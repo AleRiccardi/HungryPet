@@ -21,6 +21,8 @@ import java.util.UUID;
  * connections with other devices. It has a thread that listens for
  * incoming connections, a thread for connecting with a device, and a
  * thread for performing data transmissions when connected.
+ *
+ * @// TODO: 16/05/2018 connectionLost and connectionFailed are called to many time, make sure to stop the connection the first time.
  */
 public class CommService {
     // Debugging
@@ -223,7 +225,7 @@ public class CommService {
      */
     private void connectionFailed() {
         // Send a failure message back to the Activity
-        Message msg = mHandler.obtainMessage(CommConstants.MESSAGE_TOAST);
+        Message msg = mHandler.obtainMessage(CommConstants.CONNECTION_FAILED);
         Bundle bundle = new Bundle();
         bundle.putString(CommConstants.TOAST, "Unable to connect device");
         msg.setData(bundle);
@@ -242,7 +244,7 @@ public class CommService {
      */
     private void connectionLost() {
         // Send a failure message back to the Activity
-        Message msg = mHandler.obtainMessage(CommConstants.MESSAGE_TOAST);
+        Message msg = mHandler.obtainMessage(CommConstants.CONNECTION_LOST);
         Bundle bundle = new Bundle();
         bundle.putString(CommConstants.TOAST, "Device connection was lost");
         msg.setData(bundle);
@@ -303,6 +305,7 @@ public class CommService {
                             " socket during connection failure", e2);
                 }
                 connectionFailed();
+                this.cancel();
                 return;
             }
 
@@ -369,6 +372,7 @@ public class CommService {
                 } catch (IOException e) {
                     Log.e(TAG, "disconnected", e);
                     connectionLost();
+                    this.cancel();
                     break;
                 }
             }

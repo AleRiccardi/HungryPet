@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Select Wifi"
-        android:textSize="24sp" />
+        android:textSize="24sp"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -22,8 +22,7 @@
             android:id="@+id/txv_placeholder"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="@string/text_no_wifi" />
+            android:layout_centerInParent="true"/>
 
         <ListView
             android:id="@+id/lsv_wifi"
@@ -31,7 +30,7 @@
             android:layout_height="match_parent"
             android:layout_above="@id/btn_scan"
             android:layout_alignParentTop="true"
-            android:dividerHeight="3dp"></ListView>
+            android:dividerHeight="3dp"/>
 
         <Button
             android:id="@+id/btn_scan"

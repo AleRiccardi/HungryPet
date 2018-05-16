@@ -13,8 +13,12 @@ import com.aleric.hungrypet.data.CommConstants;
 import com.aleric.hungrypet.data.WifiCell;
 import com.aleric.hungrypet.data.WifiDirectory;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class WifiPresenter implements WifiContract.Presenter {
@@ -47,7 +51,6 @@ public class WifiPresenter implements WifiContract.Presenter {
         mView.setPresenter(this);
     }
 
-
     @Override
     public void start() {
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -77,7 +80,7 @@ public class WifiPresenter implements WifiContract.Presenter {
                             break;
                         case CommService.STATE_NONE:
                             Log.i(TAG, "Not connected");
-                            //disconnected();
+                            closeComm();
                             break;
                     }
                     break;
@@ -86,7 +89,6 @@ public class WifiPresenter implements WifiContract.Presenter {
                     byte[] writeBuf = (byte[]) msg.obj;
                     // construct a string from the buffer
                     String writeMessage = new String(writeBuf);
-                    mView.showToast(writeMessage);
                     break;
 
                 case CommConstants.MESSAGE_READ:
@@ -100,7 +102,7 @@ public class WifiPresenter implements WifiContract.Presenter {
 
                         // Possible actions from the HungryPet device
                         if (action.equals(WifiPresenter.A_WIFI_GET)) {
-                            mView.populateLsvWifi(json);
+                            sendWifisToView(json);
                         } else if (action.equals(WifiPresenter.A_WIFI_CONNECTION)) {
                             //@todo device connected to wifi
                             mView.showToast("Connected to wifi");
@@ -117,10 +119,19 @@ public class WifiPresenter implements WifiContract.Presenter {
                 case CommConstants.MESSAGE_DEVICE_NAME:
                     mDeviceName = msg.getData().getString(CommConstants.DEVICE_NAME);
                     mView.showToast("Connected with " + mDeviceName + " device");
+                    scanWifi();
+                    mView.enableComponents();
                     break;
 
                 case CommConstants.MESSAGE_TOAST:
                     mView.showToast(msg.getData().getString(CommConstants.TOAST));
+                    break;
+
+                case CommConstants.CONNECTION_FAILED:
+                    closeComm();
+                    break;
+                case CommConstants.CONNECTION_LOST:
+                    closeComm();
                     break;
             }
         }
@@ -128,11 +139,14 @@ public class WifiPresenter implements WifiContract.Presenter {
 
     @Override
     public void setUpComm() {
-        if (!mBluetoothAdapter.isEnabled()) {
+        if ((mBluetoothAdapter != null) && (!mBluetoothAdapter.isEnabled())) {
             mView.showToast("Bluetooth off, please turn on");
-        } else if (mComm == null) {
-            mComm = new CommService(mHandler);
+        } else if (mBluetoothAdapter != null) {
+            if (mComm == null) {
+                mComm = new CommService(mHandler);
+            }
         }
+
     }
 
     /**
@@ -158,6 +172,8 @@ public class WifiPresenter implements WifiContract.Presenter {
     public void closeComm() {
         if (mComm != null) {
             mComm.stop();
+            mComm = null;
+            mView.blockComponents();
         }
     }
 
@@ -197,6 +213,23 @@ public class WifiPresenter implements WifiContract.Presenter {
             e.printStackTrace();
         }
         if (!success) mView.showToast("Couldn't scan the wifi");
+    }
+
+    private void sendWifisToView(JSONObject jsWifis) {
+        JSONArray arWifis = jsWifis.optJSONArray("content");
+        List<WifiCell> listWifis = new ArrayList<>();
+        try {
+            for (int i = 0; i < arWifis.length(); i++) {
+                JSONObject jsWifi = arWifis.getJSONObject(i);
+                String ssid = jsWifi.get("ssid").toString();
+                WifiCell wifi = new WifiCell(ssid);
+                listWifis.add(wifi);
+            }
+            mView.populateLsvWifi(listWifis);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            mView.showToast("Error receiving wifi");
+        }
     }
 
     @Override

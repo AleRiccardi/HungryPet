@@ -7,6 +7,8 @@ import com.aleric.hungrypet.data.WifiCell;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.List;
+
 public interface WifiContract {
 
     interface View extends BaseView<Presenter> {
@@ -19,7 +21,7 @@ public interface WifiContract {
 
         void enableComponents();
 
-        void populateLsvWifi(JSONObject jsWifis) throws JSONException;
+        void populateLsvWifi(List<WifiCell> listWifis);
     }
 
     interface ViewDialog extends BaseView<PresenterDialog> {

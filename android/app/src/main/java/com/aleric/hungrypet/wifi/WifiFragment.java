@@ -22,6 +22,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Collection;
+import java.util.List;
+
 public class WifiFragment extends Fragment implements WifiContract.View {
 
     // CommConstants
@@ -132,18 +135,9 @@ public class WifiFragment extends Fragment implements WifiContract.View {
         btnScan.setClickable(true);
     }
 
-    public void populateLsvWifi(JSONObject jsWifis) throws JSONException {
-        btnScan.setEnabled(false);
-
-        JSONArray arWifis =  jsWifis.optJSONArray("content");
-        for (int i = 0; i < arWifis.length(); i++){
-            JSONObject jsWifi = arWifis.getJSONObject(i);
-            String ssid = jsWifi.get("ssid").toString();
-            WifiCell wifiCell = new WifiCell(ssid);
-            mWifiAdapter.add(wifiCell);
-        }
-
+    public void populateLsvWifi(List<WifiCell> listWifis){
+        mWifiAdapter.clear();
+        mWifiAdapter.addAll(listWifis);
         btnScan.setEnabled(true);
     }
-
 }
