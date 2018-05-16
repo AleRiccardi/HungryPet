@@ -1,11 +1,11 @@
 #Internal package file, do not edit.
-#Thu May 10 12:22:41 CEST 2018
-1.base=/Users/aleric/AndroidStudioProjects/HungryPet/app/build/intermediates/transforms/dexMerger/debug/11
+#Wed May 16 18:02:18 CEST 2018
+1.base=/Users/aleric/AndroidStudioProjects/HungryPet/android/app/build/intermediates/transforms/dexMerger/debug/12
 0.baseType=DIRECTORY
 1.baseType=DIRECTORY
 count=2
 1.set=DEX
 0.path=classes.dex
 0.set=DEX
-0.base=/Users/aleric/AndroidStudioProjects/HungryPet/app/build/intermediates/transforms/dexMerger/debug/12
+0.base=/Users/aleric/AndroidStudioProjects/HungryPet/android/app/build/intermediates/transforms/dexMerger/debug/11
 1.path=classes.dex

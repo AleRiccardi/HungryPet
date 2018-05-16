@@ -8,7 +8,7 @@
     <string name="text_welcome">Looks like you haven\'t configurated your HungryPet device, so make
         sure that you established a connection with its and then press configure to connect the device
         to Internet.</string>
-    <string name="text_no_wifi">No wifi detected</string>
+    <string name="text_no_wifi">No wifiCell detected</string>
 
     <!-- Button -->
     <string name="btn_config">Configure</string>
@@ -27,7 +27,7 @@
     <string name="config_configuring">Start configuring...</string>
     <string name="config_success">Configure Wifi successfully, IP: </string>
     <string name="config_fail">Fail to configure Wifi! Please check SSID and/or password and try again.</string>
-    <string name="config_alreadyConfig">You have already configured the wifi</string>
+    <string name="config_alreadyConfig">You have already configured the wifiCell</string>
 
 
     <string name="not_connected">You are not connected to a device</string>

@@ -820,7 +820,7 @@
     <string name="btn_select">Select</string>
     <string name="cancel">Cancel</string>
     <string name="character_counter_pattern" translatable="false">%1$d / %2$d</string>
-    <string name="config_alreadyConfig">You have already configured the wifi</string>
+    <string name="config_alreadyConfig">You have already configured the wifiCell</string>
     <string name="config_configuring">Start configuring...</string>
     <string name="config_fail">Fail to configure Wifi! Please check SSID and/or password and try again.</string>
     <string name="config_success">Configure Wifi successfully, IP: </string>
@@ -841,7 +841,7 @@
     <string name="search_menu_title">Search</string>
     <string name="start_configuration">Start Configuration</string>
     <string name="status_bar_notification_info_overflow">999+</string>
-    <string name="text_no_wifi">No wifi detected</string>
+    <string name="text_no_wifi">No wifiCell detected</string>
     <string name="text_welcome">Looks like you haven\'t configurated your HungryPet device, so make
         sure that you established a connection with its and then press configure to connect the device
         to Internet.</string>

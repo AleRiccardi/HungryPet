@@ -20,7 +20,7 @@
         android:supportsRtl="true"
         android:testOnly="true"
         android:theme="@style/AppTheme" >
-        <activity android:name="com.aleric.hungrypet.MainActivity" >
+        <activity android:name="com.aleric.hungrypet.main.MainActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -28,8 +28,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.aleric.hungrypet.WifiActivity"
-            android:label="@string/bar_conn_wifi" />
+            android:name="com.aleric.hungrypet.wifi.WifiActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
         <provider
             android:name="com.android.tools.ir.server.InstantRunContentProvider"

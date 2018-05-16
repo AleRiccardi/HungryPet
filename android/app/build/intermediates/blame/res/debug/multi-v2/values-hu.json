@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "/Users/aleric/AndroidStudioProjects/HungryPet/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-hu/values-hu.xml",
+            "outputFile": "/Users/aleric/AndroidStudioProjects/HungryPet/android/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-hu/values-hu.xml",
             "map": [
                 {
                     "source": "/Users/aleric/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.1.1.aar/8dbc3e58520bd5c2159828413980d126/res/values-hu/values-hu.xml",
