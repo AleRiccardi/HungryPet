@@ -136,6 +136,10 @@
         "source": "/Users/aleric/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.1.1.aar/8dbc3e58520bd5c2159828413980d126/res/anim/abc_shrink_fade_out_from_bottom.xml"
     },
     {
+        "merged": "/Users/aleric/AndroidStudioProjects/HungryPet/android/app/build/intermediates/res/merged/debug/drawable_refresh.png.flat",
+        "source": "/Users/aleric/AndroidStudioProjects/HungryPet/android/app/src/main/res/drawable/refresh.png"
+    },
+    {
         "merged": "/Users/aleric/AndroidStudioProjects/HungryPet/android/app/build/intermediates/res/merged/debug/layout_notification_template_part_chronometer.xml.flat",
         "source": "/Users/aleric/.gradle/caches/transforms-1/files-1.1/support-compat-27.1.1.aar/1ff458d28b522b68e733df597d5dcf57/res/layout/notification_template_part_chronometer.xml"
     },
@@ -152,12 +156,12 @@
         "source": "/Users/aleric/.gradle/caches/transforms-1/files-1.1/support-compat-27.1.1.aar/1ff458d28b522b68e733df597d5dcf57/res/layout/notification_action.xml"
     },
     {
-        "merged": "/Users/aleric/AndroidStudioProjects/HungryPet/android/app/build/intermediates/res/merged/debug/drawable-mdpi-v4_design_ic_visibility_off.png.flat",
-        "source": "/Users/aleric/.gradle/caches/transforms-1/files-1.1/design-27.1.1.aar/78145b098554b46b7d98f628faf5762f/res/drawable-mdpi-v4/design_ic_visibility_off.png"
-    },
-    {
         "merged": "/Users/aleric/AndroidStudioProjects/HungryPet/android/app/build/intermediates/res/merged/debug/color-v21_abc_btn_colored_borderless_text_material.xml.flat",
         "source": "/Users/aleric/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.1.1.aar/8dbc3e58520bd5c2159828413980d126/res/color-v21/abc_btn_colored_borderless_text_material.xml"
+    },
+    {
+        "merged": "/Users/aleric/AndroidStudioProjects/HungryPet/android/app/build/intermediates/res/merged/debug/drawable-mdpi-v4_design_ic_visibility_off.png.flat",
+        "source": "/Users/aleric/.gradle/caches/transforms-1/files-1.1/design-27.1.1.aar/78145b098554b46b7d98f628faf5762f/res/drawable-mdpi-v4/design_ic_visibility_off.png"
     },
     {
         "merged": "/Users/aleric/AndroidStudioProjects/HungryPet/android/app/build/intermediates/res/merged/debug/drawable-hdpi-v4_abc_text_select_handle_middle_mtrl_light.png.flat",
@@ -222,6 +226,10 @@
     {
         "merged": "/Users/aleric/AndroidStudioProjects/HungryPet/android/app/build/intermediates/res/merged/debug/mipmap-xhdpi_ic_launcher_round.png.flat",
         "source": "/Users/aleric/AndroidStudioProjects/HungryPet/android/app/src/main/res/mipmap-xhdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "/Users/aleric/AndroidStudioProjects/HungryPet/android/app/build/intermediates/res/merged/debug/menu_menu_wifi.xml.flat",
+        "source": "/Users/aleric/AndroidStudioProjects/HungryPet/android/app/src/main/res/menu/menu_wifi.xml"
     },
     {
         "merged": "/Users/aleric/AndroidStudioProjects/HungryPet/android/app/build/intermediates/res/merged/debug/drawable-mdpi-v4_abc_ic_star_half_black_48dp.png.flat",
@@ -346,10 +354,6 @@
     {
         "merged": "/Users/aleric/AndroidStudioProjects/HungryPet/android/app/build/intermediates/res/merged/debug/drawable-xhdpi-v4_abc_cab_background_top_mtrl_alpha.9.png.flat",
         "source": "/Users/aleric/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.1.1.aar/8dbc3e58520bd5c2159828413980d126/res/drawable-xhdpi-v4/abc_cab_background_top_mtrl_alpha.9.png"
-    },
-    {
-        "merged": "/Users/aleric/AndroidStudioProjects/HungryPet/android/app/build/intermediates/res/merged/debug/layout_fragment_welc_done.xml.flat",
-        "source": "/Users/aleric/AndroidStudioProjects/HungryPet/android/app/src/main/res/layout/fragment_welc_done.xml"
     },
     {
         "merged": "/Users/aleric/AndroidStudioProjects/HungryPet/android/app/build/intermediates/res/merged/debug/drawable-v21_design_bottom_navigation_item_background.xml.flat",
@@ -800,8 +804,16 @@
         "source": "/Users/aleric/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.1.1.aar/8dbc3e58520bd5c2159828413980d126/res/layout-v26/abc_screen_toolbar.xml"
     },
     {
+        "merged": "/Users/aleric/AndroidStudioProjects/HungryPet/android/app/build/intermediates/res/merged/debug/layout_activity_wifi.xml.flat",
+        "source": "/Users/aleric/AndroidStudioProjects/HungryPet/android/app/src/main/res/layout/activity_wifi.xml"
+    },
+    {
         "merged": "/Users/aleric/AndroidStudioProjects/HungryPet/android/app/build/intermediates/res/merged/debug/drawable_abc_ic_search_api_material.xml.flat",
         "source": "/Users/aleric/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.1.1.aar/8dbc3e58520bd5c2159828413980d126/res/drawable/abc_ic_search_api_material.xml"
+    },
+    {
+        "merged": "/Users/aleric/AndroidStudioProjects/HungryPet/android/app/build/intermediates/res/merged/debug/drawable_bluetooth_active.png.flat",
+        "source": "/Users/aleric/AndroidStudioProjects/HungryPet/android/app/src/main/res/drawable/bluetooth_active.png"
     },
     {
         "merged": "/Users/aleric/AndroidStudioProjects/HungryPet/android/app/build/intermediates/res/merged/debug/drawable-ldrtl-xxxhdpi-v17_abc_ic_menu_copy_mtrl_am_alpha.png.flat",
@@ -826,6 +838,10 @@
     {
         "merged": "/Users/aleric/AndroidStudioProjects/HungryPet/android/app/build/intermediates/res/merged/debug/mipmap-xxxhdpi_ic_launcher.png.flat",
         "source": "/Users/aleric/AndroidStudioProjects/HungryPet/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png"
+    },
+    {
+        "merged": "/Users/aleric/AndroidStudioProjects/HungryPet/android/app/build/intermediates/res/merged/debug/drawable_bluetooth_disabled.png.flat",
+        "source": "/Users/aleric/AndroidStudioProjects/HungryPet/android/app/src/main/res/drawable/bluetooth_disabled.png"
     },
     {
         "merged": "/Users/aleric/AndroidStudioProjects/HungryPet/android/app/build/intermediates/res/merged/debug/layout_abc_dialog_title_material.xml.flat",
@@ -1074,10 +1090,6 @@
     {
         "merged": "/Users/aleric/AndroidStudioProjects/HungryPet/android/app/build/intermediates/res/merged/debug/drawable-ldrtl-xxxhdpi-v17_abc_ic_menu_cut_mtrl_alpha.png.flat",
         "source": "/Users/aleric/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.1.1.aar/8dbc3e58520bd5c2159828413980d126/res/drawable-ldrtl-xxxhdpi-v17/abc_ic_menu_cut_mtrl_alpha.png"
-    },
-    {
-        "merged": "/Users/aleric/AndroidStudioProjects/HungryPet/android/app/build/intermediates/res/merged/debug/layout_fragment_welcome.xml.flat",
-        "source": "/Users/aleric/AndroidStudioProjects/HungryPet/android/app/src/main/res/layout/fragment_welcome.xml"
     },
     {
         "merged": "/Users/aleric/AndroidStudioProjects/HungryPet/android/app/build/intermediates/res/merged/debug/drawable-mdpi-v4_abc_menu_hardkey_panel_mtrl_mult.9.png.flat",
@@ -1760,12 +1772,12 @@
         "source": "/Users/aleric/AndroidStudioProjects/HungryPet/android/app/src/main/res/mipmap-mdpi/ic_launcher_foreground.png"
     },
     {
-        "merged": "/Users/aleric/AndroidStudioProjects/HungryPet/android/app/build/intermediates/res/merged/debug/drawable_abc_edit_text_material.xml.flat",
-        "source": "/Users/aleric/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.1.1.aar/8dbc3e58520bd5c2159828413980d126/res/drawable/abc_edit_text_material.xml"
-    },
-    {
         "merged": "/Users/aleric/AndroidStudioProjects/HungryPet/android/app/build/intermediates/res/merged/debug/drawable-hdpi-v4_abc_ic_menu_selectall_mtrl_alpha.png.flat",
         "source": "/Users/aleric/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.1.1.aar/8dbc3e58520bd5c2159828413980d126/res/drawable-hdpi-v4/abc_ic_menu_selectall_mtrl_alpha.png"
+    },
+    {
+        "merged": "/Users/aleric/AndroidStudioProjects/HungryPet/android/app/build/intermediates/res/merged/debug/drawable_abc_edit_text_material.xml.flat",
+        "source": "/Users/aleric/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.1.1.aar/8dbc3e58520bd5c2159828413980d126/res/drawable/abc_edit_text_material.xml"
     },
     {
         "merged": "/Users/aleric/AndroidStudioProjects/HungryPet/android/app/build/intermediates/res/merged/debug/drawable-hdpi-v4_abc_btn_check_to_on_mtrl_015.png.flat",

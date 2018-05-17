@@ -1,16 +1,15 @@
 package com.aleric.hungrypet.wifi;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,11 +17,6 @@ import android.widget.Toast;
 import com.aleric.hungrypet.R;
 import com.aleric.hungrypet.data.WifiCell;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.Collection;
 import java.util.List;
 
 public class WifiFragment extends Fragment implements WifiContract.View {
@@ -37,7 +31,7 @@ public class WifiFragment extends Fragment implements WifiContract.View {
 
     private ListView lsvWifi;
 
-    private Button btnScan;
+    private FloatingActionButton fabScan;
 
     /**
      * Array adapter for the conversation thread
@@ -66,7 +60,6 @@ public class WifiFragment extends Fragment implements WifiContract.View {
     @Override
     public void onStart() {
         super.onStart();
-        mPresenter.start();
     }
 
     @Nullable
@@ -75,9 +68,9 @@ public class WifiFragment extends Fragment implements WifiContract.View {
         View view = inflater.inflate(R.layout.fragment_wifi, container, false);
         txvPlaceholder = view.findViewById(R.id.txv_placeholder);
         lsvWifi = view.findViewById(R.id.lsv_wifi);
-        btnScan = view.findViewById(R.id.btn_scan);
+        fabScan = view.findViewById(R.id.fab_refresh);
 
-        if(getActivity() != null) {
+        if (getActivity() != null) {
             // Initialize the array adapter for the conversation thread
             mWifiAdapter = new ArrayAdapter<>(getActivity(), R.layout.item_wifi);
             lsvWifi.setAdapter(mWifiAdapter);
@@ -85,7 +78,7 @@ public class WifiFragment extends Fragment implements WifiContract.View {
             lsvWifi.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                    if(position >= 0) {
+                    if (position >= 0) {
                         WifiCell wifi = (WifiCell) adapterView.getAdapter().getItem(position);
                         WifiDialogFragment dialog = WifiDialogFragment.newInstance();
 
@@ -95,7 +88,7 @@ public class WifiFragment extends Fragment implements WifiContract.View {
                 }
             });
 
-            btnScan.setOnClickListener(new View.OnClickListener() {
+            fabScan.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     mPresenter.scanWifi();
@@ -109,7 +102,7 @@ public class WifiFragment extends Fragment implements WifiContract.View {
     @Override
     public void onResume() {
         super.onResume();
-        mPresenter.resumeComm();
+        mPresenter.start();
     }
 
     @Override
@@ -125,19 +118,19 @@ public class WifiFragment extends Fragment implements WifiContract.View {
 
     @Override
     public void blockComponents() {
-        btnScan.setEnabled(false);
-        btnScan.setClickable(false);
+        fabScan.setEnabled(false);
+        fabScan.setClickable(false);
     }
 
     @Override
     public void enableComponents() {
-        btnScan.setEnabled(true);
-        btnScan.setClickable(true);
+        fabScan.setEnabled(true);
+        fabScan.setClickable(true);
     }
 
-    public void populateLsvWifi(List<WifiCell> listWifis){
+    public void populateLsvWifi(List<WifiCell> listWifis) {
         mWifiAdapter.clear();
         mWifiAdapter.addAll(listWifis);
-        btnScan.setEnabled(true);
+        fabScan.setEnabled(true);
     }
 }

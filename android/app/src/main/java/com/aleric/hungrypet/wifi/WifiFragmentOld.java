@@ -100,7 +100,7 @@ public class WifiFragmentOld extends Fragment  {
         View view = inflater.inflate(R.layout.fragment_wifi, container, false);
         txvPlaceholder = view.findViewById(R.id.txv_placeholder);
         lsvWifi = view.findViewById(R.id.lsv_wifi);
-        btnScan = view.findViewById(R.id.btn_scan);
+        btnScan = view.findViewById(R.id.fab_refresh);
 
         lsvWifi.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

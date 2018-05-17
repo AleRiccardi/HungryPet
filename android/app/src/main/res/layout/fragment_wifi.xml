@@ -1,49 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent">
+
 
     <TextView
-        android:id="@+id/textView"
-        android:layout_width="match_parent"
+        android:id="@+id/txv_placeholder"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Select Wifi"
-        android:textSize="24sp"/>
+        android:layout_centerInParent="true" />
 
-    <RelativeLayout
+    <ListView
+        android:id="@+id/lsv_wifi"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="20dp"
-        android:orientation="vertical">
+        android:layout_alignParentTop="true"
+        android:dividerHeight="3dp" />
 
-        <TextView
-            android:id="@+id/txv_placeholder"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"/>
+</RelativeLayout>
 
-        <ListView
-            android:id="@+id/lsv_wifi"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@id/btn_scan"
-            android:layout_alignParentTop="true"
-            android:dividerHeight="3dp"/>
-
-        <Button
-            android:id="@+id/btn_scan"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:theme="@style/PrimaryButton"
-            android:enabled="false"
-            android:clickable = "false"
-            android:text="@string/btn_scan" />
-
-    </RelativeLayout>
-
-
-
-</LinearLayout>

@@ -224,38 +224,39 @@ public class CommService {
      * Indicate that the connection attempt failed and notify the UI Activity.
      */
     private void connectionFailed() {
+        mState = STATE_NONE;
+
         // Send a failure message back to the Activity
         Message msg = mHandler.obtainMessage(CommConstants.CONNECTION_FAILED);
         Bundle bundle = new Bundle();
         bundle.putString(CommConstants.TOAST, "Unable to connect device");
         msg.setData(bundle);
         mHandler.sendMessage(msg);
-
-        mState = STATE_NONE;
         // Update UI title
         updateUserInterfaceTitle();
 
         // Start the service over to restart listening mode
-        CommService.this.start();
+        //CommService.this.start();
     }
 
     /**
      * Indicate that the connection was lost and notify the UI Activity.
+     * I commented the last line to avoid to reconnect again without the permission of the user.
      */
     private void connectionLost() {
+        mState = STATE_NONE;
+
         // Send a failure message back to the Activity
         Message msg = mHandler.obtainMessage(CommConstants.CONNECTION_LOST);
         Bundle bundle = new Bundle();
         bundle.putString(CommConstants.TOAST, "Device connection was lost");
         msg.setData(bundle);
         mHandler.sendMessage(msg);
-
-        mState = STATE_NONE;
         // Update UI title
         updateUserInterfaceTitle();
 
         // Start the service over to restart listening mode
-        CommService.this.start();
+        //CommService.this.start();
     }
 
 
