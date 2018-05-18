@@ -1,34 +1,34 @@
 raspberry/proj/bt.py
 .DS_Store
 #built application files
-*.apk
-*.ap_
+android/*.apk
+android/*.ap_
 
 # files for the dex VM
-*.dex
+android/*.dex
 
 # Java class files
-*.class
+android/*.class
 
 # generated files
-bin/
-gen/
+android/bin/
+android/gen/
 
 # Local configuration file (sdk path, etc)
-local.properties
+android/local.properties
 
 # Windows thumbnail db
-Thumbs.db
+android/Thumbs.db
 
 # OSX files
-.DS_Store
+android/.DS_Store
 
 # Eclipse project files
-.classpath
-.project
+android/.classpath
+android/.project
 
 # Android Studio
-.idea
+android/.idea
 #.idea/workspace.xml - remove # and delete .idea if it better suit your needs.
-.gradle
-build/
+android/.gradle
+android/app/build/
