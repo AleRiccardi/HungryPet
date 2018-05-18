@@ -2,6 +2,7 @@ package com.aleric.hungrypet.wifi;
 
 
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -49,24 +50,9 @@ public class WifiActivity extends AppCompatActivity {
                     getSupportFragmentManager(), wifiFragment, R.id.contentFrame);
         }
 
-        mWifiPresenter = new WifiPresenter(wifiFragment);
         // Create the presenter
-        mTasksPresenter = new TasksPresenter(
-                Injection.provideTasksRepository(getApplicationContext()), tasksFragment);
+        mWifiPresenter = new WifiPresenter(wifiFragment);
 
-        // Load previously saved state, if available.
-        if (savedInstanceState != null) {
-            TasksFilterType currentFiltering =
-                    (TasksFilterType) savedInstanceState.getSerializable(CURRENT_FILTERING_KEY);
-            mTasksPresenter.setFiltering(currentFiltering);
-        }
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        outState.putSerializable(CURRENT_FILTERING_KEY, mWifiPresenter.getFiltering());
-
-        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -74,22 +60,6 @@ public class WifiActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_wifi, menu);
         return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_bt_activation) {
-            Toast.makeText(WifiActivity.this, "Action clicked", Toast.LENGTH_LONG).show();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
 }

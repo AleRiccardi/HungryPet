@@ -6,6 +6,7 @@
 
     <dimen name="list_item_padding">8dp</dimen>
 
+    <dimen name="small_margin">5dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
 
 </resources>

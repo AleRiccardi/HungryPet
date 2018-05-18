@@ -2,15 +2,29 @@ package com.aleric.hungrypet.data;
 
 public class WifiCell {
     private String ssid;
+    private String encryption;
     private String pswd;
 
-    public WifiCell(String ssid){
+    public WifiCell(String ssid, String encryption){
         this.ssid = ssid;
+        this.encryption = encryption;
         this.pswd = null;
     }
 
-    @Override
-    public String toString() {
+    public void setPassword(String pswd){
+        this.pswd = pswd;
+    }
+
+    public String getSsid(){
         return ssid;
     }
+
+    public String getEncryption(){
+        return encryption;
+    }
+
+    public String getPswd(){
+        return pswd;
+    }
+
 }

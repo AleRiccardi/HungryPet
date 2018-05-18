@@ -15,31 +15,24 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="horizontal"
             android:layout_marginHorizontal="@dimen/margin_medium"
-            android:layout_marginVertical="@dimen/margin_small">
+            android:layout_marginVertical="@dimen/margin_small"
+            android:layout_weight="1"
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.45"
-                android:text="State: " />
-
-            <TextView
-                android:id="@+id/txvState"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:layout_weight="8"
-                android:text="active" />
+                android:text="State: active" />
 
             <Button
-                android:id="@+id/btnStateAction"
+                android:id="@+id/button2"
                 style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.3"
+                android:layout_weight="0.2"
                 android:text="Disconnect" />
         </LinearLayout>
 

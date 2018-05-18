@@ -1,5 +1,6 @@
 package com.aleric.hungrypet.wifi;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 import com.aleric.hungrypet.R;
 import com.aleric.hungrypet.data.WifiCell;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class WifiFragment extends Fragment implements WifiContract.View {
@@ -31,7 +33,7 @@ public class WifiFragment extends Fragment implements WifiContract.View {
 
     private ListView lsvWifi;
 
-    private FloatingActionButton fabScan;
+    private FloatingActionButton fabRefresh;
 
     /**
      * Array adapter for the conversation thread
@@ -57,22 +59,24 @@ public class WifiFragment extends Fragment implements WifiContract.View {
         mPresenter = presenter;
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_wifi, container, false);
         txvPlaceholder = view.findViewById(R.id.txv_placeholder);
         lsvWifi = view.findViewById(R.id.lsv_wifi);
-        fabScan = view.findViewById(R.id.fab_refresh);
+        fabRefresh = getActivity().findViewById(R.id.fab_refresh);
 
         if (getActivity() != null) {
             // Initialize the array adapter for the conversation thread
-            mWifiAdapter = new ArrayAdapter<>(getActivity(), R.layout.item_wifi);
+            //mWifiAdapter = new ArrayAdapter<>(getActivity(), R.layout.item_wifi);
+            //lsvWifi.setAdapter(mWifiAdapter);
+
+            // Construct the data source
+            ArrayList<WifiCell> arrayOfWifi = new ArrayList<>();
+            // Create the adapter to convert the array to views
+            mWifiAdapter = new WifiAdapter(getActivity(), arrayOfWifi);
+            // Attach the adapter to a ListView
             lsvWifi.setAdapter(mWifiAdapter);
 
             lsvWifi.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -88,7 +92,7 @@ public class WifiFragment extends Fragment implements WifiContract.View {
                 }
             });
 
-            fabScan.setOnClickListener(new View.OnClickListener() {
+            fabRefresh.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     mPresenter.scanWifi();
@@ -118,19 +122,21 @@ public class WifiFragment extends Fragment implements WifiContract.View {
 
     @Override
     public void blockComponents() {
-        fabScan.setEnabled(false);
-        fabScan.setClickable(false);
+        fabRefresh.setEnabled(false);
+        fabRefresh.setClickable(false);
     }
 
     @Override
     public void enableComponents() {
-        fabScan.setEnabled(true);
-        fabScan.setClickable(true);
+        fabRefresh.setEnabled(true);
+        fabRefresh.setClickable(true);
     }
 
     public void populateLsvWifi(List<WifiCell> listWifis) {
         mWifiAdapter.clear();
         mWifiAdapter.addAll(listWifis);
-        fabScan.setEnabled(true);
+        fabRefresh.setEnabled(true);
     }
+
+
 }

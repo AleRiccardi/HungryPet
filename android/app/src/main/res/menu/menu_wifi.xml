@@ -3,13 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
-    <!-- "Mark Favorite", should appear as action button if possible -->
-    <item
+    <!--<item
         android:id="@+id/action_bt_activation"
         android:orderInCategory="300"
-        android:title="bt"
-        android:icon="@drawable/bluetooth_disabled"
-        app:showAsAction="ifRoom"/>
+        android:title="ic_bluetooth"
+        android:icon="@drawable/ic_bluetooth_disabled"
+        app:showAsAction="ifRoom"/>-->
 
 
 </menu>

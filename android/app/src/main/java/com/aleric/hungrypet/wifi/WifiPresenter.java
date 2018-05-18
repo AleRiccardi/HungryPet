@@ -27,9 +27,9 @@ public class WifiPresenter implements WifiContract.Presenter {
     /**
      * Communication action, same in raspberry program.
      */
-    public static final String A_WIFI_GET = "wifi-get";
-    public static final String A_WIFI_CONNECTION = "wifi-connection";
-    public static final String A_BT_DISCONNECT = "bt-quit";
+    private static final String A_WIFI_GET = "wifi-get";
+    private static final String A_WIFI_CONNECTION = "wifi-connection";
+    private static final String A_BT_DISCONNECT = "bt-quit";
 
     private final WifiContract.View mView;
     /**
@@ -57,7 +57,7 @@ public class WifiPresenter implements WifiContract.Presenter {
 
         if (mBluetoothAdapter == null) {
             mView.showToast("Bluetooth not supported");
-            mView.blockComponents();
+            closeComm();
         } else {
             setUpComm();
         }
@@ -141,6 +141,7 @@ public class WifiPresenter implements WifiContract.Presenter {
     public void setUpComm() {
         if ((mBluetoothAdapter != null) && (!mBluetoothAdapter.isEnabled())) {
             mView.showToast("Bluetooth off, please turn on");
+            closeComm();
         } else if (mBluetoothAdapter != null) {
             if (mComm == null) {
                 mComm = new CommService(mHandler);
@@ -162,6 +163,8 @@ public class WifiPresenter implements WifiContract.Presenter {
                 // Start the Bluetooth chat services
                 mComm.start();
             }
+        } else {
+            closeComm();
         }
     }
 
@@ -173,8 +176,8 @@ public class WifiPresenter implements WifiContract.Presenter {
         if (mComm != null) {
             mComm.stop();
             mComm = null;
-            mView.blockComponents();
         }
+        mView.blockComponents();
     }
 
     /**
@@ -222,7 +225,9 @@ public class WifiPresenter implements WifiContract.Presenter {
             for (int i = 0; i < arWifis.length(); i++) {
                 JSONObject jsWifi = arWifis.getJSONObject(i);
                 String ssid = jsWifi.get("ssid").toString();
-                WifiCell wifi = new WifiCell(ssid);
+                String encryption = jsWifi.get("encryption").toString();
+
+                WifiCell wifi = new WifiCell(ssid, encryption);
                 listWifis.add(wifi);
             }
             mView.populateLsvWifi(listWifis);

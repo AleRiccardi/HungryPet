@@ -1,7 +1,0 @@
-#Thu May 17 10:18:04 CEST 2018
-base.0=/Users/aleric/AndroidStudioProjects/HungryPet/android/app/build/intermediates/transforms/dexMerger/debug/12
-path.1=classes.dex
-renamed.1=classes2.dex
-path.0=classes.dex
-renamed.0=classes.dex
-base.1=/Users/aleric/AndroidStudioProjects/HungryPet/android/app/build/intermediates/transforms/dexMerger/debug/11

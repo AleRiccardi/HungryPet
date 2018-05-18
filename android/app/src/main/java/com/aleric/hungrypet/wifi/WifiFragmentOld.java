@@ -293,7 +293,7 @@ public class WifiFragmentOld extends Fragment  {
             JSONObject jsWifi = arWifis.getJSONObject(i);
             String ssid = jsWifi.get("ssid").toString();
             String encryption = jsWifi.get("encryption").toString();
-            WifiCell wifiCell = new WifiCell(ssid);
+            WifiCell wifiCell = new WifiCell(ssid, encryption);
             mWifiArrayAdapter.add(wifiCell);
         }
 

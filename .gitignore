@@ -1,32 +1,27 @@
-raspberry/proj/bt.py
+## General ##
 .DS_Store
+.idea/
+
+## Android ##
 #built application files
 android/*.apk
 android/*.ap_
-
 # files for the dex VM
 android/*.dex
-
 # Java class files
 android/*.class
-
 # generated files
 android/bin/
 android/gen/
-
 # Local configuration file (sdk path, etc)
 android/local.properties
-
 # Windows thumbnail db
 android/Thumbs.db
-
 # OSX files
 android/.DS_Store
-
 # Eclipse project files
 android/.classpath
 android/.project
-
 # Android Studio
 android/.idea
 #.idea/workspace.xml - remove # and delete .idea if it better suit your needs.
