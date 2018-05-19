@@ -7,7 +7,6 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.aleric.hungrypet.R;
 import com.aleric.hungrypet.data.CommService;
 import com.aleric.hungrypet.data.CommConstants;
 import com.aleric.hungrypet.data.WifiCell;
@@ -54,13 +53,7 @@ public class WifiPresenter implements WifiContract.Presenter {
     @Override
     public void start() {
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-
-        if (mBluetoothAdapter == null) {
-            mView.showToast("Bluetooth not supported");
-            closeComm();
-        } else {
-            setUpComm();
-        }
+        setComm(true);
     }
 
     @SuppressLint("HandlerLeak")
@@ -118,9 +111,8 @@ public class WifiPresenter implements WifiContract.Presenter {
 
                 case CommConstants.MESSAGE_DEVICE_NAME:
                     mDeviceName = msg.getData().getString(CommConstants.DEVICE_NAME);
-                    mView.showToast("Connected with " + mDeviceName + " device");
                     scanWifi();
-                    mView.enableComponents();
+                    mView.enableComm();
                     break;
 
                 case CommConstants.MESSAGE_TOAST:
@@ -138,30 +130,46 @@ public class WifiPresenter implements WifiContract.Presenter {
     };
 
     @Override
-    public void setUpComm() {
-        if ((mBluetoothAdapter != null) && (!mBluetoothAdapter.isEnabled())) {
+    public void setComm(boolean on) {
+        if (mBluetoothAdapter == null) {
+            mView.showToast("Bluetooth not supported");
+            closeComm();
+        } else {
+            if(on) {
+                enableComm();
+            } else {
+                closeComm();
+            }
+        }
+
+    }
+
+    private void enableComm(){
+        if (!mBluetoothAdapter.isEnabled()) {
             mView.showToast("Bluetooth off, please turn on");
             closeComm();
         } else if (mBluetoothAdapter != null) {
             if (mComm == null) {
                 mComm = new CommService(mHandler);
+            } else {
+                resumeComm();
             }
         }
-
     }
+
 
     /**
      * Performing this check in onResume() covers the case in which BT was
      * not enabled during onStart(), so we were paused to enable it...
      * onResume() will be called when ACTION_REQUEST_ENABLE activity returns.
      */
-    @Override
-    public void resumeComm() {
+    private void resumeComm() {
         if (mComm != null) {
             // Only if the state is STATE_NONE, do we know that we haven't started already
             if (mComm.getState() == CommService.STATE_NONE) {
                 // Start the Bluetooth chat services
                 mComm.start();
+                mView.enableComm();
             }
         } else {
             closeComm();
@@ -171,13 +179,12 @@ public class WifiPresenter implements WifiContract.Presenter {
     /**
      * Close the communication.
      */
-    @Override
-    public void closeComm() {
+    private void closeComm() {
         if (mComm != null) {
             mComm.stop();
             mComm = null;
         }
-        mView.blockComponents();
+        mView.disableComm();
     }
 
     /**
@@ -188,7 +195,7 @@ public class WifiPresenter implements WifiContract.Presenter {
     private boolean sendMessage(String msg) {
         // Check that we're actually connected before trying anything
         if (mComm.getState() != CommService.STATE_CONNECTED) {
-            mView.showToast(R.string.not_connected + "");
+            mView.disableComm();
             return false;
         }
 
@@ -215,7 +222,8 @@ public class WifiPresenter implements WifiContract.Presenter {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        if (!success) mView.showToast("Couldn't scan the wifi");
+        if (success) mView.showToast("Wifi networks scanned");
+        else mView.showToast("Couldn't scan the wifi");
     }
 
     private void sendWifisToView(JSONObject jsWifis) {

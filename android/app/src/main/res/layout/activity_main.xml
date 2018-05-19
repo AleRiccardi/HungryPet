@@ -28,7 +28,7 @@
                 android:id="@+id/txv_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/title_welcome"
+                android:text="@string/main_title_welcome"
                 android:textSize="35sp" />
 
             <TextView
@@ -36,7 +36,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="@string/text_welcome"
+                android:text="@string/main_text_welcome"
                 android:textSize="15sp" />
         </LinearLayout>
 

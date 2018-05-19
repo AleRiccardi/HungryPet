@@ -1,6 +1,6 @@
 package com.aleric.hungrypet.wifi;
 
-import android.content.Context;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,7 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +30,10 @@ public class WifiFragment extends Fragment implements WifiContract.View {
 
     // Variables
     private WifiContract.Presenter mPresenter;
+
+    private TextView txvState;
+
+    private Switch swcStateAction;
 
     private TextView txvPlaceholder;
 
@@ -63,6 +69,8 @@ public class WifiFragment extends Fragment implements WifiContract.View {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_wifi, container, false);
+        txvState = view.findViewById(R.id.txv_state);
+        swcStateAction = view.findViewById(R.id.swc_state_action);
         txvPlaceholder = view.findViewById(R.id.txv_placeholder);
         lsvWifi = view.findViewById(R.id.lsv_wifi);
         fabRefresh = getActivity().findViewById(R.id.fab_refresh);
@@ -92,6 +100,13 @@ public class WifiFragment extends Fragment implements WifiContract.View {
                 }
             });
 
+            swcStateAction.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    mPresenter.setComm(isChecked);
+                }
+            });
+
             fabRefresh.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -112,24 +127,42 @@ public class WifiFragment extends Fragment implements WifiContract.View {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mPresenter.closeComm();
+        mPresenter.setComm(false);
     }
 
     @Override
     public void showToast(String msg) {
-        Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
+        boolean longDuration = true;
+        Toast.makeText(getActivity(), msg, longDuration ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    public void blockComponents() {
-        fabRefresh.setEnabled(false);
-        fabRefresh.setClickable(false);
-    }
 
     @Override
-    public void enableComponents() {
+    public void enableComm() {
+        // TextView --> On
+        txvState.setText(R.string.state_on);
+        // Switch --> Checked
+        swcStateAction.setChecked(true);
+        // ListView --> Clear
+        mWifiAdapter.clear();
+        // FloatingActionButton --> Enable
         fabRefresh.setEnabled(true);
         fabRefresh.setClickable(true);
+        fabRefresh.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary)));
+    }
+
+    @Override
+    public void disableComm() {
+        // TextView --> Off
+        txvState.setText(R.string.state_off);
+        // Switch --> Unchecked
+        swcStateAction.setChecked(false);
+        // ListView --> Clear
+        mWifiAdapter.clear();
+        // FloatingActionButton --> Enable
+        fabRefresh.setEnabled(false);
+        fabRefresh.setClickable(false);
+        fabRefresh.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.inactiveGray)));
     }
 
     public void populateLsvWifi(List<WifiCell> listWifis) {
