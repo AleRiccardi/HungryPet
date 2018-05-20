@@ -113,6 +113,9 @@ public class WifiFragment extends Fragment implements WifiContract.View {
                     mPresenter.scanWifi();
                 }
             });
+
+
+            setComponentsComm(false);
         }
 
         return view;
@@ -131,38 +134,35 @@ public class WifiFragment extends Fragment implements WifiContract.View {
     }
 
     @Override
-    public void showToast(String msg) {
-        boolean longDuration = true;
-        Toast.makeText(getActivity(), msg, longDuration ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT).show();
+    public void showToast(String msg, boolean lengthLong){
+        Toast.makeText(getActivity(), msg, lengthLong ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT).show();
     }
 
 
     @Override
-    public void enableComm() {
-        // TextView --> On
-        txvState.setText(R.string.state_on);
-        // Switch --> Checked
-        swcStateAction.setChecked(true);
-        // ListView --> Clear
-        mWifiAdapter.clear();
-        // FloatingActionButton --> Enable
-        fabRefresh.setEnabled(true);
-        fabRefresh.setClickable(true);
-        fabRefresh.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary)));
-    }
+    public void setComponentsComm(boolean enable) {
+        if(isActive()){
+            int stateString;
+            ColorStateList colorFab;
+            if(enable){
+                stateString = R.string.state_on;
+                colorFab = ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary));
+            } else {
+                stateString = R.string.state_off;
+                colorFab = ColorStateList.valueOf(getResources().getColor(R.color.inactiveGray));
+            }
+            // TextView
+            txvState.setText(stateString);
+            // Switch
+            swcStateAction.setChecked(enable);
+            // ListView
+            mWifiAdapter.clear();
+            // FloatingActionButton
+            fabRefresh.setEnabled(enable);
+            fabRefresh.setClickable(enable);
+            fabRefresh.setBackgroundTintList(colorFab);
+        }
 
-    @Override
-    public void disableComm() {
-        // TextView --> Off
-        txvState.setText(R.string.state_off);
-        // Switch --> Unchecked
-        swcStateAction.setChecked(false);
-        // ListView --> Clear
-        mWifiAdapter.clear();
-        // FloatingActionButton --> Enable
-        fabRefresh.setEnabled(false);
-        fabRefresh.setClickable(false);
-        fabRefresh.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.inactiveGray)));
     }
 
     public void populateLsvWifi(List<WifiCell> listWifis) {

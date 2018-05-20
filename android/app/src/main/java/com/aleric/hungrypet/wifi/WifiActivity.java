@@ -19,7 +19,7 @@ import com.aleric.hungrypet.main.MainActivity;
 import com.aleric.hungrypet.util.ActivityUtils;
 
 /**
- * @todo fix views mix
+ * @todo understand why the presenter disconnect the communication
  */
 public class WifiActivity extends AppCompatActivity {
 
@@ -27,7 +27,10 @@ public class WifiActivity extends AppCompatActivity {
 
     public static final String TAG = "WifiActivity";
 
-    public WifiPresenter mWifiPresenter;
+    public static WifiPresenter mWifiPresenter;
+
+    private boolean isNewActivity;
+
 
     public WifiActivity() {
     }
@@ -50,9 +53,23 @@ public class WifiActivity extends AppCompatActivity {
                     getSupportFragmentManager(), wifiFragment, R.id.contentFrame);
         }
 
+        // Check if it's a new view
+        isNewActivity = (savedInstanceState == null);
         // Create the presenter
-        mWifiPresenter = new WifiPresenter(wifiFragment);
 
+        mWifiPresenter = new WifiPresenter(wifiFragment, isNewActivity);
+
+        isNewActivity = false;
+
+    }
+
+    // Save UI state changes to the savedInstanceState.
+    // This bundle will be passed to onCreate if the process is
+    // killed and restarted.
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+
+        super.onSaveInstanceState(savedInstanceState);
     }
 
     @Override

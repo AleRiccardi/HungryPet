@@ -55,23 +55,9 @@ public class CommService {
      * @param handler A Handler to send messages back to the UI Activity
      */
     public CommService(Handler handler) {
-        mAdapter = BluetoothAdapter.getDefaultAdapter();
-        Set<BluetoothDevice> pairedDevices = mAdapter.getBondedDevices();
-
         mState = STATE_NONE;
         mNewState = mState;
         mHandler = handler;
-
-        if (pairedDevices.size() > 0) {
-            for (BluetoothDevice device : pairedDevices) {
-                if (device.getAddress().equals("B8:27:EB:EE:FC:FF")) {
-                    connect(device);
-                }
-            }
-        } else {
-            Log.i(TAG, "No Paired Device.");
-        }
-
     }
 
     /**
@@ -94,11 +80,11 @@ public class CommService {
     }
 
     /**
-     * Start the chat service. Specifically start AcceptThread to begin a
+     * Prepare the chat service. Specifically prepare AcceptThread to begin a
      * session in listening (server) mode. Called by the Activity onResume()
      */
-    public synchronized void start() {
-        Log.d(TAG, "start");
+    public synchronized void prepare() {
+        Log.d(TAG, "prepare");
 
         // Cancel any thread attempting to make a connection
         if (mConnectThread != null) {
@@ -114,6 +100,23 @@ public class CommService {
 
         // Update UI title
         updateUserInterfaceTitle();
+    }
+
+    public void start() {
+        mAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (mAdapter != null) {
+            Set<BluetoothDevice> pairedDevices = mAdapter.getBondedDevices();
+
+            if (pairedDevices.size() > 0) {
+                for (BluetoothDevice device : pairedDevices) {
+                    if (device.getAddress().equals("B8:27:EB:EE:FC:FF")) {
+                        connect(device);
+                    }
+                }
+            } else {
+                Log.i(TAG, "No Paired Device.");
+            }
+        }
     }
 
     /**
@@ -151,9 +154,8 @@ public class CommService {
      * @param socket The BluetoothSocket on which the connection was made
      * @param device The BluetoothDevice that has been connected
      */
-    public synchronized void connected(BluetoothSocket socket, BluetoothDevice
-            device, final String socketType) {
-        Log.d(TAG, "connected, Socket Type:" + socketType);
+    private synchronized void connected(BluetoothSocket socket, BluetoothDevice device) {
+        Log.d(TAG, "connected");
 
         // Cancel the thread that completed the connection
         if (mConnectThread != null) {
@@ -168,7 +170,7 @@ public class CommService {
         }
 
         // Start the thread to manage the connection and perform transmissions
-        mConnectedThread = new ConnectedThread(socket, socketType);
+        mConnectedThread = new ConnectedThread(socket);
         mConnectedThread.start();
 
         // Send the name of the connected device back to the UI Activity
@@ -236,7 +238,7 @@ public class CommService {
         updateUserInterfaceTitle();
 
         // Start the service over to restart listening mode
-        //CommService.this.start();
+        //CommService.this.prepare();
     }
 
     /**
@@ -256,7 +258,7 @@ public class CommService {
         updateUserInterfaceTitle();
 
         // Start the service over to restart listening mode
-        //CommService.this.start();
+        //CommService.this.prepare();
     }
 
 
@@ -268,7 +270,6 @@ public class CommService {
     private class ConnectThread extends Thread {
         private final BluetoothSocket mmSocket;
         private final BluetoothDevice mmDevice;
-        private String mSocketType;
 
         public ConnectThread(BluetoothDevice device) {
             mmDevice = device;
@@ -279,15 +280,15 @@ public class CommService {
             try {
                 tmp = device.createRfcommSocketToServiceRecord(MY_UUID);
             } catch (IOException e) {
-                Log.e(TAG, "Socket Type: " + mSocketType + "create() failed", e);
+                Log.e(TAG, "Socket Type: create() failed", e);
             }
             mmSocket = tmp;
             mState = STATE_CONNECTING;
         }
 
         public void run() {
-            Log.i(TAG, "BEGIN mConnectThread SocketType:" + mSocketType);
-            setName("ConnectThread" + mSocketType);
+            Log.i(TAG, "BEGIN mConnectThread");
+            setName("ConnectThread");
 
             // Always cancel discovery because it will slow down a connection
             mAdapter.cancelDiscovery();
@@ -302,8 +303,7 @@ public class CommService {
                 try {
                     mmSocket.close();
                 } catch (IOException e2) {
-                    Log.e(TAG, "unable to close() " + mSocketType +
-                            " socket during connection failure", e2);
+                    Log.e(TAG, "unable to close() during connection failure", e2);
                 }
                 connectionFailed();
                 this.cancel();
@@ -316,14 +316,14 @@ public class CommService {
             }
 
             // Start the connected thread
-            connected(mmSocket, mmDevice, mSocketType);
+            connected(mmSocket, mmDevice);
         }
 
         public void cancel() {
             try {
                 mmSocket.close();
             } catch (IOException e) {
-                Log.e(TAG, "close() of connect " + mSocketType + " socket failed", e);
+                Log.e(TAG, "close() of connect failed", e);
             }
         }
     }
@@ -337,8 +337,8 @@ public class CommService {
         private final InputStream mmInStream;
         private final OutputStream mmOutStream;
 
-        public ConnectedThread(BluetoothSocket socket, String socketType) {
-            Log.d(TAG, "create ConnectedThread: " + socketType);
+        public ConnectedThread(BluetoothSocket socket) {
+            Log.d(TAG, "create ConnectedThread");
             mmSocket = socket;
             InputStream tmpIn = null;
             OutputStream tmpOut = null;
@@ -366,10 +366,10 @@ public class CommService {
                 try {
                     // Read from the InputStream
                     bytes = mmInStream.read(buffer);
-
                     // Send the obtained bytes to the UI Activity
                     mHandler.obtainMessage(CommConstants.MESSAGE_READ, bytes, -1, buffer)
                             .sendToTarget();
+
                 } catch (IOException e) {
                     Log.e(TAG, "disconnected", e);
                     connectionLost();

@@ -44,16 +44,20 @@ public class WifiPresenter implements WifiContract.Presenter {
      */
     private CommService mComm = null;
 
+    private boolean mIsNewActivity;
 
-    public WifiPresenter(@NonNull WifiContract.View wifiView) {
+
+    public WifiPresenter(@NonNull WifiContract.View wifiView, boolean isNewActivity) {
         mView = wifiView;
         mView.setPresenter(this);
+        mIsNewActivity = isNewActivity;
     }
 
     @Override
     public void start() {
-        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        setComm(true);
+        if (mIsNewActivity) {
+            setComm(true);
+        }
     }
 
     @SuppressLint("HandlerLeak")
@@ -98,10 +102,10 @@ public class WifiPresenter implements WifiContract.Presenter {
                             sendWifisToView(json);
                         } else if (action.equals(WifiPresenter.A_WIFI_CONNECTION)) {
                             //@todo device connected to wifi
-                            mView.showToast("Connected to wifi");
+                            mView.showToast("Connected to wifi", false);
                         } else if (action.equals(WifiPresenter.A_BT_DISCONNECT)) {
                             //@todo device disconnected
-                            mView.showToast("Disconnected to wifi");
+                            mView.showToast("Disconnected to wifi", false);
                         }
 
                     } catch (JSONException e) {
@@ -112,14 +116,15 @@ public class WifiPresenter implements WifiContract.Presenter {
                 case CommConstants.MESSAGE_DEVICE_NAME:
                     mDeviceName = msg.getData().getString(CommConstants.DEVICE_NAME);
                     scanWifi();
-                    mView.enableComm();
+                    mView.setComponentsComm(true);
                     break;
 
                 case CommConstants.MESSAGE_TOAST:
-                    mView.showToast(msg.getData().getString(CommConstants.TOAST));
+                    mView.showToast(msg.getData().getString(CommConstants.TOAST), false);
                     break;
 
                 case CommConstants.CONNECTION_FAILED:
+                    mView.showToast(msg.getData().getString(CommConstants.TOAST), false);
                     closeComm();
                     break;
                 case CommConstants.CONNECTION_LOST:
@@ -131,50 +136,32 @@ public class WifiPresenter implements WifiContract.Presenter {
 
     @Override
     public void setComm(boolean on) {
+        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
         if (mBluetoothAdapter == null) {
-            mView.showToast("Bluetooth not supported");
+            mView.showToast("Bluetooth not supported", false);
             closeComm();
-        } else {
-            if(on) {
-                enableComm();
-            } else {
-                closeComm();
-            }
-        }
-
-    }
-
-    private void enableComm(){
-        if (!mBluetoothAdapter.isEnabled()) {
-            mView.showToast("Bluetooth off, please turn on");
+        } else if (!mBluetoothAdapter.isEnabled()) {
+            mView.showToast("Bluetooth off, please turn on", false);
             closeComm();
-        } else if (mBluetoothAdapter != null) {
-            if (mComm == null) {
-                mComm = new CommService(mHandler);
-            } else {
-                resumeComm();
-            }
-        }
-    }
-
-
-    /**
-     * Performing this check in onResume() covers the case in which BT was
-     * not enabled during onStart(), so we were paused to enable it...
-     * onResume() will be called when ACTION_REQUEST_ENABLE activity returns.
-     */
-    private void resumeComm() {
-        if (mComm != null) {
-            // Only if the state is STATE_NONE, do we know that we haven't started already
-            if (mComm.getState() == CommService.STATE_NONE) {
-                // Start the Bluetooth chat services
-                mComm.start();
-                mView.enableComm();
-            }
+        } else if (on) {
+            enableComm();
         } else {
             closeComm();
         }
     }
+
+    private void enableComm() {
+        if (mComm == null) {
+            mComm = new CommService(mHandler);
+            mComm.start();
+        } else if (mComm.getState() == CommService.STATE_NONE) {
+            // Start the Bluetooth chat services
+            mComm.prepare();
+            mView.setComponentsComm(true);
+        }
+    }
+
 
     /**
      * Close the communication.
@@ -184,7 +171,7 @@ public class WifiPresenter implements WifiContract.Presenter {
             mComm.stop();
             mComm = null;
         }
-        mView.disableComm();
+        mView.setComponentsComm(false);
     }
 
     /**
@@ -195,7 +182,7 @@ public class WifiPresenter implements WifiContract.Presenter {
     private boolean sendMessage(String msg) {
         // Check that we're actually connected before trying anything
         if (mComm.getState() != CommService.STATE_CONNECTED) {
-            mView.disableComm();
+            mView.setComponentsComm(false);
             return false;
         }
 
@@ -222,8 +209,8 @@ public class WifiPresenter implements WifiContract.Presenter {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        if (success) mView.showToast("Wifi networks scanned");
-        else mView.showToast("Couldn't scan the wifi");
+        if (success) mView.showToast("Wifi networks scanned", false);
+        else mView.showToast("Couldn't scan the wifi", false);
     }
 
     private void sendWifisToView(JSONObject jsWifis) {
@@ -241,7 +228,7 @@ public class WifiPresenter implements WifiContract.Presenter {
             mView.populateLsvWifi(listWifis);
         } catch (JSONException e) {
             e.printStackTrace();
-            mView.showToast("Error receiving wifi");
+            mView.showToast("Error receiving wifi", false);
         }
     }
 

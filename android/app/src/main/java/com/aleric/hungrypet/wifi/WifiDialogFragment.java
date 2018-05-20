@@ -84,8 +84,8 @@ public class WifiDialogFragment extends DialogFragment implements WifiContract.V
     }
 
     @Override
-    public void showToast(String msg) {
-        Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
+    public void showToast(String msg, boolean lengthLong){
+        Toast.makeText(getActivity(), msg, lengthLong ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT).show();
     }
 
 }

@@ -34,7 +34,7 @@ public class WifiDialogPresenter implements WifiContract.PresenterDialog {
     private boolean sendMessage(String msg) {
         // Check that we're actually connected before trying anything
         if (mComm.getState() != CommService.STATE_CONNECTED) {
-            mView.showToast(R.string.not_connected + "");
+            mView.showToast(R.string.not_connected + "", false);
             return false;
         }
 
@@ -50,7 +50,7 @@ public class WifiDialogPresenter implements WifiContract.PresenterDialog {
 
     @Override
     public void connectToWifi() {
-        mView.showToast("Connecting ...");
+        mView.showToast("Connecting ...", false);
         //@todo connect to the wifi
     }
 }

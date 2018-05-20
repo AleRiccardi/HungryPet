@@ -150,7 +150,7 @@ public class WifiFragmentOld extends Fragment  {
             // Only if the state is STATE_NONE, do we know that we haven't started already
             if (mChatService.getState() == CommService.STATE_NONE) {
                 // Start the Bluetooth chat services
-                mChatService.start();
+                mChatService.prepare();
             }
         }
     }

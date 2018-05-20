@@ -15,11 +15,9 @@ public interface WifiContract {
 
         boolean isActive();
 
-        void showToast(String msg);
+        void showToast(String msg, boolean lengthLong);
 
-        void disableComm();
-
-        void enableComm();
+        void setComponentsComm(boolean enable);
 
         void populateLsvWifi(List<WifiCell> listWifis);
     }
@@ -28,7 +26,7 @@ public interface WifiContract {
 
         boolean isActive();
 
-        void showToast(String msg, boolean longDuration);
+        void showToast(String msg, boolean lengthLong);
     }
 
     interface Presenter extends BasePresenter {
