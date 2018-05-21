@@ -1,18 +1,26 @@
 package com.aleric.hungrypet.data;
 
 
+import android.annotation.TargetApi;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothHeadset;
+import android.bluetooth.BluetoothManager;
+import android.bluetooth.BluetoothProfile;
 import android.bluetooth.BluetoothSocket;
+import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -22,7 +30,7 @@ import java.util.UUID;
  * incoming connections, a thread for connecting with a device, and a
  * thread for performing data transmissions when connected.
  *
- * @// TODO: 16/05/2018 connectionLost and connectionFailed are called to many time, make sure to stop the connection the first time.
+ * @// TODO: 20/05/2018 in the start() func. starts a communication also if the device it's not connected
  */
 public class CommService {
     // Debugging
@@ -37,7 +45,7 @@ public class CommService {
 
     // Member fields
     private BluetoothAdapter mAdapter;
-    private final Handler mHandler;
+    private Handler mHandler;
 
     private ConnectThread mConnectThread;
     private ConnectedThread mConnectedThread;
@@ -48,6 +56,7 @@ public class CommService {
     public static final int STATE_NONE = 0;       // we're doing nothing
     public static final int STATE_CONNECTING = 1; // now initiating an outgoing connection
     public static final int STATE_CONNECTED = 2;  // now connected to a remote device
+
 
     /**
      * Constructor. Prepares a new BluetoothChat session.
@@ -102,14 +111,17 @@ public class CommService {
         updateUserInterfaceTitle();
     }
 
+
     public void start() {
         mAdapter = BluetoothAdapter.getDefaultAdapter();
+        Set<BluetoothDevice> btManager = mAdapter.getBondedDevices();
         if (mAdapter != null) {
+
             Set<BluetoothDevice> pairedDevices = mAdapter.getBondedDevices();
 
             if (pairedDevices.size() > 0) {
                 for (BluetoothDevice device : pairedDevices) {
-                    if (device.getAddress().equals("B8:27:EB:EE:FC:FF")) {
+                    if (device.getName().equals("HungryPet")) {
                         connect(device);
                     }
                 }

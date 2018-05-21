@@ -91,11 +91,11 @@ public class WifiFragment extends Fragment implements WifiContract.View {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                     if (position >= 0) {
-                        WifiCell wifi = (WifiCell) adapterView.getAdapter().getItem(position);
-                        WifiDialogFragment dialog = WifiDialogFragment.newInstance();
+                        WifiCell wifiCell = (WifiCell) adapterView.getAdapter().getItem(position);
+                        WifiDialogFragment dialogFragment = WifiDialogFragment.newInstance();
+                        mPresenter.startDialog(dialogFragment, wifiCell);
 
-                        mPresenter.startDialog(dialog, wifi);
-                        dialog.show(getFragmentManager().beginTransaction(), "dialog");
+                        dialogFragment.show(getFragmentManager().beginTransaction(), "dialog");
                     }
                 }
             });
@@ -113,7 +113,6 @@ public class WifiFragment extends Fragment implements WifiContract.View {
                     mPresenter.scanWifi();
                 }
             });
-
 
             setComponentsComm(false);
         }

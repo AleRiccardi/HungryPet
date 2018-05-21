@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+
     android:orientation="vertical">
 
     <LinearLayout
@@ -20,7 +21,7 @@
             app:srcCompat="@drawable/simble_wifi" />
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/txv_ssid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -34,7 +35,32 @@
         android:id="@+id/edt_pswd"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="15dp"
         android:hint="@string/password"
-        android:inputType="textPassword" />
+        android:inputType="textPassword"
+        android:padding="15dp" />
+
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/btn_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:text="@string/cancel"
+            android:theme="@style/PrimaryFlatButton"/>
+
+        <Button
+            android:id="@+id/btn_sing_in"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:theme="@style/PrimaryFlatButton"
+            android:text="@string/sing_in" />
+
+    </RelativeLayout>
+
 </LinearLayout>

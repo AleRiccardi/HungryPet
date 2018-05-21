@@ -40,6 +40,6 @@ public interface WifiContract {
 
     interface PresenterDialog extends BasePresenter {
 
-        void connectToWifi();
+        void connectToWifi(String password);
     }
 }

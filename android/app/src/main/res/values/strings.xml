@@ -30,5 +30,6 @@
     <!-- Dialog -->
     <string name="config_configuring">Start configuring …</string>
     <string name="config_fail">Fail to configure Wifi! Please check SSID and/or password and try again.</string>
+    <string name="sing_in">Sing in</string>
 
 </resources>

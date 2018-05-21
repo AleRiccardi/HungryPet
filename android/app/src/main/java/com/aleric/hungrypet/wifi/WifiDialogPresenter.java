@@ -49,8 +49,9 @@ public class WifiDialogPresenter implements WifiContract.PresenterDialog {
     }
 
     @Override
-    public void connectToWifi() {
-        mView.showToast("Connecting ...", false);
+    public void connectToWifi(String password) {
+        mWifi.setPassword(password);
+        mView.showToast("SSID: " + mWifi.getSsid() + ", PSWD: " + mWifi.getPswd(), false);
         //@todo connect to the wifi
     }
 }

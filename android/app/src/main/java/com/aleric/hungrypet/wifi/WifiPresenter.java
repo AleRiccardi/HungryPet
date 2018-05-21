@@ -124,7 +124,6 @@ public class WifiPresenter implements WifiContract.Presenter {
                     break;
 
                 case CommConstants.CONNECTION_FAILED:
-                    mView.showToast(msg.getData().getString(CommConstants.TOAST), false);
                     closeComm();
                     break;
                 case CommConstants.CONNECTION_LOST:
@@ -154,7 +153,7 @@ public class WifiPresenter implements WifiContract.Presenter {
     private void enableComm() {
         if (mComm == null) {
             mComm = new CommService(mHandler);
-            mComm.start();
+
         } else if (mComm.getState() == CommService.STATE_NONE) {
             // Start the Bluetooth chat services
             mComm.prepare();
