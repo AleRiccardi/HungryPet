@@ -9,177 +9,135 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/toolbar"
+        android:gravity="center_vertical|center_horizontal"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical|center_horizontal"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.6"
+            android:gravity="start"
             android:orientation="vertical">
 
-            <RelativeLayout
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="start">
+                android:background="@color/colorPrimary"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="@dimen/margin_medium">
+
+                <ImageView
+                    android:id="@+id/imv_title"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="@dimen/margin_medium"
+                    android:layout_marginRight="@dimen/margin_medium"
+                    android:gravity="center"
+                    android:src="@drawable/ic_ciotola" />
 
                 <TextView
                     android:id="@+id/txv_title"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/main_title_welcome"
-                    android:textColor="@android:color/primary_text_light"
-                    android:textSize="35sp"
-                    android:background="@drawable/title_main"
-                    />
+                    android:elevation="4dp"
+                    android:gravity="center"
+                    android:text="@string/app_name"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/text_large" />
+            </LinearLayout>
 
-                <TextView
-                    android:id="@+id/txv_description"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/txv_title"
-                    android:layout_marginTop="20dp"
-                    android:text="@string/main_text_welcome"
-                    android:textSize="15sp" />
-            </RelativeLayout>
-
-
-            <FrameLayout
-                android:id="@+id/btn_configure"
-                style="@style/Widget.AppCompat.Button.Borderless"
+            <TextView
+                android:id="@+id/txv_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/margin_medium"
-                android:layout_weight="0.5"
-                android:background="@drawable/btn_main_config">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:radius="360dp">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:id="@+id/imv_settings"
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
-                            android:layout_marginEnd="@dimen/margin_large"
-                            android:layout_marginRight="@dimen/margin_large"
-                            android:gravity="center"
-                            android:src="@drawable/ic_settings" />
-
-                        <TextView
-                            android:id="@+id/txv_configure"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:text="@string/btn_config"
-                            android:textAppearance="?android:attr/textAppearanceButton"
-                            android:textColor="@android:color/white"
-                            android:textSize="@dimen/text_ml" />
-                    </LinearLayout>
-
-
-                </RelativeLayout>
-            </FrameLayout>
-
-            <FrameLayout
-                android:id="@+id/btn_manage"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/margin_medium"
-                android:layout_weight="0.2"
-                android:background="@drawable/btn_main_manage">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:radius="360dp">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-
-
-                        <TextView
-                            android:id="@+id/txv_manage"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:text="@string/btn_mange"
-                            android:textColor="@android:color/secondary_text_light"
-                            android:textSize="@dimen/text_tiny"
-                            android:textAppearance="?android:attr/textAppearanceButton"/>
-                    </LinearLayout>
-
-
-                </RelativeLayout>
-            </FrameLayout>
+                android:layout_below="@id/txv_title"
+                android:layout_marginTop="20dp"
+                android:padding="@dimen/margin_medium"
+                android:text="@string/main_text_welcome"
+                android:textSize="@dimen/text_medium" />
         </LinearLayout>
+
+
+        <FrameLayout
+            android:id="@+id/btn_configure"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_medium"
+            android:layout_weight="0.2"
+            android:background="@drawable/btn_main_config">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:radius="360dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/imv_settings"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginEnd="@dimen/margin_large"
+                        android:layout_marginRight="@dimen/margin_large"
+                        android:gravity="center"
+                        android:src="@drawable/ic_settings" />
+
+                    <TextView
+                        android:id="@+id/txv_configure"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="@string/btn_config"
+                        android:textAppearance="?android:attr/textAppearanceButton"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/text_ml" />
+
+                </LinearLayout>
+            </RelativeLayout>
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/btn_manage"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_medium"
+            android:layout_weight="0.1"
+            android:background="@drawable/btn_main_manage">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:radius="360dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/txv_manage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="@string/btn_mange"
+                        android:textAppearance="?android:attr/textAppearanceButton"
+                        android:textColor="@android:color/secondary_text_light"
+                        android:textSize="@dimen/text_tiny" />
+
+                </LinearLayout>
+            </RelativeLayout>
+        </FrameLayout>
 
     </LinearLayout>
 
-    <!--
-    <RelativeLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1">
-
-        <TextView
-            android:id="@+id/txv_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/main_title_welcome"
-            android:textSize="35sp" />
-
-        <TextView
-            android:id="@+id/txv_description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="@string/main_text_welcome"
-            android:textSize="15sp" />
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1">
-
-        <Button
-            android:id="@+id/btn_manage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:text="@string/btn_mange"
-            android:theme="@style/PrimaryFlatButton" />
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:orientation="vertical">
-
-        <Button
-            android:id="@+id/btn_configure"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:text="@string/btn_main_config"
-            android:theme="@style/PrimaryFlatButton" />
-    </RelativeLayout>
--->
 </RelativeLayout>
 
 
