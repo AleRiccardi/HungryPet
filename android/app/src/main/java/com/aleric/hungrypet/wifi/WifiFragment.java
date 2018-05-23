@@ -27,6 +27,7 @@ public class WifiFragment extends Fragment implements WifiContract.View {
 
     // CommConstants
     private static final String TAG = "WifiFragmentOld";
+    private static final String NO_TRIGGER = "no_trigger";
 
     // Variables
     private WifiContract.Presenter mPresenter;
@@ -103,7 +104,8 @@ public class WifiFragment extends Fragment implements WifiContract.View {
             swcStateAction.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    mPresenter.setComm(isChecked);
+                    //@todo fix the recursive changing of the state of the switch every time there's no connection
+                    mPresenter.enableComm(isChecked);
                 }
             });
 
@@ -129,21 +131,20 @@ public class WifiFragment extends Fragment implements WifiContract.View {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mPresenter.setComm(false);
     }
 
     @Override
-    public void showToast(String msg, boolean lengthLong){
+    public void showToast(String msg, boolean lengthLong) {
         Toast.makeText(getActivity(), msg, lengthLong ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT).show();
     }
 
 
     @Override
     public void setComponentsComm(boolean enable) {
-        if(isActive()){
+        if (isActive()) {
             int stateString;
             ColorStateList colorFab;
-            if(enable){
+            if (enable) {
                 stateString = R.string.state_on;
                 colorFab = ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary));
             } else {

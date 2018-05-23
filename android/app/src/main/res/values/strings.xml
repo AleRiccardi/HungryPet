@@ -23,6 +23,7 @@
     <string name="not_connected">You are not connected to a device</string>
 
     <!-- Button -->
+    <string name="btn_mange">Continue and do not configure</string>
     <string name="btn_config">Configure</string>
     <string name="btn_select">Select</string>
     <string name="btn_scan">Scan</string>

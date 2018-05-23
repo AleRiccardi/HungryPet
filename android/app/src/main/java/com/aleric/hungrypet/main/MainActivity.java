@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 
 import com.aleric.hungrypet.R;
 import com.aleric.hungrypet.wifi.WifiActivity;
@@ -19,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
 
-        Button btnConfigure = findViewById(R.id.btn_configure);
+        FrameLayout btnConfigure = findViewById(R.id.btn_configure);
         btnConfigure.setOnClickListener((new View.OnClickListener() {
             @Override
             public void onClick(View view) {

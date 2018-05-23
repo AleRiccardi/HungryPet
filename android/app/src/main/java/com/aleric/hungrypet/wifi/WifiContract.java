@@ -1,5 +1,7 @@
 package com.aleric.hungrypet.wifi;
 
+import android.os.Handler;
+
 import com.aleric.hungrypet.BasePresenter;
 import com.aleric.hungrypet.BaseView;
 import com.aleric.hungrypet.data.WifiCell;
@@ -11,11 +13,10 @@ import java.util.List;
 
 public interface WifiContract {
 
+
     interface View extends BaseView<Presenter> {
 
         boolean isActive();
-
-        void showToast(String msg, boolean lengthLong);
 
         void setComponentsComm(boolean enable);
 
@@ -24,14 +25,15 @@ public interface WifiContract {
 
     interface ViewDialog extends BaseView<PresenterDialog> {
 
-        boolean isActive();
+        void dismiss();
 
-        void showToast(String msg, boolean lengthLong);
+        boolean isActive();
     }
+
 
     interface Presenter extends BasePresenter {
 
-        void setComm(boolean on);
+        void enableComm(boolean enable);
 
         void scanWifi();
 

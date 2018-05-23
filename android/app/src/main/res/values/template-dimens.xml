@@ -13,9 +13,10 @@
     <dimen name="vertical_page_margin">@dimen/margin_medium</dimen>
 
     <!-- ## Text ## -->
-    <dimen name="text_tiny">8sp</dimen>
+    <dimen name="text_tiny">14sp</dimen>
     <dimen name="text_small">16sp</dimen>
     <dimen name="text_medium">20sp</dimen>
+    <dimen name="text_ml">27sp</dimen>
     <dimen name="text_large">32sp</dimen>
     <dimen name="text_huge">64sp</dimen>
 

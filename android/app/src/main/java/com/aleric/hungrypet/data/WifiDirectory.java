@@ -3,8 +3,6 @@ package com.aleric.hungrypet.data;
 public class WifiDirectory {
     public static WifiDirectory INSTANCE = null;
     private WifiCell mWifi = null;
-    private CommService mComm = null;
-
     private WifiDirectory(){}
 
     public static WifiDirectory getInstance(){
@@ -18,15 +16,8 @@ public class WifiDirectory {
         mWifi = wifi;
     }
 
-    public void setComm(CommService comm){
-        mComm = comm;
-    }
-
     public WifiCell getWifi() {
         return mWifi;
     }
 
-    public CommService getComm() {
-        return mComm;
-    }
 }

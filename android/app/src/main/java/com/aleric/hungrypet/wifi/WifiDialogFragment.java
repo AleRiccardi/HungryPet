@@ -1,17 +1,11 @@
 package com.aleric.hungrypet.wifi;
 
-
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,7 +13,7 @@ import android.widget.Toast;
 import com.aleric.hungrypet.R;
 import com.aleric.hungrypet.data.WifiDirectory;
 
-public class WifiDialogFragment extends DialogFragment implements WifiContract.ViewDialog{
+public class WifiDialogFragment extends DialogFragment implements WifiContract.ViewDialog {
     private static final String TAG = "WifiDialogFragment";
     private static final String DIALOG_PRESENTER = "presenter";
     private static final String DIALOG_WIFI = "wificell";
@@ -85,12 +79,10 @@ public class WifiDialogFragment extends DialogFragment implements WifiContract.V
         }));
 
 
-        txvSsid .setText(ssid);
+        txvSsid.setText(ssid);
 
         return view;
     }
-
-
 
     @Override
     public void onResume() {
@@ -98,7 +90,12 @@ public class WifiDialogFragment extends DialogFragment implements WifiContract.V
     }
 
     @Override
-    public void showToast(String msg, boolean lengthLong){
+    public void dismiss() {
+        dismiss();
+    }
+
+    @Override
+    public void showToast(String msg, boolean lengthLong) {
         Toast.makeText(getActivity(), msg, lengthLong ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT).show();
     }
 

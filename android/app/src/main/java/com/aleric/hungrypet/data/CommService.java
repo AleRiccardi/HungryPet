@@ -1,26 +1,18 @@
 package com.aleric.hungrypet.data;
 
 
-import android.annotation.TargetApi;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothHeadset;
-import android.bluetooth.BluetoothManager;
-import android.bluetooth.BluetoothProfile;
 import android.bluetooth.BluetoothSocket;
-import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.RequiresApi;
 import android.util.Log;
 
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -111,8 +103,14 @@ public class CommService {
         updateUserInterfaceTitle();
     }
 
+    public void setHandler(Handler handler){
+        mHandler = handler;
+    }
+
 
     public void start() {
+        prepare();
+
         mAdapter = BluetoothAdapter.getDefaultAdapter();
         Set<BluetoothDevice> btManager = mAdapter.getBondedDevices();
         if (mAdapter != null) {
@@ -186,7 +184,7 @@ public class CommService {
         mConnectedThread.start();
 
         // Send the name of the connected device back to the UI Activity
-        Message msg = mHandler.obtainMessage(CommConstants.MESSAGE_DEVICE_NAME);
+        Message msg = mHandler.obtainMessage(CommConstants.MESSAGE_DEVICE_CONNECTED);
         Bundle bundle = new Bundle();
         bundle.putString(CommConstants.DEVICE_NAME, device.getName());
         msg.setData(bundle);
