@@ -20,7 +20,7 @@ public interface WifiContract {
 
         void setComponentsComm(boolean enable);
 
-        void populateLsvWifi(List<WifiCell> listWifis);
+        void populateLsvWifi(List<WifiCell> listWifiNet);
     }
 
     interface ViewDialog extends BaseView<PresenterDialog> {
@@ -35,13 +35,13 @@ public interface WifiContract {
 
         void enableComm(boolean enable);
 
-        void scanWifi();
+        boolean scanWifi();
 
         void startDialog(WifiContract.ViewDialog dialog, WifiCell wifi);
     }
 
     interface PresenterDialog extends BasePresenter {
 
-        void connectToWifi(String password);
+        boolean connectToWifi(String password);
     }
 }

@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".wifi.WifiActivity"
     android:orientation="vertical">
 
     <LinearLayout
@@ -51,14 +52,14 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:text="@string/cancel"
-            android:theme="@style/PrimaryFlatButton"/>
+            android:theme="@style/button_primary_flat"/>
 
         <Button
             android:id="@+id/btn_sing_in"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:theme="@style/PrimaryFlatButton"
+            android:theme="@style/button_primary_flat"
             android:text="@string/sing_in" />
 
     </RelativeLayout>

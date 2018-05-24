@@ -58,7 +58,6 @@ public class WifiDialogPresenter implements WifiContract.PresenterDialog {
                             break;
                         case CommService.STATE_NONE:
                             Log.i(TAG, "Not connected");
-                            mCommDir.closeComm();
                             break;
                     }
                     break;
@@ -79,9 +78,7 @@ public class WifiDialogPresenter implements WifiContract.PresenterDialog {
                         String action = (String) json.get("action");
 
                         // Possible actions from the HungryPet device
-                        if (action.equals(CommDirectory.A_WIFI_GET)) {
-                            // nothing
-                        } else if (action.equals(CommDirectory.A_WIFI_SET)) {
+                        if (action.equals(CommDirectory.A_WIFI_SET)) {
                             //@todo device connected to wifi
                             mView.showToast("Connected to wifi", false);
                             mView.dismiss();
@@ -104,19 +101,28 @@ public class WifiDialogPresenter implements WifiContract.PresenterDialog {
                     break;
 
                 case CommConstants.CONNECTION_FAILED:
-                    mCommDir.closeComm();
                     break;
                 case CommConstants.CONNECTION_LOST:
-                    mCommDir.closeComm();
                     break;
             }
         }
     };
 
     @Override
-    public void connectToWifi(String password) {
+    public boolean connectToWifi(String password) {
         mWifi.setPassword(password);
-        mView.showToast("Connecting", false);
-        //@todo connect to the wifi
+        boolean success = false;
+        try {
+            String jsScanMsg = new JSONObject()
+                    .put("action", CommDirectory.A_WIFI_SET)
+                    .put("content", new JSONObject()
+                            .put("ssid", mWifi.getSsid())
+                            .put("pswd", mWifi.getPswd()))
+                    .toString();
+            success = mCommDir.sendMessage(jsScanMsg);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return success;
     }
 }

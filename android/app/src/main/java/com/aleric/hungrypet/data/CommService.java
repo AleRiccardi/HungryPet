@@ -80,37 +80,12 @@ public class CommService {
         return mState;
     }
 
-    /**
-     * Prepare the chat service. Specifically prepare AcceptThread to begin a
-     * session in listening (server) mode. Called by the Activity onResume()
-     */
-    public synchronized void prepare() {
-        Log.d(TAG, "prepare");
-
-        // Cancel any thread attempting to make a connection
-        if (mConnectThread != null) {
-            mConnectThread.cancel();
-            mConnectThread = null;
-        }
-
-        // Cancel any thread currently running a connection
-        if (mConnectedThread != null) {
-            mConnectedThread.cancel();
-            mConnectedThread = null;
-        }
-
-        // Update UI title
-        updateUserInterfaceTitle();
-    }
-
     public void setHandler(Handler handler){
         mHandler = handler;
     }
 
 
     public void start() {
-        prepare();
-
         mAdapter = BluetoothAdapter.getDefaultAdapter();
         Set<BluetoothDevice> btManager = mAdapter.getBondedDevices();
         if (mAdapter != null) {
@@ -377,8 +352,10 @@ public class CommService {
                     // Read from the InputStream
                     bytes = mmInStream.read(buffer);
                     // Send the obtained bytes to the UI Activity
-                    mHandler.obtainMessage(CommConstants.MESSAGE_READ, bytes, -1, buffer)
-                            .sendToTarget();
+                    if(bytes != 0) {
+                        mHandler.obtainMessage(CommConstants.MESSAGE_READ, bytes, -1, buffer)
+                                .sendToTarget();
+                    }
 
                 } catch (IOException e) {
                     Log.e(TAG, "disconnected", e);

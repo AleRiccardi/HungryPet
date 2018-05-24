@@ -19,7 +19,6 @@ import com.aleric.hungrypet.main.MainActivity;
 import com.aleric.hungrypet.util.ActivityUtils;
 
 /**
- * @todo understand why the presenter disconnect the communication
  */
 public class WifiActivity extends AppCompatActivity {
 
@@ -45,12 +44,12 @@ public class WifiActivity extends AppCompatActivity {
         setSupportActionBar(myToolbar);
 
         WifiFragment wifiFragment =
-                (WifiFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
+                (WifiFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_cont_wifi);
         if (wifiFragment == null) {
             // Create the fragment
             wifiFragment = WifiFragment.newInstance();
             ActivityUtils.addFragmentToActivity(
-                    getSupportFragmentManager(), wifiFragment, R.id.contentFrame);
+                    getSupportFragmentManager(), wifiFragment, R.id.fragment_cont_wifi);
         }
 
         // Check if it's a new view

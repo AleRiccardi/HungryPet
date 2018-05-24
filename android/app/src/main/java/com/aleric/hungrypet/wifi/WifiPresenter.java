@@ -53,29 +53,26 @@ public class WifiPresenter implements WifiContract.Presenter {
         }
     }
 
+
     @Override
     public void enableComm(boolean enable) {
         if (enable && mCommDir.getState() != CommService.STATE_CONNECTED) {
-            if (!mCommDir.restartComm()) {
+            if (!mCommDir.restartCommunication()) {
                 startCommunication();
             }
-        } else if (mCommDir.getState() != CommService.STATE_NONE){
+        } else if (!enable) {
             mCommDir.closeComm();
         }
     }
 
-    private void startCommunication(){
-        switch (mCommDir.setComm(mHandler)) {
+    private void startCommunication() {
+        switch (mCommDir.setCommunication(mHandler)) {
             case CommDirectory.E_BT_NOT_SUPPORTED:
                 mView.showToast("Bluetooth not supported", false);
                 mView.setComponentsComm(false);
                 break;
             case CommDirectory.E_BT_OFF:
                 mView.showToast("Bluetooth off, please turn on", false);
-                mView.setComponentsComm(false);
-                break;
-            case CommDirectory.E_BT_ERROR:
-                mView.showToast("Bluetooth error, restart the application", false);
                 mView.setComponentsComm(false);
                 break;
         }
@@ -104,7 +101,7 @@ public class WifiPresenter implements WifiContract.Presenter {
                             break;
                         case CommService.STATE_NONE:
                             Log.i(TAG, "Not connected");
-                            if (mCommDir.closeComm()) mView.setComponentsComm(false);
+                            mView.setComponentsComm(false);
                             mView.showToast("Not connected", false);
                             break;
                     }
@@ -127,7 +124,7 @@ public class WifiPresenter implements WifiContract.Presenter {
 
                         // Possible actions from the HungryPet device
                         if (action.equals(CommDirectory.A_WIFI_GET)) {
-                            sendWifisToView(json);
+                            sendWifiToView(json);
                         } else if (action.equals(CommDirectory.A_WIFI_SET)) {
                             //@todo device connected to wifi
                             mView.showToast("Connected to wifi", false);
@@ -152,10 +149,10 @@ public class WifiPresenter implements WifiContract.Presenter {
                     break;
 
                 case CommConstants.CONNECTION_FAILED:
-                    if (mCommDir.closeComm()) mView.setComponentsComm(false);
+                    mView.setComponentsComm(false);
                     break;
                 case CommConstants.CONNECTION_LOST:
-                    if (mCommDir.closeComm()) mView.setComponentsComm(false);
+                    mView.setComponentsComm(false);
                     break;
             }
         }
@@ -166,7 +163,7 @@ public class WifiPresenter implements WifiContract.Presenter {
      * Scan the wifi and display in the ListView of the view.
      */
     @Override
-    public void scanWifi() {
+    public boolean scanWifi() {
         boolean success = false;
         try {
             String jsScanMsg = new JSONObject()
@@ -175,23 +172,23 @@ public class WifiPresenter implements WifiContract.Presenter {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        if (success) mView.showToast("Wifi networks scanned", false);
-        else mView.showToast("Couldn't scan the wifi", false);
+
+        return success;
     }
 
-    private void sendWifisToView(JSONObject jsWifis) {
-        JSONArray arWifis = jsWifis.optJSONArray("content");
-        List<WifiCell> listWifis = new ArrayList<>();
+    private void sendWifiToView(JSONObject jsWifiNetworks) {
+        JSONArray arWifiNet = jsWifiNetworks.optJSONArray("content");
+        List<WifiCell> listWifiNet = new ArrayList<>();
         try {
-            for (int i = 0; i < arWifis.length(); i++) {
-                JSONObject jsWifi = arWifis.getJSONObject(i);
+            for (int i = 0; i < arWifiNet.length(); i++) {
+                JSONObject jsWifi = arWifiNet.getJSONObject(i);
                 String ssid = jsWifi.get("ssid").toString();
                 String encryption = jsWifi.get("encryption").toString();
 
                 WifiCell wifi = new WifiCell(ssid, encryption);
-                listWifis.add(wifi);
+                listWifiNet.add(wifi);
             }
-            mView.populateLsvWifi(listWifis);
+            mView.populateLsvWifi(listWifiNet);
         } catch (JSONException e) {
             e.printStackTrace();
             mView.showToast("Error receiving wifi", false);

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -95,7 +96,6 @@ public class WifiFragment extends Fragment implements WifiContract.View {
                         WifiCell wifiCell = (WifiCell) adapterView.getAdapter().getItem(position);
                         WifiDialogFragment dialogFragment = WifiDialogFragment.newInstance();
                         mPresenter.startDialog(dialogFragment, wifiCell);
-
                         dialogFragment.show(getFragmentManager().beginTransaction(), "dialog");
                     }
                 }
@@ -104,7 +104,6 @@ public class WifiFragment extends Fragment implements WifiContract.View {
             swcStateAction.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    //@todo fix the recursive changing of the state of the switch every time there's no connection
                     mPresenter.enableComm(isChecked);
                 }
             });
@@ -112,7 +111,11 @@ public class WifiFragment extends Fragment implements WifiContract.View {
             fabRefresh.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mPresenter.scanWifi();
+                    if(mPresenter.scanWifi()){
+                        Snackbar.make(v, "Scanned new wifi from the HungryPet device", Snackbar.LENGTH_LONG).show();
+                    } else {
+                        showToast("Couldn't scan the the wifi networks", false);
+                    }
                 }
             });
 
@@ -123,21 +126,24 @@ public class WifiFragment extends Fragment implements WifiContract.View {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onStart() {
+        super.onStart();
         mPresenter.start();
     }
+
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        mPresenter.enableComm(false);
     }
 
     @Override
     public void showToast(String msg, boolean lengthLong) {
-        Toast.makeText(getActivity(), msg, lengthLong ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT).show();
+        if(getActivity() != null) {
+            Toast.makeText(getActivity(), msg, lengthLong ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT).show();
+        }
     }
-
 
     @Override
     public void setComponentsComm(boolean enable) {
@@ -165,9 +171,9 @@ public class WifiFragment extends Fragment implements WifiContract.View {
 
     }
 
-    public void populateLsvWifi(List<WifiCell> listWifis) {
+    public void populateLsvWifi(List<WifiCell> listWifiNet) {
         mWifiAdapter.clear();
-        mWifiAdapter.addAll(listWifis);
+        mWifiAdapter.addAll(listWifiNet);
         fabRefresh.setEnabled(true);
     }
 

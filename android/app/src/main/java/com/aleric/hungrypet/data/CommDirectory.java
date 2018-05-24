@@ -14,7 +14,6 @@ public class CommDirectory {
     public static final int E_NONE = 0;
     public static final int E_BT_NOT_SUPPORTED = 1;
     public static final int E_BT_OFF = 2;
-    public static final int E_BT_ERROR = 3;
     /**
      * Stati instance of the class
      */
@@ -34,14 +33,12 @@ public class CommDirectory {
         return instance;
     }
 
-    public int setComm(Handler handler) {
+    public int setCommunication(Handler handler) {
         BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         if (bluetoothAdapter == null) {
-            closeComm();
             return E_BT_NOT_SUPPORTED;
         } else if (!bluetoothAdapter.isEnabled()) {
-            closeComm();
             return E_BT_OFF;
         } else {
             if (mComm == null) {
@@ -60,7 +57,7 @@ public class CommDirectory {
         mComm.setHandler(handler);
     }
 
-    public boolean restartComm() {
+    public boolean restartCommunication() {
         if (mComm == null) {
             return false;
         } else if (mComm.getState() == CommService.STATE_NONE) {
@@ -71,7 +68,6 @@ public class CommDirectory {
             return (mComm.getState() == CommService.STATE_CONNECTED);
         }
     }
-
 
     /**
      * Close the communication.
