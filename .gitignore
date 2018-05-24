@@ -1,3 +1,7 @@
 raspberry/proj/bt.py
 .DS_Store
+.idea
 .idea/*
+android/
+arduino/
+raspberry/.DS_Store

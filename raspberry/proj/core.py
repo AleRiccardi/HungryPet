@@ -1,4 +1,4 @@
-from .bt import BlueWifiConf
+from .BluetoothConn import BluetoothConn
 
 
 class Core:
@@ -8,10 +8,10 @@ class Core:
 
     def run(self):
         val = False
-        btConf = BlueWifiConf()
+        btConf = BluetoothConn()
 
         while not val:
-            btConf.connect()
-            val = btConf.listen_data()
+            btConf.bt_connection()
+            val = btConf.run()
 
         print("Finish")
