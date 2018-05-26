@@ -33,4 +33,21 @@
     <string name="config_fail">Fail to configure Wifi! Please check SSID and/or password and try again.</string>
     <string name="sing_in">Sing in</string>
 
+    <!-- ## InitDevice ## -->
+    <string name="initialize">Initialize</string>
+
+    <!-- ## Core ## -->
+    <string name="nav_core_title">Core</string>
+    <string name="nav_core_desc">Core header</string>
+    <string name="nav_core_subtitle">Select a section</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="dashboard">Dashboard</string>
+    <string name="schedule">Schedule</string>
+    <string name="settings">Settings</string>
+
+    <!-- ~ Dashboard ~ -->
+
+
 </resources>

@@ -65,7 +65,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_medium"
-            android:layout_weight="0.2"
+            android:layout_weight="0.3"
             android:background="@drawable/btn_main_config">
 
             <RelativeLayout
@@ -86,7 +86,7 @@
                         android:layout_marginEnd="@dimen/margin_large"
                         android:layout_marginRight="@dimen/margin_large"
                         android:gravity="center"
-                        android:src="@drawable/ic_settings" />
+                        android:src="@drawable/ic_configure" />
 
                     <TextView
                         android:id="@+id/txv_configure"
@@ -103,7 +103,7 @@
         </FrameLayout>
 
         <FrameLayout
-            android:id="@+id/btn_manage"
+            android:id="@+id/btn_dashboard"
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

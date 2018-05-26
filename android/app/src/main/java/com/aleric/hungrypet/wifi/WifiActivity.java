@@ -18,11 +18,7 @@ import com.aleric.hungrypet.R;
 import com.aleric.hungrypet.main.MainActivity;
 import com.aleric.hungrypet.util.ActivityUtils;
 
-/**
- */
 public class WifiActivity extends AppCompatActivity {
-
-    private static final String CURRENT_FILTERING_KEY = "CURRENT_FILTERING_KEY";
 
     public static final String TAG = "WifiActivity";
 

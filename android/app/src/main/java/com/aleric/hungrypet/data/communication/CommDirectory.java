@@ -1,9 +1,7 @@
-package com.aleric.hungrypet.data;
+package com.aleric.hungrypet.data.communication;
 
 import android.bluetooth.BluetoothAdapter;
 import android.os.Handler;
-
-import com.aleric.hungrypet.BaseView;
 
 public class CommDirectory {
 

@@ -1,13 +1,8 @@
 package com.aleric.hungrypet.wifi;
 
-import android.os.Handler;
-
 import com.aleric.hungrypet.BasePresenter;
 import com.aleric.hungrypet.BaseView;
-import com.aleric.hungrypet.data.WifiCell;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.aleric.hungrypet.data.wifi.WifiCell;
 
 import java.util.List;
 
@@ -28,6 +23,16 @@ public interface WifiContract {
         void dismiss();
 
         boolean isActive();
+
+        /**
+         * Set the message of the TextView Status
+         *
+         * @param state with 0 -> Connecting, 1 -> Connected, 2 -> not Connected
+         */
+        void setStatus(int state);
+
+        void startDashboardActivity();
+
     }
 
 
@@ -43,5 +48,6 @@ public interface WifiContract {
     interface PresenterDialog extends BasePresenter {
 
         boolean connectToWifi(String password);
+
     }
 }

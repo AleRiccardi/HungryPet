@@ -1,0 +1,6 @@
+package com.aleric.hungrypet.initDevice;
+
+import android.support.v7.app.AppCompatActivity;
+
+public class InitDeviceActivity extends AppCompatActivity {
+}

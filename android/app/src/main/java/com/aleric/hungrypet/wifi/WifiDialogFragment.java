@@ -1,5 +1,6 @@
 package com.aleric.hungrypet.wifi;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
@@ -11,7 +12,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aleric.hungrypet.R;
-import com.aleric.hungrypet.data.WifiDirectory;
+import com.aleric.hungrypet.core.CoreActivity;
+import com.aleric.hungrypet.data.wifi.WifiDirectory;
 
 public class WifiDialogFragment extends DialogFragment implements WifiContract.ViewDialog {
     private static final String TAG = "WifiDialogFragment";
@@ -21,11 +23,8 @@ public class WifiDialogFragment extends DialogFragment implements WifiContract.V
     private WifiContract.PresenterDialog mPresenter;
 
     // Layout Views
-    private TextView txvSsid;
     private EditText edtPassword;
-
-    private Button btnSingIn;
-    private Button btnCancel;
+    private TextView txvStatus;
 
     public WifiDialogFragment() {
     }
@@ -38,6 +37,19 @@ public class WifiDialogFragment extends DialogFragment implements WifiContract.V
     @Override
     public boolean isActive() {
         return isAdded();
+    }
+
+
+    @Override
+    public void setStatus(int state) {
+        String msg = state == 0 ? "Connecting ..." : state == 1 ? "Connected" : "Not connected";
+        txvStatus.setText(msg);
+    }
+
+    @Override
+    public void startDashboardActivity() {
+        Intent intent = new Intent(getActivity(), CoreActivity.class);
+        startActivity(intent);
     }
 
     @Override
@@ -58,11 +70,12 @@ public class WifiDialogFragment extends DialogFragment implements WifiContract.V
         View view = inflater.inflate(R.layout.dialog_wifi, container, false);
         WifiDirectory dir = WifiDirectory.getInstance();
         String ssid = dir.getWifi().getSsid();
-
-        txvSsid = view.findViewById(R.id.txv_ssid);
+        Button btnSingIn = view.findViewById(R.id.btn_sing_in);
+        Button btnCancel = view.findViewById(R.id.btn_cancel);
+        TextView txvSsid = view.findViewById(R.id.txv_ssid);
         edtPassword = view.findViewById(R.id.edt_pswd);
-        btnSingIn = view.findViewById(R.id.btn_sing_in);
-        btnCancel = view.findViewById(R.id.btn_cancel);
+        txvStatus = view.findViewById(R.id.txv_status);
+
 
         btnSingIn.setOnClickListener((new View.OnClickListener() {
             @Override
@@ -89,10 +102,6 @@ public class WifiDialogFragment extends DialogFragment implements WifiContract.V
         super.onResume();
     }
 
-    @Override
-    public void dismiss() {
-        dismiss();
-    }
 
     @Override
     public void showToast(String msg, boolean lengthLong) {

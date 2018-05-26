@@ -19,7 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aleric.hungrypet.R;
-import com.aleric.hungrypet.data.WifiCell;
+import com.aleric.hungrypet.data.wifi.WifiCell;
 
 import java.util.ArrayList;
 import java.util.List;

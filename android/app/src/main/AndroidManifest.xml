@@ -11,15 +11,28 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        >
+        android:theme="@style/AppTheme">
 
-        <activity android:name=".main.MainActivity">
+        <activity
+            android:name=".main.MainActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".wifi.WifiActivity" />
+
+        <activity
+            android:name=".initDevice.InitDeviceActivity"
+            android:label="@string/initialize"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".core.CoreActivity"
+            android:label="@string/nav_core_title"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 </manifest>
