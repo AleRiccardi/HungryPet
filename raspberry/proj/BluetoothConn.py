@@ -1,26 +1,31 @@
 import bluetooth
+import json
 import time
+
 import os
 import json
 import RPi.GPIO as GPIO
 import subprocess
 from .WifiScan import WifiScan
 
+
 class BluetoothConn:
-    TAG = 'BlueWifiConf - '
+    # General strings
+    TAG = 'BlueWifiConf ~ '
     PATH_WIFI = '/etc/wpa_supplicant/wpa_supplicant.conf'
     CMD_SUDO = 'sudo '
-
     NOT_SET = '<Not Set>'
 
+    # STATUS
     A_WIFI_GET = 'wifi-get'
     A_WIFI_SET = 'wifi-set'
     A_BT_DISCONNECT = 'bt-quit'
-    S_WIFI_CONNECTION = 'e_no_wifi_connection'
-    E_NO_WIFI_CONNECTION = 'e_no_wifi_connection'
-    JS_WIFI_CONNECTED = '{ "action": "' + S_WIFI_CONNECTION + '", "content": "none" }'
-    JS_NO_WIFI_CONNECTED = '{ "action": "' + E_NO_WIFI_CONNECTION + '", "content": "none" }'
 
+    # JSON
+    JS_WIFI_CONNECTED = '{ "action": "' + A_WIFI_SET + '", "content": "success" }'
+    JS_NO_WIFI_CONNECTED = '{ "action": "' + A_WIFI_SET + '", "content": "fail" }'
+
+    # Variables
     bluectl = 0
     networks = 0
     socket = 0
@@ -29,18 +34,20 @@ class BluetoothConn:
     address = 0
     work = True
 
+    def __init__(self):
+        GPIO.setwarnings(False)
+
     def bt_connection(self):
         """Connection to bluetooth device."""
         GPIO.setmode(GPIO.BOARD)
         GPIO.setup(40, GPIO.OUT)
-        GPIO.setwarnings(False)
         self.socket = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
         self.port = 1
         self.socket.bind(('', self.port))
         self.socket.listen(1)
-        self.print_msg('Listening fot connection')
+        self.print_msg('Listening for connection')
         self.connection, self.address = self.socket.accept()
-        # CONNECTED #
+        # After that the device is CONNECTED #
         self.print_msg('Accepted connection from ' + str(self.address))
 
     def run(self):
@@ -50,11 +57,11 @@ class BluetoothConn:
                 data = self.connection.recv(1024)
                 data = data.decode()
                 data = str(data.replace('\\r\\n', ''))
-                print(data)
+                # print(data)
 
                 if self.is_json(str(data)):
                     data = json.loads(str(data))
-                    self.print_msg(data)
+                    # self.print_msg(data)
                     # selection of action
                     try:
                         if data['action'] == self.A_WIFI_GET:
@@ -65,12 +72,17 @@ class BluetoothConn:
                             ssid = data['content']['ssid']
                             pswd = data['content']['pswd']
                             ip_address = self.connect_to_wifi(ssid, pswd)
-                            if ip_address != self.E_NO_WIFI_CONNECTION:
-                                self.print_msg('Connected to SSID: ' + ssid)
-                                self.connection.send(self.JS_WIFI_CONNECTED)
+
+                            if ip_address != self.NOT_SET:
+                                self.print_msg('Connected to SSID: ' + ssid + '\n')
+                                self.send_device_info_to_bt(ip_address)
+
                             else:
-                                self.print_msg('Couldn\'t connect to SSID: ' + ssid)
-                                self.connection.send(self.JS_NO_WIFI_CONNECTED)
+                                self.print_msg('Couldn\'t connect to SSID: ' + ssid + '\n')
+                                data['action'] = self.A_WIFI_SET
+                                data['content'] = {'status': "fail"}
+                                json_data = json.dumps(data)
+                                self.connection.send(json_data)
 
                         elif data['action'] == self.A_BT_DISCONNECT:
                             # @todo Close the connection
@@ -94,24 +106,45 @@ class BluetoothConn:
 
             if len(json_object) == 0:
                 return False
+
         except ValueError as err:
             self.print_msg(err)
             return False
+
         return True
 
     def send_wifi_to_bt(self):
         wifi_sc = WifiScan()
         connect = wifi_sc.scan()
         result = wifi_sc.parse(connect)
-        js_response = '{ "action": "' + self.A_WIFI_GET + '", "content": ['
+        js_response = '{"action": "' + self.A_WIFI_GET + '", "content": ['
         for wifi in result:
-            js_wifi = '{ "ssid": "' + wifi['essid'] + '", "encryption": "' + wifi['encryption'] + '"}'
+            js_wifi = '{"ssid": "' + wifi['essid'] + '", "encryption": "' + wifi['encryption'] + '"}'
             js_response += ' ' + js_wifi + ','
 
         js_response = js_response[:-1]
         js_response += ']}'
-        print(js_response)
+        # print(js_response)
         self.connection.send(str(js_response))
+
+    def send_device_info_to_bt(self, ip_address):
+        mac_address = self.NOT_SET
+        p = subprocess.Popen(['ifconfig', 'eth0'], stdout=subprocess.PIPE,
+                             stderr=subprocess.PIPE)
+
+        out, err = p.communicate()
+
+        for l in out.split(b'\n'):
+            if l.strip().startswith(b'ether '):
+                mac_address = l.strip().split(b'ether ')[1].split(b' ')[0]
+
+        if mac_address != self.NOT_SET and ip_address != self.NOT_SET:
+            data = {'action': self.A_WIFI_SET,
+                    'content': {'status': "success",
+                                'mac': mac_address.decode(),
+                                'ip': ip_address.decode()}}
+            json_data = json.dumps(data)
+            self.connection.send(json_data)
 
     def connect_to_wifi(self, ssid, psk):
         """
@@ -119,6 +152,10 @@ class BluetoothConn:
         and trying to establish a connection.
         Return the IP address if success or
         """
+        ip_address = self.NOT_SET
+
+        if len(psk) < 8:
+            return ip_address
 
         f = open('wifi.conf', 'w')
         f.write('ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev\n')
@@ -133,25 +170,28 @@ class BluetoothConn:
         f.close()
         time.sleep(1)
 
+        # Place the file with the new wifi credential
         cmd = self.CMD_SUDO + ' mv wifi.conf ' + self.PATH_WIFI
         cmd_result = os.system(cmd)
-        self.print_msg('Wifi file placed:' + str(cmd_result))
+        if cmd_result != 0:
+            return ip_address
+        self.print_msg('Wifi file placed')
         time.sleep(1)
 
+        # Configure the new wifi
         cmd = 'wpa_cli -i wlan0 reconfigure'
         cmd_result = os.system(cmd)
-        self.print_msg('Wifi activation ...' + str(cmd_result))
-        time.sleep(15)
+        if cmd_result != 0:
+            return ip_address
+        self.print_msg('Wifi activating ...')
+        time.sleep(12)
 
-        p = subprocess.Popen(['ifconfig', 'wlan0'], stdout=subprocess.PIPE,
-                             stderr=subprocess.PIPE)
-
+        # Get the new configuration
+        args = ["dig", "+short", "myip.opendns.com", "@resolver1.opendns.com"]
+        # args = ["curl", "-s", "checkip.dyndns.org", "|", "sed", "-e", ",'s/.*Current IP Address: //' -e 's/<.*$//'"]
+        p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         out, err = p.communicate()
-        ip_address = self.NOT_SET
-
-        for l in out.split(b'\n'):
-            if l.strip().startswith(b'inet '):
-                ip_address = l.strip().split(b'inet ')[1].split(b' ')[0]
+        ip_address = out.strip().split(b'<')[0]
 
         return ip_address
 
