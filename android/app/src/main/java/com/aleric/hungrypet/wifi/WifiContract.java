@@ -31,7 +31,7 @@ public interface WifiContract {
          */
         void setStatus(int state);
 
-        void startDashboardActivity();
+        void startInitActivity();
 
     }
 

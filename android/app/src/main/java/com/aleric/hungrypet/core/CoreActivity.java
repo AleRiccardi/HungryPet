@@ -11,10 +11,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import com.aleric.hungrypet.R;
+import com.aleric.hungrypet.data.Device;
+import com.aleric.hungrypet.data.DeviceDirectory;
 
-public class CoreActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class CoreActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +36,20 @@ public class CoreActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        View headerLayout = navigationView.getHeaderView(0); // 0-index header
+
+
+        TextView txvNavTitle = headerLayout.findViewById(R.id.txv_nav_title);
+        TextView txvNavSubtitle = headerLayout.findViewById(R.id.txv_nav_subtitle);
+
+        Device device = DeviceDirectory.getInstance().getDevice();
+        if (device != null) {
+            txvNavTitle.setText(device.getName());
+            txvNavSubtitle.setText(device.getIp());
+        } else {
+            txvNavTitle.setText("Title");
+            txvNavSubtitle.setText("Subtitle");
+        }
         //add this line to display menu1 when the activity is loaded
         displaySelectedScreen(R.id.nav_dashboard);
     }

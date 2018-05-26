@@ -24,7 +24,7 @@ public class DbDeviceHelper extends SQLiteOpenHelper {
     }
 
 
-    public static final String CREATE_TABLE_DEVICE = "CREATE TABLE IF NOT EXISTS "
+    public static final String CREATE_TABLE_DEVICE = "CREATE TABLE "
             + Device.TABLE_NAME + " (" +
             Device._MAC + " VARCHAR(12) NOT NULL, " +
             Device.COLUMN_NAME + " VARCHAR(30), " +

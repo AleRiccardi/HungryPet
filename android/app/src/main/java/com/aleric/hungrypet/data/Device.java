@@ -14,7 +14,7 @@ import java.util.Date;
 public class Device {
 
     public static final String TABLE_NAME = "device";
-    public static final String _MAC = "id";
+    public static final String _MAC = "mac";
     public static final String COLUMN_NAME = "nameD";
     public static final String COLUMN_IP = "ip";
     public static final String COLUMN_UPDATE = "dUpdate";

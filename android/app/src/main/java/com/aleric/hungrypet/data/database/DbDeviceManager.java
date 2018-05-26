@@ -26,23 +26,23 @@ public class DbDeviceManager {
     }
 
 
-    public boolean addDevice(Device person) {
+    public boolean addDevice(Device device) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        long row = db.insert(Device.TABLE_NAME, null, person.getContentValues());
+        long row = db.insert(Device.TABLE_NAME, null, device.getContentValues());
         return row > 0;
     }
 
-    public boolean updateDevice(Device person) {
+    public boolean updateDevice(Device device) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        long row = db.update(Device.TABLE_NAME, person.getContentValues(),
-                Device._MAC + " = ? ", new String[]{String.valueOf(person.getMac())});
+        long row = db.update(Device.TABLE_NAME, device.getContentValues(),
+                Device._MAC + " = ? ", new String[]{String.valueOf(device.getMac())});
         return row > 0;
     }
 
-    public boolean deleteDevice(Device person) {
+    public boolean deleteDevice(Device device) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         long row = db.delete(Device.TABLE_NAME,
-                Device._MAC + " = ? ", new String[]{String.valueOf(person.getMac())});
+                Device._MAC + " = ? ", new String[]{String.valueOf(device.getMac())});
         return row > 0;
     }
 

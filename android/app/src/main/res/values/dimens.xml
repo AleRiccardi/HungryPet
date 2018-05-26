@@ -9,6 +9,4 @@
 
     <dimen name="list_item_padding">8dp</dimen>
 
-    <dimen name="margin_small">5dp</dimen>
-
 </resources>

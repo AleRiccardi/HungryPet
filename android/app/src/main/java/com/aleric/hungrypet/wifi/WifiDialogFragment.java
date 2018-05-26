@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.aleric.hungrypet.R;
 import com.aleric.hungrypet.core.CoreActivity;
 import com.aleric.hungrypet.data.wifi.WifiDirectory;
+import com.aleric.hungrypet.init.InitActivity;
 
 public class WifiDialogFragment extends DialogFragment implements WifiContract.ViewDialog {
     private static final String TAG = "WifiDialogFragment";
@@ -47,8 +48,8 @@ public class WifiDialogFragment extends DialogFragment implements WifiContract.V
     }
 
     @Override
-    public void startDashboardActivity() {
-        Intent intent = new Intent(getActivity(), CoreActivity.class);
+    public void startInitActivity() {
+        Intent intent = new Intent(getActivity(), InitActivity.class);
         startActivity(intent);
     }
 

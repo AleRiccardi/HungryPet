@@ -26,7 +26,7 @@
         <activity android:name=".wifi.WifiActivity" />
 
         <activity
-            android:name=".initDevice.InitDeviceActivity"
+            android:name=".init.InitActivity"
             android:label="@string/initialize"
             android:theme="@style/AppTheme.NoActionBar" />
 

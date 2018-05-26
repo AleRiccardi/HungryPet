@@ -146,6 +146,6 @@ public class WifiDialogPresenter implements WifiContract.PresenterDialog {
         DeviceDirectory.getInstance().setDevice(device);
 
         mView.showToast("Connected to wifi", false);
-        mView.startDashboardActivity();
+        mView.startInitActivity();
     }
 }
