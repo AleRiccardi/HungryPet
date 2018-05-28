@@ -11,9 +11,9 @@ import java.util.Date;
  * Created by aleric on 05/04/2018.
  */
 
-public class Device {
+public class Station {
 
-    public static final String TABLE_NAME = "device";
+    public static final String TABLE_NAME = "station";
     public static final String _MAC = "mac";
     public static final String COLUMN_NAME = "nameD";
     public static final String COLUMN_IP = "ip";
@@ -24,14 +24,14 @@ public class Device {
     private String mIp;
     private Date mUpdate;
 
-    public Device(String mac, String name, String ip, Date update) {
+    public Station(String mac, String name, String ip, Date update) {
         mMac = mac;
         mName = name;
         mIp = ip;
         mUpdate = update;
     }
 
-    public Device(Cursor cursor) {
+    public Station(Cursor cursor) {
         this.mMac = cursor.getString(cursor.getColumnIndex(_MAC));
         this.mName = cursor.getString(cursor.getColumnIndex(COLUMN_NAME));
         this.mIp = cursor.getString(cursor.getColumnIndex(COLUMN_IP));

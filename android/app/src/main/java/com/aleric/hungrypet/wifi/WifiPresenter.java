@@ -22,51 +22,50 @@ import java.util.List;
 
 public class WifiPresenter implements WifiContract.Presenter {
 
-    private static final String TAG = "wifi-presenter";
+    private static final String TAG = "wifi-mPresenter";
 
-    private final WifiContract.View mView;
-    /**
-     * Member object for the chat services
-     */
-    private CommService mComm = null;
+    private WifiContract.View mView;
     /**
      * Communication service instance
      */
-    private CommDirectory mCommDir;
+    private CommDirectory mComm;
     /**
      * Set if it's the first time that we start the activity
      */
     private boolean mIsNewActivity;
 
 
-    public WifiPresenter(@NonNull WifiContract.View wifiView, boolean isNewActivity) {
-        mView = wifiView;
+    public WifiPresenter(@NonNull WifiContract.View view) {
+        mView = view;
         mView.setPresenter(this);
-        mIsNewActivity = isNewActivity;
-        mCommDir = CommDirectory.getInstance();
+        mComm = CommDirectory.getInstance();
     }
 
     @Override
     public void start() {
-        if (mIsNewActivity) {
+        if (mComm.getState() == CommService.STATE_NONE) {
             startCommunication();
+        } else if (mComm.getState() == CommService.STATE_CONNECTED) {
+            mComm.setHandler(mHandler);
+            scanWifi();
+            mView.setComponentsComm(true);
         }
     }
 
 
     @Override
     public void enableComm(boolean enable) {
-        if (enable && mCommDir.getState() != CommService.STATE_CONNECTED) {
-            if (!mCommDir.restartCommunication()) {
+        if (enable && mComm.getState() != CommService.STATE_CONNECTED) {
+            if (!mComm.restartCommunication()) {
                 startCommunication();
             }
         } else if (!enable) {
-            mCommDir.closeComm();
+            mComm.stopComm();
         }
     }
 
     private void startCommunication() {
-        switch (mCommDir.setCommunication(mHandler)) {
+        switch (mComm.setCommunication(mHandler)) {
             case CommDirectory.E_BT_NOT_SUPPORTED:
                 mView.showToast("Bluetooth not supported", false);
                 mView.setComponentsComm(false);
@@ -125,11 +124,7 @@ public class WifiPresenter implements WifiContract.Presenter {
                         // Possible actions from the HungryPet device
                         if (action.equals(CommDirectory.A_WIFI_GET)) {
                             sendWifiToView(json);
-                        } else if (action.equals(CommDirectory.A_WIFI_SET)) {
-                            //@todo device connected to wifi
-                            mView.showToast("Connected to wifi", false);
-                        } else if (action.equals(CommDirectory.A_BT_DISCONNECT)) {
-                            //@todo device disconnected
+                        }  else if (action.equals(CommDirectory.A_BT_DISCONNECT)) {
                             mView.showToast("Disconnected to wifi", false);
                         }
 
@@ -168,7 +163,7 @@ public class WifiPresenter implements WifiContract.Presenter {
         try {
             String jsScanMsg = new JSONObject()
                     .put("action", CommDirectory.A_WIFI_GET).toString();
-            success = mCommDir.sendMessage(jsScanMsg);
+            success = mComm.sendMessage(jsScanMsg);
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -12,13 +12,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aleric.hungrypet.R;
-import com.aleric.hungrypet.core.CoreActivity;
 import com.aleric.hungrypet.data.wifi.WifiDirectory;
 import com.aleric.hungrypet.init.InitActivity;
 
 public class WifiDialogFragment extends DialogFragment implements WifiContract.ViewDialog {
     private static final String TAG = "WifiDialogFragment";
-    private static final String DIALOG_PRESENTER = "presenter";
+    private static final String DIALOG_PRESENTER = "mPresenter";
     private static final String DIALOG_WIFI = "wificell";
 
     private WifiContract.PresenterDialog mPresenter;
@@ -34,6 +33,39 @@ public class WifiDialogFragment extends DialogFragment implements WifiContract.V
         return new WifiDialogFragment();
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.dialog_wifi, container, false);
+        WifiDirectory dir = WifiDirectory.getInstance();
+        String ssid = dir.getWifi().getSsid();
+        Button btnSingIn = view.findViewById(R.id.btn_sing_in);
+        Button btnCancel = view.findViewById(R.id.btn_cancel);
+        TextView txvSsid = view.findViewById(R.id.txv_ssid);
+        edtPassword = view.findViewById(R.id.edt_pswd);
+        txvStatus = view.findViewById(R.id.txv_status);
+        btnSingIn.setOnClickListener((new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mPresenter.connectToWifi(edtPassword.getText().toString());
+            }
+        }));
+        btnCancel.setOnClickListener((new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismiss();
+            }
+        }));
+        txvSsid.setText(ssid);
+
+        return view;
+    }
 
     @Override
     public boolean isActive() {
@@ -50,6 +82,8 @@ public class WifiDialogFragment extends DialogFragment implements WifiContract.V
     @Override
     public void startInitActivity() {
         Intent intent = new Intent(getActivity(), InitActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 
@@ -58,49 +92,18 @@ public class WifiDialogFragment extends DialogFragment implements WifiContract.V
         mPresenter = presenter;
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        mPresenter.start();
-    }
-
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.dialog_wifi, container, false);
-        WifiDirectory dir = WifiDirectory.getInstance();
-        String ssid = dir.getWifi().getSsid();
-        Button btnSingIn = view.findViewById(R.id.btn_sing_in);
-        Button btnCancel = view.findViewById(R.id.btn_cancel);
-        TextView txvSsid = view.findViewById(R.id.txv_ssid);
-        edtPassword = view.findViewById(R.id.edt_pswd);
-        txvStatus = view.findViewById(R.id.txv_status);
-
-
-        btnSingIn.setOnClickListener((new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mPresenter.connectToWifi(edtPassword.getText().toString());
-            }
-        }));
-
-        btnCancel.setOnClickListener((new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dismiss();
-            }
-        }));
-
-
-        txvSsid.setText(ssid);
-
-        return view;
-    }
 
     @Override
     public void onResume() {
         super.onResume();
+        attachPresenter();
+        mPresenter.start();
+    }
+
+    private void attachPresenter() {
+        if(mPresenter == null) {
+            mPresenter = new WifiDialogPresenter(this);
+        }
     }
 
 

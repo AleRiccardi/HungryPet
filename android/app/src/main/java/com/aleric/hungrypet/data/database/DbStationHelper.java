@@ -4,7 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.aleric.hungrypet.data.Device;
+import com.aleric.hungrypet.data.Station;
 
 /**
  * Created by elia.dipasquale on 16/03/2017.
@@ -13,29 +13,29 @@ import com.aleric.hungrypet.data.Device;
 /**
  * Per dettagli vedere: db-example.
  */
-public class DbDeviceHelper extends SQLiteOpenHelper {
+public class DbStationHelper extends SQLiteOpenHelper {
 
-    private static final String DATABASE_NAME = "exercis.db";
+    private static final String DATABASE_NAME = "my_hungrypet.db";
     private static final int DATABASE_VERSION = 1;
 
 
-    public DbDeviceHelper(Context context) {
+    public DbStationHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
 
-    public static final String CREATE_TABLE_DEVICE = "CREATE TABLE "
-            + Device.TABLE_NAME + " (" +
-            Device._MAC + " VARCHAR(12) NOT NULL, " +
-            Device.COLUMN_NAME + " VARCHAR(30), " +
-            Device.COLUMN_IP + " VARCHAR(12) NOT NULL, " +
-            Device.COLUMN_UPDATE + " DATETIME, " +
+    public static final String CREATE_TABLE_STATION = "CREATE TABLE "
+            + Station.TABLE_NAME + " (" +
+            Station._MAC + " VARCHAR(12) NOT NULL, " +
+            Station.COLUMN_NAME + " VARCHAR(30), " +
+            Station.COLUMN_IP + " VARCHAR(12) NOT NULL, " +
+            Station.COLUMN_UPDATE + " DATETIME, " +
             " PRIMARY KEY (mac) " +
             ")";
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(CREATE_TABLE_DEVICE);
+        db.execSQL(CREATE_TABLE_STATION);
     }
 
     @Override

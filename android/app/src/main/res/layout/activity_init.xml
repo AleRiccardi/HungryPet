@@ -39,7 +39,7 @@
                 android:id="@+id/textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Give a name to your HungryPet device"
+                android:text="Give a name to your HungryPet station"
                 android:textSize="@dimen/text_medium" />
 
             <EditText
@@ -49,15 +49,15 @@
                 android:layout_marginTop="@dimen/margin_medium"
                 android:layout_weight="1"
                 android:ems="10"
-                android:inputType="textPersonName"
-                android:text="Name" />
+                android:hint="@string/name"
+                android:inputType="textPersonName" />
 
             <TextView
                 android:id="@+id/txv_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_large"
-                android:text="Device information"
+                android:text="Station information"
                 android:textSize="@dimen/text_medium" />
 
             <LinearLayout
@@ -109,10 +109,12 @@
 
         <Button
             android:id="@+id/btn_finish"
-            android:layout_width="match_parent"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:text="Finish" />
+            android:layout_alignParentRight="true"
+            android:text="Start" />
     </RelativeLayout>
 
 </LinearLayout>

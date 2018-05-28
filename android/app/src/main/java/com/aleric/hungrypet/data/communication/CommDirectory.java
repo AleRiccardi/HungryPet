@@ -3,6 +3,9 @@ package com.aleric.hungrypet.data.communication;
 import android.bluetooth.BluetoothAdapter;
 import android.os.Handler;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class CommDirectory {
 
     public static final String A_WIFI_GET = "wifi-get";
@@ -22,10 +25,11 @@ public class CommDirectory {
     private static CommService mComm = null;
 
     public CommDirectory() {
+
     }
 
-    public static CommDirectory getInstance(){
-        if(instance == null) {
+    public static CommDirectory getInstance() {
+        if (instance == null) {
             instance = new CommDirectory();
         }
         return instance;
@@ -68,14 +72,30 @@ public class CommDirectory {
     }
 
     /**
-     * Close the communication.
+     * Stop the communication from the phone
      */
-    public boolean closeComm() {
+    public void stopComm() {
         if (mComm != null) {
             mComm.stop();
             mComm = null;
         }
-        return true;
+    }
+
+    public void closeComm(){
+        try {
+            String jsCloseMsg = new JSONObject()
+                    .put("action", CommDirectory.A_BT_DISCONNECT)
+                    .put("content", "none")
+                    .toString();
+            sendMessage(jsCloseMsg);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        if (mComm != null) {
+            mComm.stop();
+            mComm = null;
+        }
     }
 
     /**
@@ -99,7 +119,7 @@ public class CommDirectory {
         return false;
     }
 
-    public int getState(){
+    public int getState() {
         if (mComm != null) {
             return mComm.getState();
         } else {

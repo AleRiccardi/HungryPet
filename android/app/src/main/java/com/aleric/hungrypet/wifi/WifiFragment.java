@@ -18,6 +18,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.aleric.hungrypet.BaseContract;
 import com.aleric.hungrypet.R;
 import com.aleric.hungrypet.data.wifi.WifiCell;
 
@@ -112,7 +113,7 @@ public class WifiFragment extends Fragment implements WifiContract.View {
                 @Override
                 public void onClick(View v) {
                     if(mPresenter.scanWifi()){
-                        Snackbar.make(v, "Scanned new wifi from the HungryPet device", Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(v, "Scanned new wifi from the HungryPet station", Snackbar.LENGTH_LONG).show();
                     } else {
                         showToast("Couldn't scan the the wifi networks", false);
                     }
@@ -126,17 +127,19 @@ public class WifiFragment extends Fragment implements WifiContract.View {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onResume() {
+        super.onResume();
+        attachPresenter();
         mPresenter.start();
     }
 
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mPresenter.enableComm(false);
+    private void attachPresenter() {
+        if(mPresenter == null) {
+            mPresenter = new WifiPresenter(this);
+        }
     }
+
+
 
     @Override
     public void showToast(String msg, boolean lengthLong) {

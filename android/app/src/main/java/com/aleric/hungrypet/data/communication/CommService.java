@@ -99,7 +99,7 @@ public class CommService {
                     }
                 }
             } else {
-                Log.i(TAG, "No Paired Device.");
+                Log.i(TAG, "No Paired Station.");
             }
         }
     }
@@ -236,7 +236,7 @@ public class CommService {
         // Send a failure message back to the Activity
         Message msg = mHandler.obtainMessage(CommConstants.CONNECTION_LOST);
         Bundle bundle = new Bundle();
-        bundle.putString(CommConstants.TOAST, "Device connection was lost");
+        bundle.putString(CommConstants.TOAST, "Station connection was lost");
         msg.setData(bundle);
         mHandler.sendMessage(msg);
         // Update UI title
@@ -314,7 +314,7 @@ public class CommService {
     }
 
     /**
-     * This thread runs during a connection with a remote device.
+     * This thread runs during a connection with a remote station.
      * It handles all incoming and outgoing transmissions.
      */
     private class ConnectedThread extends Thread {

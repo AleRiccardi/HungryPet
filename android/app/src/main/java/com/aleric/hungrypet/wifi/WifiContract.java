@@ -1,7 +1,6 @@
 package com.aleric.hungrypet.wifi;
 
-import com.aleric.hungrypet.BasePresenter;
-import com.aleric.hungrypet.BaseView;
+import com.aleric.hungrypet.BaseContract;
 import com.aleric.hungrypet.data.wifi.WifiCell;
 
 import java.util.List;
@@ -9,7 +8,7 @@ import java.util.List;
 public interface WifiContract {
 
 
-    interface View extends BaseView<Presenter> {
+    interface View extends BaseContract.View<Presenter>{
 
         boolean isActive();
 
@@ -18,11 +17,11 @@ public interface WifiContract {
         void populateLsvWifi(List<WifiCell> listWifiNet);
     }
 
-    interface ViewDialog extends BaseView<PresenterDialog> {
-
-        void dismiss();
+    interface ViewDialog extends BaseContract.View<PresenterDialog> {
 
         boolean isActive();
+
+        void dismiss();
 
         /**
          * Set the message of the TextView Status
@@ -36,7 +35,7 @@ public interface WifiContract {
     }
 
 
-    interface Presenter extends BasePresenter {
+    interface Presenter extends BaseContract.Presenter {
 
         void enableComm(boolean enable);
 
@@ -45,7 +44,7 @@ public interface WifiContract {
         void startDialog(WifiContract.ViewDialog dialog, WifiCell wifi);
     }
 
-    interface PresenterDialog extends BasePresenter {
+    interface PresenterDialog extends  BaseContract.Presenter {
 
         boolean connectToWifi(String password);
 

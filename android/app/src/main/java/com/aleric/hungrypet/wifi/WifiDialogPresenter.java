@@ -6,8 +6,8 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.aleric.hungrypet.data.Device;
-import com.aleric.hungrypet.data.DeviceDirectory;
+import com.aleric.hungrypet.data.Station;
+import com.aleric.hungrypet.data.StationDirectory;
 import com.aleric.hungrypet.data.communication.CommConstants;
 import com.aleric.hungrypet.data.communication.CommDirectory;
 import com.aleric.hungrypet.data.communication.CommService;
@@ -21,29 +21,33 @@ import java.util.Calendar;
 
 public class WifiDialogPresenter implements WifiContract.PresenterDialog {
     // Constants
-    private static final String TAG = "wifi-main-presenter";
+    private static final String TAG = "wifi-main-mPresenter";
 
-    private final WifiContract.ViewDialog mView;
+    private WifiContract.ViewDialog mView;
     private final WifiDirectory mDir;
-    private CommDirectory mCommDir;
+    private CommDirectory mComm;
     private WifiCell mWifi;
 
     public WifiDialogPresenter(@NonNull WifiContract.ViewDialog view) {
         mDir = WifiDirectory.getInstance();
         mView = view;
         mView.setPresenter(this);
+        mComm = CommDirectory.getInstance();
     }
 
     @Override
     public void start() {
-        mCommDir = CommDirectory.getInstance();
-        mWifi = mDir.getWifi();
+        if (mComm.getState() == CommService.STATE_NONE) {
+            mView.dismiss();
+        } else if (mComm.getState() == CommService.STATE_CONNECTED) {
+            mComm.setHandler(mHandler);
+            mWifi = mDir.getWifi();
 
-        mCommDir.setHandler(mHandler);
-        mCommDir.setHandler(mHandler);
+            mComm.setHandler(mHandler);
+        }
+
 
     }
-
 
     @SuppressLint("HandlerLeak")
     private final Handler mHandler = new Handler() {
@@ -81,7 +85,7 @@ public class WifiDialogPresenter implements WifiContract.PresenterDialog {
                         JSONObject jsAction = new JSONObject(readMessage);
                         String action = (String) jsAction.get("action");
 
-                        // Possible actions from the HungryPet device
+                        // Possible actions from the HungryPet station
                         if (action.equals(CommDirectory.A_WIFI_SET)) {
                             JSONObject jsContent = new JSONObject(readMessage);
                             jsContent = jsContent.getJSONObject("content");
@@ -133,7 +137,7 @@ public class WifiDialogPresenter implements WifiContract.PresenterDialog {
                             .put("ssid", mWifi.getSsid())
                             .put("pswd", mWifi.getPswd()))
                     .toString();
-            success = mCommDir.sendMessage(jsScanMsg);
+            success = mComm.sendMessage(jsScanMsg);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -142,8 +146,9 @@ public class WifiDialogPresenter implements WifiContract.PresenterDialog {
 
     private void connectionSuccess(String mac, String ip) {
         mView.setStatus(1);
-        Device device = new Device(mac, "", ip, Calendar.getInstance().getTime());
-        DeviceDirectory.getInstance().setDevice(device);
+        Station station = new Station(mac, "", ip, Calendar.getInstance().getTime());
+        StationDirectory.getInstance().setStation(station); // Save the station
+        CommDirectory.getInstance().closeComm(); // Close the comm.
 
         mView.showToast("Connected to wifi", false);
         mView.startInitActivity();

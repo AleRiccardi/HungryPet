@@ -1,13 +1,21 @@
 <resources>
 
     <!-- ## Base application theme ## -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light" >
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:actionBarStyle">@style/NewActionBar</item>
     </style>
 
+    <style name="NewActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
+        <item name="android:titleTextStyle">@style/TitleBarTextColor</item>
+        <item name="android:background">#666666</item>
+    </style>
+    <style name="TitleBarTextColor" parent="@style/TextAppearance.Sherlock.Widget.ActionBar.Menu">
+        <item name="android:textColor">#000000</item>
+    </style>
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
@@ -20,6 +28,7 @@
     <style name="button_primary" parent="Theme.AppCompat">
         <item name="colorButtonNormal">@color/colorPrimary</item>
         <item name="colorControlHighlight">@color/colorAccent</item>
+        <item name="android:textColor">#ffffff</item>
     </style>
 
     <style name="button_primary_flat" parent="Theme.AppCompat.Light">

@@ -1,29 +1,31 @@
-package com.aleric.hungrypet.core;
+package com.aleric.hungrypet.overview;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
 import com.aleric.hungrypet.R;
-import com.aleric.hungrypet.data.Device;
-import com.aleric.hungrypet.data.DeviceDirectory;
+import com.aleric.hungrypet.data.Schedule;
+import com.aleric.hungrypet.data.Station;
+import com.aleric.hungrypet.data.StationDirectory;
+import com.aleric.hungrypet.schedule.ScheduleActivity;
+import com.aleric.hungrypet.wifi.WifiActivity;
 
-public class CoreActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class OverviewActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_core);
+        setContentView(R.layout.activity_overview);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -42,16 +44,15 @@ public class CoreActivity extends AppCompatActivity implements NavigationView.On
         TextView txvNavTitle = headerLayout.findViewById(R.id.txv_nav_title);
         TextView txvNavSubtitle = headerLayout.findViewById(R.id.txv_nav_subtitle);
 
-        Device device = DeviceDirectory.getInstance().getDevice();
-        if (device != null) {
-            txvNavTitle.setText(device.getName());
-            txvNavSubtitle.setText(device.getIp());
+        Station station = StationDirectory.getInstance().getStation();
+        if (station != null) {
+            txvNavTitle.setText(station.getName());
+            txvNavSubtitle.setText(station.getIp());
         } else {
             txvNavTitle.setText("Title");
             txvNavSubtitle.setText("Subtitle");
         }
         //add this line to display menu1 when the activity is loaded
-        displaySelectedScreen(R.id.nav_dashboard);
     }
 
     @Override
@@ -64,36 +65,6 @@ public class CoreActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    private void displaySelectedScreen(int itemId) {
-
-        //creating fragment object
-        Fragment fragment = null;
-
-        //initializing the fragment object which is selected
-        switch (itemId) {
-            case R.id.nav_dashboard:
-                fragment = new DashboardFragment();
-                break;
-            case R.id.nav_schedule:
-                fragment = new ScheduleFragment();
-                break;
-            case R.id.nav_settings:
-                fragment = new SettingsFragment();
-                break;
-        }
-
-        //replacing the fragment
-        if (fragment != null) {
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.content_frame, fragment);
-            ft.commit();
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-    }
-
-
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
 
@@ -101,6 +72,24 @@ public class CoreActivity extends AppCompatActivity implements NavigationView.On
         displaySelectedScreen(item.getItemId());
         //make this method blank
         return true;
+    }
+
+    private void displaySelectedScreen(int itemId) {
+
+        //creating fragment object
+        Fragment fragment = null;
+
+        //initializing the fragment object which is selected
+        switch (itemId) {
+            case R.id.nav_schedule:
+                Intent intent = new Intent(this, ScheduleActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.nav_station:
+                break;
+            case R.id.nav_settings:
+                break;
+        }
     }
 
 }

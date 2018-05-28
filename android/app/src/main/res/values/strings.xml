@@ -11,8 +11,8 @@
 
     <!-- ## Activity Welcome ## -->
     <string name="main_title_welcome">Welcome to HungryPet</string>
-    <string name="main_text_welcome">Looks like you haven\'t configurated your HungryPet device, so make
-        sure that you established a connection with its and then press configure to connect the device
+    <string name="main_text_welcome">Looks like you haven\'t configurated your HungryPet station, so make
+        sure that you established a connection with its and then press configure to connect the station
         to Internet.</string>
 
     <!-- ## Activity Wifi ## -->
@@ -20,7 +20,7 @@
     <string name="text_no_wifi">No wifi detected</string>
 
     <!-- Connection -->
-    <string name="not_connected">You are not connected to a device</string>
+    <string name="not_connected">You are not connected to a station</string>
 
     <!-- Button -->
     <string name="btn_mange">Continue and do not configure</string>
@@ -35,16 +35,17 @@
 
     <!-- ## InitDevice ## -->
     <string name="initialize">Initialize</string>
+    <string name="name">Name</string>
 
     <!-- ## Core ## -->
-    <string name="nav_core_title">Core</string>
-    <string name="nav_core_desc">Core header</string>
-    <string name="nav_core_subtitle">Select a section</string>
+    <string name="nav_overview_title">Overview</string>
+    <string name="nav_overview_desc">Overview header</string>
+    <string name="nav_overview_subtitle">Select a section</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="dashboard">Dashboard</string>
     <string name="schedule">Schedule</string>
+    <string name="station">Station</string>
     <string name="settings">Settings</string>
 
     <!-- ~ Dashboard ~ -->
