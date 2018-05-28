@@ -12,10 +12,15 @@
             android:id="@+id/nav_station"
             android:icon="@drawable/ic_station"
             android:title="@string/station" />
-        <item
-            android:id="@+id/nav_settings"
-            android:icon="@drawable/ic_settings"
-            android:title="@string/settings" />
+
+        <item android:title="Other">
+            <menu>
+                <item
+                    android:id="@+id/nav_settings"
+                    android:icon="@drawable/ic_settings"
+                    android:title="@string/settings" />
+            </menu>
+        </item>
     </group>
 
 </menu>

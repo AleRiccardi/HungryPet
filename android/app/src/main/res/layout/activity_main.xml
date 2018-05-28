@@ -35,7 +35,7 @@
                     android:layout_marginEnd="@dimen/margin_medium"
                     android:layout_marginRight="@dimen/margin_medium"
                     android:gravity="center"
-                    android:src="@drawable/ic_logo" />
+                    android:src="@drawable/ic_logo_nude" />
 
                 <TextView
                     android:id="@+id/txv_title"

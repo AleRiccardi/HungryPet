@@ -40,7 +40,7 @@
 
         <activity
             android:name=".schedule.ScheduleActivity"
-            android:label="@string/station"
+            android:label="@string/schedule"
             android:parentActivityName=".overview.OverviewActivity"
             tools:targetApi="jelly_bean">
             <!-- Parent activity meta-data to support 4.0 and lower -->
