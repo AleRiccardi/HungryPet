@@ -22,4 +22,8 @@
     <dimen name="text_lh">40sp</dimen>
     <dimen name="text_huge">64sp</dimen>
 
+    <!-- Personalized -->
+    <dimen name="text_schedule_single">23sp</dimen>
+    <dimen name="text_schedule_single_badge">17sp</dimen>
+
 </resources>
