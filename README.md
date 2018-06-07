@@ -1,6 +1,7 @@
 # HungryPet
 
 This code platform is used to automate a pet feeder.
+
 Contributors: @AleRiccardi
 
 ## Description
