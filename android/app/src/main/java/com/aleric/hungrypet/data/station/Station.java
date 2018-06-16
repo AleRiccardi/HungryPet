@@ -1,10 +1,11 @@
-package com.aleric.hungrypet.data;
+package com.aleric.hungrypet.data.station;
 
 import android.content.ContentValues;
 import android.database.Cursor;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -24,11 +25,11 @@ public class Station {
     private String mIp;
     private Date mUpdate;
 
-    public Station(String mac, String name, String ip, Date update) {
+    public Station(String mac, String name, String ip) {
         mMac = mac;
         mName = name;
         mIp = ip;
-        mUpdate = update;
+        mUpdate = Calendar.getInstance().getTime();
     }
 
     public Station(Cursor cursor) {

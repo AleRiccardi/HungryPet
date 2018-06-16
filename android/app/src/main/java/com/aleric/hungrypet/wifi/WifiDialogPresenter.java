@@ -6,8 +6,8 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.aleric.hungrypet.data.Station;
-import com.aleric.hungrypet.data.StationDirectory;
+import com.aleric.hungrypet.data.station.Station;
+import com.aleric.hungrypet.data.station.StationDirectory;
 import com.aleric.hungrypet.data.communication.CommConstants;
 import com.aleric.hungrypet.data.communication.CommDirectory;
 import com.aleric.hungrypet.data.communication.CommService;
@@ -146,7 +146,7 @@ public class WifiDialogPresenter implements WifiContract.PresenterDialog {
 
     private void connectionSuccess(String mac, String ip) {
         mView.setStatus(1);
-        Station station = new Station(mac, "", ip, Calendar.getInstance().getTime());
+        Station station = new Station(mac, "", ip);
         StationDirectory.getInstance().setStation(station); // Save the station
         CommDirectory.getInstance().closeComm(); // Close the comm.
 

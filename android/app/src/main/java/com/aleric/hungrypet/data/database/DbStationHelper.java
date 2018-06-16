@@ -4,25 +4,16 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.aleric.hungrypet.data.Station;
+import com.aleric.hungrypet.data.station.Station;
 
-/**
- * Created by elia.dipasquale on 16/03/2017.
- */
-
-/**
- * Per dettagli vedere: db-example.
- */
 public class DbStationHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "my_hungrypet.db";
-    private static final int DATABASE_VERSION = 1;
-
+    private static final int DATABASE_VERSION = 2;
 
     public DbStationHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
-
 
     public static final String CREATE_TABLE_STATION = "CREATE TABLE "
             + Station.TABLE_NAME + " (" +

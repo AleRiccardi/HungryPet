@@ -1,4 +1,4 @@
-package com.aleric.hungrypet.data;
+package com.aleric.hungrypet.data.station;
 
 public class StationDirectory {
     public static StationDirectory INSTANCE = null;

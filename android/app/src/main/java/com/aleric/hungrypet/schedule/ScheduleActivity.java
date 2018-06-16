@@ -5,36 +5,71 @@ import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Pair;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.aleric.hungrypet.R;
-import com.aleric.hungrypet.data.shedule.DaySchedule;
+import com.aleric.hungrypet.data.database.DbScheduleManager;
+import com.aleric.hungrypet.data.shedule.Schedule;
+import com.aleric.hungrypet.data.station.Station;
+import com.aleric.hungrypet.data.station.StationDirectory;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ScheduleActivity extends AppCompatActivity {
 
-    static private String[] days = new String[] {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
+    static final public String INTENT_KEY = "day";
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_schedule);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        final ListView ltvShedule = findViewById(R.id.lsv_schedule);
 
-        ListView ltvShedule = findViewById(R.id.lsv_schedule);
+        // Set the name and the number of schedule
+        Station station = StationDirectory.getInstance().getStation();
+        DbScheduleManager dbSchedule = new DbScheduleManager(this);
 
-        ArrayList<DaySchedule> arrayOfSchedule = new ArrayList<>();
-
-        for(String day : days){
-            DaySchedule daySchedule = new DaySchedule(day, 2);
+        ArrayList<Pair<String, Integer>> arrayOfSchedule = new ArrayList<>();
+        List<Schedule> schedules = dbSchedule.getSchedules(station.getMac());
+        for(String day : Schedule.WEEK_DAYS){
+            // Count number of schedule
+            int numSchedule = 0;
+            int weekInt = Arrays.asList(Schedule.WEEK_DAYS).indexOf(day);
+            for (Schedule schedule : schedules) {
+                if (schedule.getWeekDay() == weekInt) {
+                    numSchedule++;
+                }
+            }
+            Pair<String, Integer> daySchedule = new Pair<>(day, numSchedule);
             arrayOfSchedule.add(daySchedule);
         }
         // Create the adapter to convert the array to views
         ScheduleAdapter scheduleAdapter = new ScheduleAdapter(this, arrayOfSchedule);
         ltvShedule.setAdapter(scheduleAdapter);
+        // Listener of the ListView day
+        ltvShedule.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Pair<String, Integer> day = (Pair<String, Integer>) ltvShedule.getItemAtPosition(position);
+                goToDay(day);
+            }
+        });
+    }
+
+    /**
+     * Redirect to Wifi activity.
+     */
+    public void goToDay(Pair<String, Integer> day) {
+        Intent intent = new Intent(this, ScheduleDayActivity.class);
+        intent.putExtra(INTENT_KEY, (String) day.first);
+        startActivity(intent);
     }
 
     @Override

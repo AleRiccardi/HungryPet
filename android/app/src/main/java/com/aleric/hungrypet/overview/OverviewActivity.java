@@ -14,11 +14,9 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.aleric.hungrypet.R;
-import com.aleric.hungrypet.data.Schedule;
-import com.aleric.hungrypet.data.Station;
-import com.aleric.hungrypet.data.StationDirectory;
+import com.aleric.hungrypet.data.station.Station;
+import com.aleric.hungrypet.data.station.StationDirectory;
 import com.aleric.hungrypet.schedule.ScheduleActivity;
-import com.aleric.hungrypet.wifi.WifiActivity;
 
 public class OverviewActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 

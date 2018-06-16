@@ -18,7 +18,6 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.aleric.hungrypet.BaseContract;
 import com.aleric.hungrypet.R;
 import com.aleric.hungrypet.data.wifi.WifiCell;
 
@@ -76,7 +75,7 @@ public class WifiFragment extends Fragment implements WifiContract.View {
         swcStateAction = view.findViewById(R.id.swc_state_action);
         txvPlaceholder = view.findViewById(R.id.txv_placeholder);
         lsvWifi = view.findViewById(R.id.lsv_wifi);
-        fabRefresh = getActivity().findViewById(R.id.fab_refresh);
+        fabRefresh = getActivity().findViewById(R.id.fab_add_schedule);
 
         if (getActivity() != null) {
             // Initialize the array adapter for the conversation thread
