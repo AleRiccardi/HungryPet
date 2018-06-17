@@ -44,6 +44,7 @@ public class ScheduleDayActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         ActionBar actionBar = getSupportActionBar();
+
         String day = getIntent().getExtras().getString(ScheduleActivity.INTENT_KEY);
         if (day != null) {
             mStation = StationDirectory.getInstance().getStation();

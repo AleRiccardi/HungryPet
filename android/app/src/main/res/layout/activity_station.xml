@@ -30,6 +30,7 @@
                 android:src="@drawable/ic_station_grey" />
 
             <TextView
+                android:id="@+id/txv_station_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/margin_large"
@@ -69,6 +70,7 @@
                     android:textSize="@dimen/text_small" />
 
                 <TextView
+                    android:id="@+id/txv_mac_address"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/none"
@@ -88,6 +90,7 @@
                     android:textSize="@dimen/text_small" />
 
                 <TextView
+                    android:id="@+id/txv_ip_address"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/none"
@@ -108,6 +111,7 @@
                     android:visibility="visible" />
 
                 <TextView
+                    android:id="@+id/txv_update"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/none"
@@ -117,7 +121,7 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/btn_disconnext"
+        android:id="@+id/btn_disconnect"
         style="@style/Widget.AppCompat.Button.Small"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

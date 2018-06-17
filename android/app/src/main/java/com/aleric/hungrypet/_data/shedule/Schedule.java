@@ -84,10 +84,6 @@ public class Schedule {
         return mUpdate;
     }
 
-    /**
-     * @// TODO: 16/06/2018 mUpdate is sometime == null, correct that error.
-     * @return
-     */
     public ContentValues getContentValues() {
         if(mUpdate == null){
             mUpdate = Calendar.getInstance().getTime();

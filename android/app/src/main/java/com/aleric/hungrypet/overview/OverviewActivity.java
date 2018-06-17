@@ -121,6 +121,13 @@ public class OverviewActivity extends AppCompatActivity implements NavigationVie
         mStation = StationDirectory.getInstance().getStation();
         if(mStation != null) {
             txvStationName.setText(mStation.getName());
+            txvState.setText("To set");
+            txvLastFeedTime.setText("To set");
+            btnFeedNow.setEnabled(true);
+            btnFeedNow.setClickable(true);
+        } else {
+            btnFeedNow.setEnabled(false);
+            btnFeedNow.setClickable(false);
         }
     }
 

@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
      */
     public void goToOverview() {
         Intent intent = new Intent(this, OverviewActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
 
@@ -77,10 +78,6 @@ public class MainActivity extends AppCompatActivity {
         for (Station station : stations) {
             if (mStation == null) {
                 mStation = station;
-            } else {
-                if (mStation.getUpdate().compareTo(station.getUpdate()) < 0) {
-                    mStation = station;
-                }
             }
         }
         return mStation != null;

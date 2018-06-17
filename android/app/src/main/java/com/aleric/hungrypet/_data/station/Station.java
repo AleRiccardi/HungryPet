@@ -38,7 +38,7 @@ public class Station {
         this.mIp = cursor.getString(cursor.getColumnIndex(COLUMN_IP));
 
         String s = cursor.getString(cursor.getColumnIndex(COLUMN_UPDATE));
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
         try {
             this.mUpdate = dateFormat.parse(s);
         } catch (ParseException e) {

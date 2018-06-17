@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -30,9 +31,9 @@ public class WifiActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wifi);
 
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
-        myToolbar.setTitle("Select WIFI");
-        setSupportActionBar(myToolbar);
+        // Set the title
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle("Select WIFI");
 
         WifiFragment wifiFragment =
                 (WifiFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_cont_wifi);
