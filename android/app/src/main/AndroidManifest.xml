@@ -58,5 +58,27 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".schedule.ScheduleActivity" />
         </activity>
+
+        <activity
+            android:name=".station.StationActivity"
+            android:label="@string/station"
+            android:parentActivityName=".overview.OverviewActivity"
+            tools:targetApi="jelly_bean">
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".overview.OverviewActivity" />
+        </activity>
+
+        <activity
+            android:name=".settings.SettingsActivity"
+            android:label="@string/settings"
+            android:parentActivityName=".overview.OverviewActivity"
+            tools:targetApi="jelly_bean">
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".overview.OverviewActivity" />
+        </activity>
     </application>
 </manifest>

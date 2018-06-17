@@ -1,10 +1,10 @@
-package com.aleric.hungrypet.data.database;
+package com.aleric.hungrypet._data.database;
 
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.aleric.hungrypet.data.station.Station;
+import com.aleric.hungrypet._data.station.Station;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -11,14 +11,28 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.aleric.hungrypet.R;
-import com.aleric.hungrypet.data.station.Station;
-import com.aleric.hungrypet.data.station.StationDirectory;
+import com.aleric.hungrypet._data.station.Station;
+import com.aleric.hungrypet._data.station.StationDirectory;
 import com.aleric.hungrypet.schedule.ScheduleActivity;
+import com.aleric.hungrypet.settings.SettingsActivity;
+import com.aleric.hungrypet.station.StationActivity;
 
 public class OverviewActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+    private TextView txvStationName;
+    private TextView txvState;
+    private TextView txvLastFeedTime;
+    private ProgressBar pgbLevelContainer;
+    private ProgressBar pgbLevelBowl;
+    private Button btnFeedNow;
+
+    private Station mStation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +64,9 @@ public class OverviewActivity extends AppCompatActivity implements NavigationVie
             txvNavTitle.setText("Title");
             txvNavSubtitle.setText("Subtitle");
         }
-        //add this line to display menu1 when the activity is loaded
+
+        // Initialize the component
+        initComponents();
     }
 
     @Override
@@ -80,13 +96,31 @@ public class OverviewActivity extends AppCompatActivity implements NavigationVie
         //initializing the fragment object which is selected
         switch (itemId) {
             case R.id.nav_schedule:
-                Intent intent = new Intent(this, ScheduleActivity.class);
-                startActivity(intent);
+                Intent intentSchedule = new Intent(this, ScheduleActivity.class);
+                startActivity(intentSchedule);
                 break;
             case R.id.nav_station:
+                Intent intentStation = new Intent(this, StationActivity.class);
+                startActivity(intentStation);
                 break;
             case R.id.nav_settings:
+                Intent intentSettings = new Intent(this, SettingsActivity.class);
+                startActivity(intentSettings);
                 break;
+        }
+    }
+
+    private void initComponents(){
+        txvStationName = findViewById(R.id.txv_station_name);
+        txvState = findViewById(R.id.txv_state);
+        txvLastFeedTime = findViewById(R.id.txv_last_feed_time);
+        pgbLevelContainer = findViewById(R.id.pgb_level_container);
+        pgbLevelBowl = findViewById(R.id.pgb_level_bowl);
+        btnFeedNow = findViewById(R.id.btn_feed_now);
+
+        mStation = StationDirectory.getInstance().getStation();
+        if(mStation != null) {
+            txvStationName.setText(mStation.getName());
         }
     }
 

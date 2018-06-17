@@ -1,10 +1,10 @@
-package com.aleric.hungrypet.data.database;
+package com.aleric.hungrypet._data.database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.aleric.hungrypet.data.station.Station;
+import com.aleric.hungrypet._data.station.Station;
 
 public class DbStationHelper extends SQLiteOpenHelper {
 

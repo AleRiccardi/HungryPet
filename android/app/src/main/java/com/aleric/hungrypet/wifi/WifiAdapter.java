@@ -8,7 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.aleric.hungrypet.R;
-import com.aleric.hungrypet.data.wifi.WifiCell;
+import com.aleric.hungrypet._data.wifi.WifiCell;
 
 import java.util.ArrayList;
 

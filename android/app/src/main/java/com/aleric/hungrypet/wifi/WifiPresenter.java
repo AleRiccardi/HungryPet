@@ -6,11 +6,11 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.aleric.hungrypet.data.communication.CommDirectory;
-import com.aleric.hungrypet.data.communication.CommService;
-import com.aleric.hungrypet.data.communication.CommConstants;
-import com.aleric.hungrypet.data.wifi.WifiCell;
-import com.aleric.hungrypet.data.wifi.WifiDirectory;
+import com.aleric.hungrypet._data.communication.CommDirectory;
+import com.aleric.hungrypet._data.communication.CommService;
+import com.aleric.hungrypet._data.communication.CommConstants;
+import com.aleric.hungrypet._data.wifi.WifiCell;
+import com.aleric.hungrypet._data.wifi.WifiDirectory;
 
 import org.json.JSONArray;
 import org.json.JSONException;

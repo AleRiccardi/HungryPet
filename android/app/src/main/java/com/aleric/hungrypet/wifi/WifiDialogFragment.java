@@ -12,7 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aleric.hungrypet.R;
-import com.aleric.hungrypet.data.wifi.WifiDirectory;
+import com.aleric.hungrypet._data.wifi.WifiDirectory;
 import com.aleric.hungrypet.init.InitActivity;
 
 public class WifiDialogFragment extends DialogFragment implements WifiContract.ViewDialog {

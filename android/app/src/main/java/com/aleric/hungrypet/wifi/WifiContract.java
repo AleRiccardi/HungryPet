@@ -1,7 +1,7 @@
 package com.aleric.hungrypet.wifi;
 
 import com.aleric.hungrypet.BaseContract;
-import com.aleric.hungrypet.data.wifi.WifiCell;
+import com.aleric.hungrypet._data.wifi.WifiCell;
 
 import java.util.List;
 

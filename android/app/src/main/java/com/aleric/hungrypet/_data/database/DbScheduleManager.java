@@ -1,10 +1,10 @@
-package com.aleric.hungrypet.data.database;
+package com.aleric.hungrypet._data.database;
 
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.aleric.hungrypet.data.shedule.Schedule;
+import com.aleric.hungrypet._data.shedule.Schedule;
 
 import java.util.ArrayList;
 import java.util.List;

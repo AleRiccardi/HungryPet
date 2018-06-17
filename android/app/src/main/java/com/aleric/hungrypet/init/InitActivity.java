@@ -10,10 +10,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.aleric.hungrypet.R;
-import com.aleric.hungrypet.data.station.Station;
+import com.aleric.hungrypet._data.station.Station;
 import com.aleric.hungrypet.overview.OverviewActivity;
-import com.aleric.hungrypet.data.station.StationDirectory;
-import com.aleric.hungrypet.data.database.DbStationManager;
+import com.aleric.hungrypet._data.station.StationDirectory;
+import com.aleric.hungrypet._data.database.DbStationManager;
 
 public class InitActivity extends AppCompatActivity{
     private DbStationManager mDbManager;

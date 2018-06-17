@@ -1,4 +1,4 @@
-package com.aleric.hungrypet.data.shedule;
+package com.aleric.hungrypet._data.shedule;
 
 import java.util.List;
 

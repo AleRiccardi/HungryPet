@@ -1,4 +1,4 @@
-package com.aleric.hungrypet.data.wifi;
+package com.aleric.hungrypet._data.wifi;
 
 public class WifiDirectory {
     public static WifiDirectory INSTANCE = null;

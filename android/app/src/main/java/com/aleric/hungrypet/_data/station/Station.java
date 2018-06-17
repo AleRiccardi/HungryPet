@@ -1,4 +1,4 @@
-package com.aleric.hungrypet.data.station;
+package com.aleric.hungrypet._data.station;
 
 import android.content.ContentValues;
 import android.database.Cursor;

@@ -16,10 +16,10 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.aleric.hungrypet.R;
-import com.aleric.hungrypet.data.database.DbScheduleManager;
-import com.aleric.hungrypet.data.shedule.Schedule;
-import com.aleric.hungrypet.data.station.Station;
-import com.aleric.hungrypet.data.station.StationDirectory;
+import com.aleric.hungrypet._data.database.DbScheduleManager;
+import com.aleric.hungrypet._data.shedule.Schedule;
+import com.aleric.hungrypet._data.station.Station;
+import com.aleric.hungrypet._data.station.StationDirectory;
 
 import java.util.ArrayList;
 import java.util.Arrays;

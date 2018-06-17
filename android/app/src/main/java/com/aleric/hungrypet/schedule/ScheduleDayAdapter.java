@@ -2,6 +2,7 @@ package com.aleric.hungrypet.schedule;
 
 import android.app.Activity;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.aleric.hungrypet.R;
-import com.aleric.hungrypet.data.shedule.Schedule;
+import com.aleric.hungrypet._data.shedule.Schedule;
 
 import java.util.ArrayList;
 
@@ -50,6 +51,7 @@ public class ScheduleDayAdapter extends ArrayAdapter<Schedule> {
                         mContext.undoDeleteSchedule(schedule);
                     }
                 });
+                mySnackbar.setActionTextColor(ContextCompat.getColor(mContext, R.color.bootstrapGray));
                 mySnackbar.show();
             }
         });

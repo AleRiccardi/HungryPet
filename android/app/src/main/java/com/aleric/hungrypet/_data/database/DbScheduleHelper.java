@@ -1,11 +1,11 @@
-package com.aleric.hungrypet.data.database;
+package com.aleric.hungrypet._data.database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.aleric.hungrypet.data.shedule.Schedule;
+import com.aleric.hungrypet._data.shedule.Schedule;
 
 public class DbScheduleHelper extends SQLiteOpenHelper {
 

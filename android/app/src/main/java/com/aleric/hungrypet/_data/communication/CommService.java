@@ -1,4 +1,4 @@
-package com.aleric.hungrypet.data.communication;
+package com.aleric.hungrypet._data.communication;
 
 
 import android.bluetooth.BluetoothAdapter;

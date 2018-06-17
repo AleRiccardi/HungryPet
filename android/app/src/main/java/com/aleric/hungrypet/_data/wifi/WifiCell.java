@@ -1,4 +1,4 @@
-package com.aleric.hungrypet.data.wifi;
+package com.aleric.hungrypet._data.wifi;
 
 public class WifiCell {
     private String ssid;

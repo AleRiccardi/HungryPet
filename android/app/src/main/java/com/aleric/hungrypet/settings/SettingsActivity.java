@@ -1,9 +1,7 @@
-package com.aleric.hungrypet.station;
+package com.aleric.hungrypet.settings;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
@@ -11,11 +9,11 @@ import android.view.MenuItem;
 
 import com.aleric.hungrypet.R;
 
-public class StationActivity extends AppCompatActivity {
+public class SettingsActivity extends AppCompatActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_station);
+        setContentView(R.layout.activity_settings);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
