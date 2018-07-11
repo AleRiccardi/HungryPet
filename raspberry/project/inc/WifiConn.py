@@ -1,63 +1,67 @@
-import bluetooth
-import json
+import serial
 import time
-
 import os
 import json
-import RPi.GPIO as GPIO
 import subprocess
 from .WifiScan import WifiScan
 
 
-class BluetoothConn:
-    # General strings
+class WifiConn:
+    # ___General strings___
     TAG = 'BlueWifiConf ~ '
     PATH_WIFI = '/etc/wpa_supplicant/wpa_supplicant.conf'
     CMD_SUDO = 'sudo '
     NOT_SET = '<Not Set>'
 
-    # STATUS
+    # ___STATUS___
+    A_WIFI_ON = 'conn-on'
+    A_WIFI_OFF = 'conn-off'
     A_WIFI_GET = 'wifi-get'
     A_WIFI_SET = 'wifi-set'
     A_BT_DISCONNECT = 'bt-quit'
 
-    # JSON
+    # ____JSON____
+    JS_CONN_ON = '{ "action": "' + A_WIFI_ON + '"}'
+    JS_CONN_OFF = '{ "action": "' + A_WIFI_OFF + '" }'
     JS_WIFI_CONNECTED = '{ "action": "' + A_WIFI_SET + '", "content": "success" }'
     JS_NO_WIFI_CONNECTED = '{ "action": "' + A_WIFI_SET + '", "content": "fail" }'
 
-    # Variables
-    bluectl = 0
-    networks = 0
-    socket = 0
-    connection = 0
-    port = 0
-    address = 0
-    work = True
+    # ___VARIABLES___
+    # Boolean
+    loop = True
+    connected = False
+
+    # Other
+    serial_ard = 0
 
     def __init__(self):
-        GPIO.setwarnings(False)
+        self.serial_ard = serial.Serial('/dev/ttyACM0', 9600)  # enable the serial port
 
-    def bt_connection(self):
+    def wait_phone_connection(self):
         """Connection to bluetooth device."""
-        GPIO.setmode(GPIO.BOARD)
-        GPIO.setup(40, GPIO.OUT)
-        self.socket = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
-        self.port = 1
-        self.socket.bind(('', self.port))
-        self.socket.listen(1)
-        self.print_msg('Listening for connection')
-        self.connection, self.address = self.socket.accept()
-        # After that the device is CONNECTED #
-        self.print_msg('Accepted connection from ' + str(self.address))
+        if not self.connected:
+            msg = self.read_from_serial()
+
+            if msg == self.JS_CONN_ON:
+                self.print_msg('Connection accepted')
+                self.connected = True
+                self.send_to_serial(self.JS_CONN_ON)
+                return True
+        return False
+
+    def close_phone_connection(self):
+        if self.connected:
+            self.print_msg('Connection closed')
+            self.send_to_serial(self.JS_CONN_OFF)
+            self.connected = False
+
+        return True
 
     def run(self):
         """Detect data from paired device."""
-        try:
-            while self.work:
-                data = self.connection.recv(1024)
-                data = data.decode()
-                data = str(data.replace('\\r\\n', ''))
-                # print(data)
+        while self.loop:
+            if self.wait_phone_connection():
+                data = self.read_from_serial()
 
                 if self.is_json(str(data)):
                     data = json.loads(str(data))
@@ -82,19 +86,23 @@ class BluetoothConn:
                                 data['action'] = self.A_WIFI_SET
                                 data['content'] = {'status': "fail"}
                                 json_data = json.dumps(data)
-                                self.connection.send(json_data)
+                                self.send_to_serial(json_data)
 
                         elif data['action'] == self.A_BT_DISCONNECT:
-                            # @todo Close the connection
                             self.print_msg('Connection closed')
+                            return self.close_phone_connection()
 
                     except KeyError as err:
                         self.print_msg('Wrong key access: ' + str(err))
 
-        except bluetooth.btcommon.BluetoothError as err:
-            self.print_msg('error: ' + str(err))
-            return False
         return True
+
+    def send_to_serial(self, msg):
+        self.serial_ard.write("pong\n\r".encode())
+
+    def read_from_serial(self):
+        msg = self.serial_ard.readline()
+        return msg.rstrip().decode()
 
     def is_json(self, json_p):
         """Check if it is a Json file."""
@@ -124,8 +132,8 @@ class BluetoothConn:
 
         js_response = js_response[:-1]
         js_response += ']}'
-        # print(js_response)
-        self.connection.send(str(js_response))
+
+        self.send_to_serial(str(js_response))
 
     def send_device_info_to_bt(self, ip_address):
         mac_address = self.NOT_SET
@@ -144,7 +152,7 @@ class BluetoothConn:
                                 'mac': mac_address.decode(),
                                 'ip': ip_address.decode()}}
             json_data = json.dumps(data)
-            self.connection.send(json_data)
+            self.send_to_serial(json_data)
 
     def connect_to_wifi(self, ssid, psk):
         """
@@ -191,7 +199,8 @@ class BluetoothConn:
         # args = ["curl", "-s", "checkip.dyndns.org", "|", "sed", "-e", ",'s/.*Current IP Address: //' -e 's/<.*$//'"]
         p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         out, err = p.communicate()
-        ip_address = out.strip().split(b'<')[0]
+        if not len(err) > 0:
+            ip_address = out.strip().split(b'<')[0]
 
         return ip_address
 

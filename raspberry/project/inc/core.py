@@ -1,4 +1,4 @@
-from .BluetoothConn import BluetoothConn
+from .WifiConn import WifiConn
 
 
 class Core:
@@ -9,13 +9,12 @@ class Core:
         print("here you can see all the status of the process.")
         print("\n************************** \n")
 
-
     def run(self):
         val = False
-        btConf = BluetoothConn()
+        wifi_conn = WifiConn()
 
         while not val:
-            btConf.bt_connection()
-            val = btConf.run()
+            wifi_conn.bt_connection()
+            val = wifi_conn.run()
 
         print("Finish")
