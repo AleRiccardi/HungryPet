@@ -19,11 +19,7 @@ void BluetoothService::tick() {
     this->serialEvent();
     if (this->isMsgAvailable()) {
       Msg* msg = this->receiveMsg();
-      String content = msg->getContent();
-
-      if (content != "") {
-        this->excange->setBluetoothMsg(content);
-      }
+      this->checkAction(msg->getContent());
       delete msg;
     }
   }
@@ -31,12 +27,16 @@ void BluetoothService::tick() {
 
 }
 
-void BluetoothService::checkAction(String msg){
+void BluetoothService::checkAction(String msg) {
+  if (msg != "") {
+    this->excange->setBluetoothMsg(content);
+  }
+
   if (!this->active) {
-      this->active = true;
-      this->excange->setBluetoothMsg("Connected");
-      this->sendMsg("Connected");
-    } else {
+    this->active = true;
+    this->excange->setBluetoothMsg("Connected");
+    this->sendMsg("Connected");
+  }
 }
 
 void BluetoothService::listenSerialMsg() {
@@ -65,7 +65,7 @@ char BluetoothService::readChar() {
   return blueSerial.read();
 }
 
-void BluetoothService::sendMsg(const String& msg) {
+void BluetoothService::sendMsg(const String & msg) {
   blueSerial.println(msg);
 }
 
