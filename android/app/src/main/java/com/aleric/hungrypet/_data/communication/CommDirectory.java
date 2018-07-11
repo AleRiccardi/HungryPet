@@ -8,6 +8,9 @@ import org.json.JSONObject;
 
 public class CommDirectory {
 
+
+    public static final String A_CONN_ON = "conn-on";
+    public static final String A_CONN_OFF = "conn-off";
     public static final String A_WIFI_GET = "wifi-get";
     public static final String A_WIFI_SET = "wifi-set";
     public static final String A_BT_DISCONNECT = "bt-quit";

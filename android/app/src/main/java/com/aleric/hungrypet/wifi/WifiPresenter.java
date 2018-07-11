@@ -93,7 +93,7 @@ public class WifiPresenter implements WifiContract.Presenter {
                     switch (msg.arg1) {
                         case CommService.STATE_CONNECTED:
                             Log.i(TAG, "Connected");
-                            //mWifiArrayAdapter.clear();
+                            connectionAccepted();
                             break;
                         case CommService.STATE_CONNECTING:
                             Log.i(TAG, "Connecting");
@@ -153,11 +153,25 @@ public class WifiPresenter implements WifiContract.Presenter {
         }
     };
 
+    /**
+     * Send a message to bluetooth that the connection is set.
+     */
+    public boolean connectionAccepted() {
+        boolean success = false;
+        try {
+            String jsScanMsg = new JSONObject()
+                    .put("action", CommDirectory.A_CONN_ON).toString();
+            success = mComm.sendMessage(jsScanMsg);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return success;
+    }
 
     /**
-     * Scan the wifi and display in the ListView of the view.
+     * Send a request to scan new wifi
      */
-    @Override
     public boolean scanWifi() {
         boolean success = false;
         try {

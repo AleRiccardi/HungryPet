@@ -43,8 +43,6 @@ public class WifiDialogPresenter implements WifiContract.PresenterDialog {
 
             mComm.setHandler(mHandler);
         }
-
-
     }
 
     @SuppressLint("HandlerLeak")

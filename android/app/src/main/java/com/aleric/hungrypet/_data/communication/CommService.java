@@ -94,7 +94,7 @@ public class CommService {
 
             if (pairedDevices.size() > 0) {
                 for (BluetoothDevice device : pairedDevices) {
-                    if (device.getName().equals("HungryPet")) {
+                    if (device.getName().equals("HC-06")) {
                         connect(device);
                     }
                 }
