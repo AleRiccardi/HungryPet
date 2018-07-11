@@ -10,7 +10,7 @@ class BluetoothService : public MsgServiceTask {
     BluetoothService() {}
     void init(int period);
     void tick();
-
+    bool active;
 
   private:
     ExcangeInfo* excange;
@@ -18,6 +18,8 @@ class BluetoothService : public MsgServiceTask {
     bool availableSerial();
     char readChar();
     void sendMsg(const String& msg);
+    void listenSerialMsg();
+    void checkAction();
 };
 
 #endif

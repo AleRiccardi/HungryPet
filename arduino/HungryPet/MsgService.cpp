@@ -5,7 +5,7 @@ String cmd = "ping";
 
 void MsgServiceTask::init(int period) {
   Task::init(period);
-  
+
   this->startSerial();
   this->content.reserve(256);
   this->content = "";
@@ -15,7 +15,7 @@ void MsgServiceTask::init(int period) {
 
 void MsgServiceTask::tick() {
   this->serialEvent();
-  
+
   if (this->isMsgAvailable()) {
     Msg* msg = this->receiveMsg();
     String mes = msg->getContent();

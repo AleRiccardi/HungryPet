@@ -1,5 +1,6 @@
 #include "BluetoothService.h"
 #include <SoftwareSerial.h>
+#include "JsonConstant.h"
 
 #define rxPin A0
 #define txPin A1
@@ -9,22 +10,37 @@ SoftwareSerial blueSerial(rxPin, txPin);
 void BluetoothService::init(int period) {
   MsgServiceTask::init(period);
   this->excange = ExcangeInfo::getInstance();
+  this->active = false;
 }
 
 void BluetoothService::tick() {
-  this->serialEvent();
-  
-  if (this->isMsgAvailable()) {
-    Msg* msg = this->receiveMsg();
-    String message = msg->getContent();
 
-    if (message != "") {
-      this->excange->setBluetoothMsg(message);
+  if (this->availableSerial()) {
+    this->serialEvent();
+    if (this->isMsgAvailable()) {
+      Msg* msg = this->receiveMsg();
+      String content = msg->getContent();
+
+      if (content != "") {
+        this->excange->setBluetoothMsg(content);
+      }
+      delete msg;
     }
-    delete msg;
   }
+  this->listenSerialMsg();
 
-  if(this->excange->isSerialMsgAvailable()){
+}
+
+void BluetoothService::checkAction(String msg){
+  if (!this->active) {
+      this->active = true;
+      this->excange->setBluetoothMsg("Connected");
+      this->sendMsg("Connected");
+    } else {
+}
+
+void BluetoothService::listenSerialMsg() {
+  if (this->excange->isSerialMsgAvailable()) {
     Msg* msg = this->excange->getSerialMsg();
     String message = msg->getContent();
 
@@ -33,8 +49,8 @@ void BluetoothService::tick() {
     }
     delete msg;
   }
-  
 }
+
 
 // ### Default functions ###
 
