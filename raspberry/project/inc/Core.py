@@ -17,7 +17,7 @@ class Core:
         self.wifi_conn = WifiConn()
         self.db_manage = DbManage(self)
 
-        while self.wifi_conn.is_connected():
+        while not self.wifi_conn.is_connected():
             if self.wifi_conn.run():
                 self.print_msg("Device connected to wifi")
             else:

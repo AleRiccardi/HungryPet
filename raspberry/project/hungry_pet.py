@@ -1,4 +1,4 @@
-from inc.core import Core
+from inc.Core import Core
 
 core = Core()
 core.run()

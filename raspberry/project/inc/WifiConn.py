@@ -39,6 +39,7 @@ class WifiConn:
     def set_connection_with_arduino(self):
         try:
             self.serial_ard = serial.Serial('/dev/ttyACM0', 9600)  # enable the serial port
+            self.print_msg('Arduino connected')
             return True
         except Exception as inst:
             print(inst)
@@ -59,37 +60,41 @@ class WifiConn:
         if not ready:
             return False
 
+        self.print_msg('Waiting messages')
+
         # Start the loop
         while self.loop:
             # Read data
             data = self.read_from_serial()
             if self.is_json(str(data)):
                 data = json.loads(str(data))
-                self.print_msg(data)
                 # selection of action
                 try:
                     if data['action'] == self.A_WIFI_GET:
-                        # @todo Send back a list of wifi
+                        """ Request of wifi """
                         self.send_wifi_to_bt()
 
                     elif data['action'] == self.A_WIFI_SET:
+                        """ Set wifi """
                         ssid = data['content']['ssid']
                         pswd = data['content']['pswd']
-                        ip_address = self.connect_to_wifi(ssid, pswd)
+                        self.print_msg('Request to set wifi: ' + ssid)
+                        ip_address = self.connect_to_wifi(ssid, pswd)  # Connection
 
-                        if ip_address != self.NOT_SET:
-                            self.connected = True
-                            self.print_msg('Connected to SSID: ' + ssid + '\n')
-                            self.send_device_info_to_bt(ip_address)
-
-                        else:
-                            self.print_msg('Couldn\'t connect to SSID: ' + ssid + '\n')
+                        if ip_address == self.NOT_SET:
+                            self.print_msg('Couldn\'t connect to wifi: ' + ssid + '\n')
                             data['action'] = self.A_WIFI_SET
                             data['content'] = {'status': "fail"}
                             json_data = json.dumps(data)
                             self.send_to_serial(json_data)
 
+                        else:
+                            self.connected = True
+                            self.print_msg('Connected to wifi: ' + ssid + '\n')
+                            self.send_device_info_to_bt(ip_address)
+
                     elif data['action'] == self.A_BT_DISCONNECT:
+                        """ Closing connection """
                         self.print_msg('Connection closed')
                         return self.close_phone_connection()
 
@@ -99,6 +104,7 @@ class WifiConn:
 
     def send_to_serial(self, msg):
         msg += chr(13)
+        msg = msg.replace(" ", "")
         self.print_msg(msg)
         self.serial_ard.write(msg.encode())
 
@@ -124,17 +130,20 @@ class WifiConn:
         return True
 
     def send_wifi_to_bt(self):
+        all_wifi = []
         wifi_sc = WifiScan()
         connect = wifi_sc.scan()
         result = wifi_sc.parse(connect)
         js_response = '{"action":"' + self.A_WIFI_GET + '","content":['
         for wifi in result:
+            all_wifi += [wifi['essid']]
             js_wifi = '{"ssid":"' + wifi['essid'] + '","encryption":"' + wifi['encryption'] + '"}'
             js_response += '' + js_wifi + ','
 
         js_response = js_response[:-1]
         js_response += ']}'
 
+        self.print_msg('Scaned wifi: ' + str(all_wifi))
         self.send_to_serial(str(js_response))
 
     def send_device_info_to_bt(self, ip_address):
@@ -154,7 +163,6 @@ class WifiConn:
                                 'mac': mac_address.decode(),
                                 'ip': ip_address.decode()}}
             json_data = json.dumps(data)
-            json_data = json_data.replace(" ", "")
             self.send_to_serial(json_data)
 
     def connect_to_wifi(self, ssid, psk):
