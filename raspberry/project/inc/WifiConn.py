@@ -1,3 +1,5 @@
+from builtins import chr
+
 import serial
 import time
 import os
@@ -8,7 +10,7 @@ from .WifiScan import WifiScan
 
 class WifiConn:
     # ___General strings___
-    TAG = 'BlueWifiConf ~ '
+    TAG = 'WifiConn'
     PATH_WIFI = '/etc/wpa_supplicant/wpa_supplicant.conf'
     CMD_SUDO = 'sudo '
     NOT_SET = '<Not Set>'
@@ -21,10 +23,10 @@ class WifiConn:
     A_BT_DISCONNECT = 'bt-quit'
 
     # ____JSON____
-    JS_CONN_ON = '{ "action": "' + A_WIFI_ON + '"}'
-    JS_CONN_OFF = '{ "action": "' + A_WIFI_OFF + '" }'
-    JS_WIFI_CONNECTED = '{ "action": "' + A_WIFI_SET + '", "content": "success" }'
-    JS_NO_WIFI_CONNECTED = '{ "action": "' + A_WIFI_SET + '", "content": "fail" }'
+    JS_CONN_ON = '{ "action":"' + A_WIFI_ON + '"}'
+    JS_CONN_OFF = '{ "action":"' + A_WIFI_OFF + '"}'
+    JS_WIFI_CONNECTED = '{ "action":"' + A_WIFI_SET + '", "content": "success"}'
+    JS_NO_WIFI_CONNECTED = '{ "action":"' + A_WIFI_SET + '", "content": "fail"}'
 
     # ___VARIABLES___
     # Boolean
@@ -34,20 +36,13 @@ class WifiConn:
     # Other
     serial_ard = 0
 
-    def __init__(self):
-        self.serial_ard = serial.Serial('/dev/ttyACM0', 9600)  # enable the serial port
-
-    def wait_phone_connection(self):
-        """Connection to bluetooth device."""
-        if not self.connected:
-            msg = self.read_from_serial()
-
-            if msg == self.JS_CONN_ON:
-                self.print_msg('Connection accepted')
-                self.connected = True
-                self.send_to_serial(self.JS_CONN_ON)
-                return True
-        return False
+    def set_connection_with_arduino(self):
+        try:
+            self.serial_ard = serial.Serial('/dev/ttyACM0', 9600)  # enable the serial port
+            return True
+        except Exception as inst:
+            print(inst)
+            return False
 
     def close_phone_connection(self):
         if self.connected:
@@ -59,46 +54,53 @@ class WifiConn:
 
     def run(self):
         """Detect data from paired device."""
+        # Check if the wired connection with arduino is available.
+        ready = self.set_connection_with_arduino()
+        if not ready:
+            return False
+
+        # Start the loop
         while self.loop:
-            if self.wait_phone_connection():
-                data = self.read_from_serial()
+            # Read data
+            data = self.read_from_serial()
+            if self.is_json(str(data)):
+                data = json.loads(str(data))
+                self.print_msg(data)
+                # selection of action
+                try:
+                    if data['action'] == self.A_WIFI_GET:
+                        # @todo Send back a list of wifi
+                        self.send_wifi_to_bt()
 
-                if self.is_json(str(data)):
-                    data = json.loads(str(data))
-                    # self.print_msg(data)
-                    # selection of action
-                    try:
-                        if data['action'] == self.A_WIFI_GET:
-                            # @todo Send back a list of wifi
-                            self.send_wifi_to_bt()
+                    elif data['action'] == self.A_WIFI_SET:
+                        ssid = data['content']['ssid']
+                        pswd = data['content']['pswd']
+                        ip_address = self.connect_to_wifi(ssid, pswd)
 
-                        elif data['action'] == self.A_WIFI_SET:
-                            ssid = data['content']['ssid']
-                            pswd = data['content']['pswd']
-                            ip_address = self.connect_to_wifi(ssid, pswd)
+                        if ip_address != self.NOT_SET:
+                            self.connected = True
+                            self.print_msg('Connected to SSID: ' + ssid + '\n')
+                            self.send_device_info_to_bt(ip_address)
 
-                            if ip_address != self.NOT_SET:
-                                self.print_msg('Connected to SSID: ' + ssid + '\n')
-                                self.send_device_info_to_bt(ip_address)
+                        else:
+                            self.print_msg('Couldn\'t connect to SSID: ' + ssid + '\n')
+                            data['action'] = self.A_WIFI_SET
+                            data['content'] = {'status': "fail"}
+                            json_data = json.dumps(data)
+                            self.send_to_serial(json_data)
 
-                            else:
-                                self.print_msg('Couldn\'t connect to SSID: ' + ssid + '\n')
-                                data['action'] = self.A_WIFI_SET
-                                data['content'] = {'status': "fail"}
-                                json_data = json.dumps(data)
-                                self.send_to_serial(json_data)
+                    elif data['action'] == self.A_BT_DISCONNECT:
+                        self.print_msg('Connection closed')
+                        return self.close_phone_connection()
 
-                        elif data['action'] == self.A_BT_DISCONNECT:
-                            self.print_msg('Connection closed')
-                            return self.close_phone_connection()
-
-                    except KeyError as err:
-                        self.print_msg('Wrong key access: ' + str(err))
-
+                except KeyError as err:
+                    self.print_msg('Wrong key access: ' + str(err))
         return True
 
     def send_to_serial(self, msg):
-        self.serial_ard.write("pong\n\r".encode())
+        msg += chr(13)
+        self.print_msg(msg)
+        self.serial_ard.write(msg.encode())
 
     def read_from_serial(self):
         msg = self.serial_ard.readline()
@@ -125,10 +127,10 @@ class WifiConn:
         wifi_sc = WifiScan()
         connect = wifi_sc.scan()
         result = wifi_sc.parse(connect)
-        js_response = '{"action": "' + self.A_WIFI_GET + '", "content": ['
+        js_response = '{"action":"' + self.A_WIFI_GET + '","content":['
         for wifi in result:
-            js_wifi = '{"ssid": "' + wifi['essid'] + '", "encryption": "' + wifi['encryption'] + '"}'
-            js_response += ' ' + js_wifi + ','
+            js_wifi = '{"ssid":"' + wifi['essid'] + '","encryption":"' + wifi['encryption'] + '"}'
+            js_response += '' + js_wifi + ','
 
         js_response = js_response[:-1]
         js_response += ']}'
@@ -152,6 +154,7 @@ class WifiConn:
                                 'mac': mac_address.decode(),
                                 'ip': ip_address.decode()}}
             json_data = json.dumps(data)
+            json_data = json_data.replace(" ", "")
             self.send_to_serial(json_data)
 
     def connect_to_wifi(self, ssid, psk):
@@ -206,4 +209,7 @@ class WifiConn:
 
     def print_msg(self, msg):
         """Print class msg."""
-        print(self.TAG + str(msg))
+        print(self.TAG + ' ~ ' + str(msg))
+
+    def is_connected(self):
+        return self.connected
