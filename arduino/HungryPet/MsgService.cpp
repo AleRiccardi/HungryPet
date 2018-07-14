@@ -32,7 +32,7 @@ void MsgServiceTask::serialEvent() {
   /* reading the content */
   while (this->availableSerial()) {
     char ch = (char) this->readChar();
-    if (ch == '\n' || ch == 13) {
+    if (ch == '\n' || ch == '\r' || ch == 13) {
       this->currentMsg = new Msg(content);
       this->msgAvailable = true;
     } else {

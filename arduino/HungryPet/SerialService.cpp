@@ -8,19 +8,31 @@ void SerialService::init(int period) {
   this->excange = ExcangeInfo::getInstance();
 }
 
+
 void SerialService::tick() {
-  this->serialEvent();
-  
-  if (this->isMsgAvailable()) {
-    Msg* msg = this->receiveMsg();
-    String message = msg->getContent();
-
-    if (message != "") {
-      this->excange->setSerialMsg(message);
+   
+  // Read data from Serial (Raspberry)
+  if (this->availableSerial()) {
+    this->serialEvent();
+    if (this->isMsgAvailable()) {
+      Msg* msg = this->receiveMsg();
+      this->checkAction(msg->getContent());
+      delete msg;
     }
-    delete msg;
   }
+  
+  // Listen data from Android (Phone App)
+  this->listenBluetoothMsg();
 
+}
+
+void SerialService::checkAction(String content) {
+  if (content != "") {
+    this->excange->setSerialMsg(content);
+  }
+}
+
+void SerialService::listenBluetoothMsg() {
   if(this->excange->isBluetoothMsgAvailable()){
     Msg* msg = this->excange->getBluetoothMsg();
     String message = msg->getContent();
@@ -33,11 +45,16 @@ void SerialService::tick() {
 }
 
 
+
+
+
+
+
+
 // ### Default functions ###
 
 void SerialService::startSerial() {
   Serial.begin(9600);
-  Serial.println("Hello Raspberry");
 }
 bool SerialService::availableSerial() {
   return Serial.available();

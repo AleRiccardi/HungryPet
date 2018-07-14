@@ -12,7 +12,6 @@ void setup() {
 
   sched.init(20);
 
-
   Task* btServ = new BluetoothService();
   Task* serServ = new SerialService();
 

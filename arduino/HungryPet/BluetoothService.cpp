@@ -15,6 +15,7 @@ void BluetoothService::init(int period) {
 
 void BluetoothService::tick() {
 
+  // Read data from Bluetooth (Phone App)
   if (this->availableSerial()) {
     this->serialEvent();
     if (this->isMsgAvailable()) {
@@ -23,19 +24,15 @@ void BluetoothService::tick() {
       delete msg;
     }
   }
+
+  // Listen data from Serial (Raspberry)
   this->listenSerialMsg();
 
 }
 
-void BluetoothService::checkAction(String msg) {
-  if (msg != "") {
+void BluetoothService::checkAction(String content) {
+  if (content != "") {
     this->excange->setBluetoothMsg(content);
-  }
-
-  if (!this->active) {
-    this->active = true;
-    this->excange->setBluetoothMsg("Connected");
-    this->sendMsg("Connected");
   }
 }
 
@@ -56,7 +53,6 @@ void BluetoothService::listenSerialMsg() {
 
 void BluetoothService::startSerial() {
   blueSerial.begin(9600);
-  blueSerial.println("Hello Bluetooth");
 }
 bool BluetoothService::availableSerial() {
   return blueSerial.available();
@@ -66,6 +62,7 @@ char BluetoothService::readChar() {
 }
 
 void BluetoothService::sendMsg(const String & msg) {
-  blueSerial.println(msg);
+  msg += (char)4;
+  blueSerial.print(msg);
 }
 

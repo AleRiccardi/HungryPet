@@ -18,6 +18,8 @@ class SerialService : public MsgServiceTask {
     bool availableSerial();
     char readChar();
     void sendMsg(const String & msg);
+    void listenBluetoothMsg();
+    void checkAction(String content);
 };
 
 #endif
