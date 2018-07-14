@@ -25,6 +25,8 @@ public class WifiDialogPresenter implements WifiContract.PresenterDialog {
     private final WifiDirectory mDir;
     private CommDirectory mComm;
     private WifiCell mWifi;
+    static String messageReed;
+
 
     public WifiDialogPresenter(@NonNull WifiContract.ViewDialog view) {
         mDir = WifiDirectory.getInstance();
@@ -76,32 +78,40 @@ public class WifiDialogPresenter implements WifiContract.PresenterDialog {
                     byte[] readBuf = (byte[]) msg.obj;
                     // construct a string from the valid bytes in the buffer
                     String readMessage = new String(readBuf, 0, msg.arg1);
+                    // Concatenation of received messages
+                    messageReed += readMessage;
+                    // When receive the end of message, starts to process
+                    if (readMessage.endsWith(((char) 4) + "")) {
+                        // TODO error for null messages like -> (null{"action":"wifi-set","content":{"ip": ...)
+                        Log.i(TAG, messageReed);
+                        try {
+                            JSONObject jsAction = new JSONObject(messageReed);
+                            String action = (String) jsAction.get("action");
 
-                    try {
-                        JSONObject jsAction = new JSONObject(readMessage);
-                        String action = (String) jsAction.get("action");
+                            // Possible actions from the HungryPet station
+                            if (action.equals(CommDirectory.A_WIFI_SET)) {
+                                JSONObject jsContent = new JSONObject(messageReed);
+                                jsContent = jsContent.getJSONObject("content");
+                                String status = (String) jsContent.get("status");
 
-                        // Possible actions from the HungryPet station
-                        if (action.equals(CommDirectory.A_WIFI_SET)) {
-                            JSONObject jsContent = new JSONObject(readMessage);
-                            jsContent = jsContent.getJSONObject("content");
-                            String status = (String) jsContent.get("status");
-
-                            if (status.equals("success")) {
-                                String mac = (String) jsContent.get("mac");
-                                String ip = (String) jsContent.get("ip");
-                                connectionSuccess(mac, ip);
-                            } else {
-                                mView.setStatus(2);
-                                mView.showToast("Not connected to wifi", false);
+                                if (status.equals("success")) {
+                                    String mac = (String) jsContent.get("mac");
+                                    String ip = (String) jsContent.get("ip");
+                                    connectionSuccess(mac, ip);
+                                } else {
+                                    mView.setStatus(2);
+                                    mView.showToast("Not connected to wifi", false);
+                                }
+                            } else if (action.equals(CommDirectory.A_BT_DISCONNECT)) {
+                                mView.showToast("Disconnected to wifi", false);
+                                mView.dismiss();
                             }
-                        } else if (action.equals(CommDirectory.A_BT_DISCONNECT)) {
-                            mView.showToast("Disconnected to wifi", false);
-                            mView.dismiss();
-                        }
 
-                    } catch (JSONException e) {
-                        Log.e(TAG, "Json error:", e);
+                        } catch (JSONException e) {
+                            Log.e(TAG, "Json error:", e);
+                        } finally {
+                            messageReed = "";
+                        }
                     }
                     break;
 

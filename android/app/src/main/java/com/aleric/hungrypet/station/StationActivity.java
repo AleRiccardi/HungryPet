@@ -77,7 +77,7 @@ public class StationActivity extends AppCompatActivity {
             txvStationName.setText(mStation.getName());
             txvMac.setText(mStation.getMac());
             txvIp.setText(mStation.getIp());
-            txvUpdate.setText(mStation.getUpdate().toString());
+            txvUpdate.setText(mStation.getDateUpdate().toString());
 
             btnDisconnect.setOnClickListener(new View.OnClickListener() {
                 @Override

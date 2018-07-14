@@ -35,14 +35,14 @@ public class DbStationManager {
     public boolean updateStation(Station station) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         long row = db.update(Station.TABLE_NAME, station.getContentValues(),
-                Station._MAC + " = ? ", new String[]{String.valueOf(station.getMac())});
+                Station._ID + " = ? ", new String[]{String.valueOf(station.getId())});
         return row > 0;
     }
 
     public boolean deleteStation(Station station) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         long row = db.delete(Station.TABLE_NAME,
-                Station._MAC + " = ? ", new String[]{String.valueOf(station.getMac())});
+                Station._ID + " = ? ", new String[]{String.valueOf(station.getId())});
         return row > 0;
     }
 

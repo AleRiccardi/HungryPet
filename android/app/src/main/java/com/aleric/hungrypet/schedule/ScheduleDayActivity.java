@@ -146,24 +146,25 @@ public class ScheduleDayActivity extends AppCompatActivity {
         int hourInt = selectedHour * 100 + selectedMinute;
         String hourString = Schedule.createStringHour(hourInt);
         Toast.makeText(this, "Added schedule at " + hourString, Toast.LENGTH_LONG).show();
-        Schedule schedule = new Schedule(mStation.getMac(), dayNum, hourInt);
+        Schedule schedule = new Schedule(dayNum, hourInt, mStation.getId());
         mDbScheduleManager.addSchedule(schedule);
         refreshLsvSchedules();
     }
 
     public void updateSchedule(Schedule schedule, int selectedHour, int selectedMinute) {
-        Schedule scheduleNew = schedule.clone();
         Integer dayNum = Arrays.asList(Schedule.WEEK_DAYS).indexOf(mWeekString);
         int hourInt = selectedHour * 100 + selectedMinute;
         String hourString = Schedule.createStringHour(hourInt);
+        // Updating MODEL
+        schedule.setHour(hourInt); // Update hour
+        schedule.setUpdate(); // Update date
+        mDbScheduleManager.updateSchedule(schedule);
+        // Updating VIEW
         Toast.makeText(this, "Updated schedule at " + hourString, Toast.LENGTH_LONG).show();
-        scheduleNew.setHour(hourInt);
-        mDbScheduleManager.updateSchedule(schedule, scheduleNew);
         refreshLsvSchedules();
     }
 
     public void deleteSchedule(Schedule schedule) {
-        Schedule scheuleCopy = schedule.clone();
         mDbScheduleManager.deleteSchedule(schedule);
         refreshLsvSchedules();
     }
@@ -172,8 +173,6 @@ public class ScheduleDayActivity extends AppCompatActivity {
         mDbScheduleManager.addSchedule(schedule);
         refreshLsvSchedules();
     }
-
-
 
 
 }

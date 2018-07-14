@@ -11,65 +11,75 @@ import java.util.Date;
 public class Schedule {
 
     public static final String TABLE_NAME = "schedule";
-    public static final String COLUMN_MAC = "mac";
-    public static final String COLUMN_WEEK_D = "weekD";
+    public static final String _ID = "id";
+    public static final String COLUMN_WEEK_DAY = "week_day";
     public static final String COLUMN_HOUR = "hour";
-    public static final String COLUMN_DATE = "date";
+    public static final String COLUMN_DATE_CREATE = "date_create";
+    public static final String COLUMN_DATE_UPDATE = "date_update";
+    public static final String _ID_STATION = "id_station";
     static public String[] WEEK_DAYS = new String[]{"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
 
-    private String mMac;
+    private int mId;
     private int mWeekDay;
     private int mHour;
-    private Date mUpdate;
+    private Date mDateCreate;
+    private Date mDateUpdate;
+    private int mIdStation;
 
 
-
-    public Schedule(String mac, int weekDay, int hour){
-        mMac = mac;
+    public Schedule(int weekDay, int hour, int idStation) {
         mWeekDay = weekDay;
         mHour = hour;
-        mUpdate = Calendar.getInstance().getTime();
+        mDateCreate = Calendar.getInstance().getTime();
+        mDateUpdate = Calendar.getInstance().getTime();
+        mIdStation = idStation;
     }
 
-    public Schedule(String mac, int weekDay, int hour ,Date date){
-        mMac = mac;
+    public Schedule(int id, int weekDay, int hour, Date dateCreate, int idStation) {
+        mId = id;
         mWeekDay = weekDay;
         mHour = hour;
-        mUpdate = date;
+        mDateCreate = dateCreate;
+        mDateUpdate = Calendar.getInstance().getTime();
+        mIdStation = idStation;
     }
 
     public Schedule(Cursor cursor) {
-        this.mMac = cursor.getString(cursor.getColumnIndex(COLUMN_MAC));
-        this.mWeekDay = Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_WEEK_D)));
+        this.mId = cursor.getInt(cursor.getColumnIndex(_ID));
+        this.mWeekDay = Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_WEEK_DAY)));
         this.mHour = Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_HOUR)));
+        this.mIdStation = cursor.getInt(cursor.getColumnIndex(_ID_STATION));
 
-        String s = cursor.getString(cursor.getColumnIndex(COLUMN_DATE));
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String curCreate = cursor.getString(cursor.getColumnIndex(COLUMN_DATE_CREATE));
+        SimpleDateFormat dateFormatCreate = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss z");
+
+        String curUpdate = cursor.getString(cursor.getColumnIndex(COLUMN_DATE_UPDATE));
+        SimpleDateFormat dateFormatUpdate = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss z");
+
         try {
-            this.mUpdate = dateFormat.parse(s);
+            this.mDateCreate = dateFormatCreate.parse(curCreate);
+            this.mDateUpdate = dateFormatUpdate.parse(curUpdate);
         } catch (ParseException e) {
+            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
 
-    public void setMac(String mac){
-        mMac = mac;
-    }
 
-    public void setWeekDay(int weekDay){
+    public void setWeekDay(int weekDay) {
         mWeekDay = weekDay;
     }
 
-    public void setHour(int hour){
+    public void setHour(int hour) {
         mHour = hour;
     }
 
-    public void setUpdate(Date update){
-        mUpdate = update;
+    public void setUpdate() {
+        this.mDateUpdate = Calendar.getInstance().getTime();;
     }
 
-    public String getMac() {
-        return mMac;
+    public int getId() {
+        return mId;
     }
 
     public int getWeekDay() {
@@ -80,24 +90,28 @@ public class Schedule {
         return mHour;
     }
 
-    public Date getUpdate() {
-        return mUpdate;
+    public Date getDateCreate() {
+        return this.mDateCreate;
     }
 
+    public Date getmDateUpdate() {
+        return this.mDateUpdate;
+    }
+
+
     public ContentValues getContentValues() {
-        if(mUpdate == null){
-            mUpdate = Calendar.getInstance().getTime();
-        }
+
         ContentValues cv = new ContentValues();
-        cv.put(COLUMN_MAC, mMac);
-        cv.put(COLUMN_WEEK_D, mWeekDay);
+        cv.put(_ID, mId);
+        cv.put(COLUMN_WEEK_DAY, mWeekDay);
         cv.put(COLUMN_HOUR, mHour);
-        cv.put(COLUMN_DATE, mUpdate.toString());
+        cv.put(COLUMN_DATE_CREATE, mDateCreate.toString());
+        cv.put(COLUMN_DATE_UPDATE, mDateUpdate.toString());
         return cv;
     }
 
-    public Schedule clone(){
-        return new Schedule(mMac,mWeekDay,mHour,mUpdate);
+    public Schedule clone() {
+        return new Schedule(mId, mWeekDay, mHour, mDateCreate, mIdStation);
     }
 
 

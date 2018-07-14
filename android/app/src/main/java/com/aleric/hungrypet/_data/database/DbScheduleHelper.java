@@ -10,7 +10,7 @@ import com.aleric.hungrypet._data.shedule.Schedule;
 public class DbScheduleHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "my_hungrypet.db";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     public DbScheduleHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -18,12 +18,14 @@ public class DbScheduleHelper extends SQLiteOpenHelper {
 
     public static final String CREATE_TABLE_SCHEDULE = "CREATE TABLE " +
             Schedule.TABLE_NAME + " (" +
-            Schedule.COLUMN_MAC + " VARCHAR(12) NOT NULL, " +
-            Schedule.COLUMN_WEEK_D + " INTEGER NOT NULL, " +
+            Schedule._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + // Define a primary key
+            Schedule.COLUMN_WEEK_DAY + " INTEGER NOT NULL, " +
             Schedule.COLUMN_HOUR + " INTEGER NOT NULL, " +
-            Schedule.COLUMN_DATE + " DATETIME NOT NULL, " +
-            " PRIMARY KEY (" + Schedule.COLUMN_MAC + ", " + Schedule.COLUMN_WEEK_D + ", " + Schedule.COLUMN_HOUR + "), " +
-            " FOREIGN KEY (mac) REFERENCES station(mac)" +
+            Schedule.COLUMN_DATE_CREATE + " DATETIME NOT NULL, " +
+            Schedule.COLUMN_DATE_UPDATE + " DATETIME NOT NULL, " +
+            " CONSTRAINT ak_unique_schedule UNIQUE(" + Schedule._ID_STATION + ", " +
+            Schedule.COLUMN_WEEK_DAY + ", " + Schedule.COLUMN_HOUR + "),  " +
+            " FOREIGN KEY (" + Schedule._ID_STATION + ") REFERENCES station(mac)" +
             ")";
 
     @Override
