@@ -7,6 +7,7 @@ import android.bluetooth.BluetoothSocket;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.SystemClock;
 import android.util.Log;
 
 
@@ -80,7 +81,7 @@ public class CommService {
         return mState;
     }
 
-    public void setHandler(Handler handler){
+    public void setHandler(Handler handler) {
         mHandler = handler;
     }
 
@@ -344,18 +345,23 @@ public class CommService {
         public void run() {
             Log.i(TAG, "BEGIN mConnectedThread");
             byte[] buffer = new byte[1024];
+            byte[] tmpMessage = new byte[3000];
+            int tmpIndex = 0;
             int bytes;
 
             // Keep listening to the InputStream while connected
             while (mState == STATE_CONNECTED) {
                 try {
-                    // Read from the InputStream
-                    bytes = mmInStream.read(buffer);
-                    // Send the obtained bytes to the UI Activity
-                    if(bytes != 0) {
-                        mHandler.obtainMessage(CommConstants.MESSAGE_READ, bytes, -1, buffer)
-                                .sendToTarget();
-                    }
+                    if (mmInStream.available() > 0) {
+                        // Read from the InputStream
+                        bytes = mmInStream.read(buffer);
+                        // Send the obtained bytes to the UI Activity
+                        if (bytes != 0) {
+                            mHandler.obtainMessage(CommConstants.MESSAGE_READ, bytes, -1, buffer)
+                                    .sendToTarget();
+                        }
+
+                    } else SystemClock.sleep(100);
 
                 } catch (IOException e) {
                     Log.e(TAG, "disconnected", e);

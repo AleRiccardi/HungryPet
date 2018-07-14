@@ -34,6 +34,8 @@ public class WifiPresenter implements WifiContract.Presenter {
      */
     private boolean mIsNewActivity;
 
+    static String messageReed = "";
+
 
     public WifiPresenter(@NonNull WifiContract.View view) {
         mView = view;
@@ -85,7 +87,6 @@ public class WifiPresenter implements WifiContract.Presenter {
 
     @SuppressLint("HandlerLeak")
     private final Handler mHandler = new Handler() {
-
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
@@ -93,7 +94,6 @@ public class WifiPresenter implements WifiContract.Presenter {
                     switch (msg.arg1) {
                         case CommService.STATE_CONNECTED:
                             Log.i(TAG, "Connected");
-                            connectionAccepted();
                             break;
                         case CommService.STATE_CONNECTING:
                             Log.i(TAG, "Connecting");
@@ -116,20 +116,28 @@ public class WifiPresenter implements WifiContract.Presenter {
                     byte[] readBuf = (byte[]) msg.obj;
                     // construct a string from the valid bytes in the buffer
                     String readMessage = new String(readBuf, 0, msg.arg1);
+                    // Concatenation of received messages
+                    messageReed += readMessage;
+                    // When receive the end of message, starts to process
+                    if (readMessage.endsWith(((char) 4) + "")) {
+                        Log.i(TAG, messageReed);
+                        try {
+                            JSONObject json = new JSONObject(messageReed);
 
-                    try {
-                        JSONObject json = new JSONObject(readMessage);
-                        String action = (String) json.get("action");
+                            String action = (String) json.get("action");
 
-                        // Possible actions from the HungryPet device
-                        if (action.equals(CommDirectory.A_WIFI_GET)) {
-                            sendWifiToView(json);
-                        }  else if (action.equals(CommDirectory.A_BT_DISCONNECT)) {
-                            mView.showToast("Disconnected to wifi", false);
+                            // Possible actions from the HungryPet device
+                            if (action.equals(CommDirectory.A_WIFI_GET)) {
+                                sendWifiToView(json);
+                            } else if (action.equals(CommDirectory.A_BT_DISCONNECT)) {
+                                mView.showToast("Disconnected to wifi", false);
+                            }
+
+                        } catch (JSONException e) {
+                            Log.e(TAG, "Json error:", e);
+                        } finally {
+                            messageReed = "";
                         }
-
-                    } catch (JSONException e) {
-                        Log.e(TAG, "Json error:", e);
                     }
                     break;
 
@@ -152,22 +160,6 @@ public class WifiPresenter implements WifiContract.Presenter {
             }
         }
     };
-
-    /**
-     * Send a message to bluetooth that the connection is set.
-     */
-    public boolean connectionAccepted() {
-        boolean success = false;
-        try {
-            String jsScanMsg = new JSONObject()
-                    .put("action", CommDirectory.A_CONN_ON).toString();
-            success = mComm.sendMessage(jsScanMsg);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        return success;
-    }
 
     /**
      * Send a request to scan new wifi
