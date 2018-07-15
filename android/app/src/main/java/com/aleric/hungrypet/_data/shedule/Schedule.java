@@ -10,14 +10,19 @@ import java.util.Date;
 
 public class Schedule {
 
+    /* TABLE */
     public static final String TABLE_NAME = "schedule";
+    public static final String _ID = "id";
     public static final String COLUMN_MAC = "mac";
     public static final String COLUMN_WEEK_DAY = "week_day";
     public static final String COLUMN_HOUR = "hour";
     public static final String COLUMN_DATE_CREATE = "date_create";
     public static final String COLUMN_DATE_UPDATE = "date_update";
+
+    public static final String PATTERN_DATE = "yyyy-MM-dd HH:mm:ss";
     static public String[] WEEK_DAYS = new String[]{"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
 
+    private String mId;
     private String mMac;
     private int mWeekDay;
     private int mHour;
@@ -31,9 +36,11 @@ public class Schedule {
         mHour = hour;
         mDateCreate = Calendar.getInstance().getTime();
         mDateUpdate = Calendar.getInstance().getTime();
+        mId = generateId(mac, mDateCreate);
     }
 
-    public Schedule(String mac, int weekDay, int hour, Date dateCreate) {
+    public Schedule(String id, String mac, int weekDay, int hour, Date dateCreate) {
+        mId = id;
         mMac = mac;
         mWeekDay = weekDay;
         mHour = hour;
@@ -41,13 +48,22 @@ public class Schedule {
         mDateUpdate = Calendar.getInstance().getTime();
     }
 
-    public Schedule(Cursor cursor) {
+    public Schedule(String id, String mac, int weekDay, int hour, Date dateCreate, Date dateUpdate) {
+        mId = id;
+        mMac = mac;
+        mWeekDay = weekDay;
+        mHour = hour;
+        mDateCreate = dateCreate;
+        mDateUpdate = dateUpdate;
+    }
 
+    public Schedule(Cursor cursor) {
+        this.mId = cursor.getString(cursor.getColumnIndex(_ID));
         this.mMac = cursor.getString(cursor.getColumnIndex(COLUMN_MAC));
         this.mWeekDay = Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_WEEK_DAY)));
         this.mHour = Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_HOUR)));
 
-        SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss z");
+        SimpleDateFormat format = new SimpleDateFormat(this.PATTERN_DATE);
         String curCreate = cursor.getString(cursor.getColumnIndex(COLUMN_DATE_CREATE));
         String curUpdate = cursor.getString(cursor.getColumnIndex(COLUMN_DATE_UPDATE));
 
@@ -60,6 +76,10 @@ public class Schedule {
         }
     }
 
+    private String generateId(String mac, Date dateCreate) {
+        SimpleDateFormat format = new SimpleDateFormat(this.PATTERN_DATE);
+        return mac + "-" + format.format(dateCreate);
+    }
 
     public void setWeekDay(int weekDay) {
         mWeekDay = weekDay;
@@ -72,6 +92,10 @@ public class Schedule {
     public void setUpdate() {
         this.mDateUpdate = Calendar.getInstance().getTime();
         ;
+    }
+
+    public String getId() {
+        return mId;
     }
 
     public String getMac() {
@@ -97,9 +121,10 @@ public class Schedule {
 
     public ContentValues getContentValues() {
         // Formatting time
-        SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss z");
+        SimpleDateFormat format = new SimpleDateFormat(this.PATTERN_DATE);
 
         ContentValues cv = new ContentValues();
+        cv.put(_ID, mId);
         cv.put(COLUMN_MAC, mMac);
         cv.put(COLUMN_WEEK_DAY, mWeekDay);
         cv.put(COLUMN_HOUR, mHour);
@@ -109,7 +134,7 @@ public class Schedule {
     }
 
     public Schedule clone() {
-        return new Schedule(mMac, mWeekDay, mHour, mDateCreate);
+        return new Schedule(mId, mMac, mWeekDay, mHour, mDateCreate);
     }
 
 

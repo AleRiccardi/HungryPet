@@ -54,4 +54,10 @@
     <!-- ~ Dashboard ~ -->
 
 
+
+    <!-- ~ Schedule ~ -->
+    <string name="label_download">Download</string>
+
+
+
 </resources>

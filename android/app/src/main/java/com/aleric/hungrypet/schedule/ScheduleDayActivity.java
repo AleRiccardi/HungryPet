@@ -155,11 +155,10 @@ public class ScheduleDayActivity extends AppCompatActivity {
         Integer dayNum = Arrays.asList(Schedule.WEEK_DAYS).indexOf(mWeekString);
         int hourInt = selectedHour * 100 + selectedMinute;
         String hourString = Schedule.createStringHour(hourInt);
-        Schedule oldSchedule = schedule.clone();
         // Updating MODEL
         schedule.setHour(hourInt); // Update hour
         schedule.setUpdate(); // Update date
-        mDbScheduleManager.updateSchedule(oldSchedule, schedule);
+        mDbScheduleManager.updateSchedule(schedule);
         // Updating VIEW
         Toast.makeText(this, "Updated schedule at " + hourString, Toast.LENGTH_LONG).show();
         refreshLsvSchedules();

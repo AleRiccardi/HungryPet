@@ -24,42 +24,17 @@ public class DbScheduleManager {
         return row > 0;
     }
 
-    public boolean updateSchedule(Schedule scheduleOld, Schedule scheduleNew) {
-        String macS = String.valueOf(scheduleOld.getMac());
-        String weekDS = String.valueOf(scheduleOld.getWeekDay());
-        String hourS = String.valueOf(scheduleOld.getHour());
-        String selection =
-                Schedule.COLUMN_MAC + " = ? AND " +
-                        Schedule.COLUMN_WEEK_DAY + " = ? AND " +
-                        Schedule.COLUMN_HOUR + " = ? ";
-        String[] selectionArg = new String[]{macS, weekDS, hourS};
+    public boolean updateSchedule(Schedule schedule) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        long row = db.update(
-                Schedule.TABLE_NAME,
-                scheduleNew.getContentValues(),
-                selection,
-                selectionArg
-        );
+        long row = db.update(Schedule.TABLE_NAME, schedule.getContentValues(),
+                Schedule._ID + " = ? ", new String[]{schedule.getId()});
         return row > 0;
     }
 
     public boolean deleteSchedule(Schedule schedule) {
-        String macS = String.valueOf(schedule.getMac());
-        String weekDS = String.valueOf(schedule.getWeekDay());
-        String hourS = String.valueOf(schedule.getHour());
-        String selection =
-                Schedule.COLUMN_MAC + " = ? AND " +
-                        Schedule.COLUMN_WEEK_DAY + " = ? AND " +
-                        Schedule.COLUMN_HOUR + " = ? ";
-        String[] selectionArg = new String[]{macS, weekDS, hourS};
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-        long row = db.delete(
-                Schedule.TABLE_NAME,
-                selection,
-                selectionArg
-        );
-
+        long row = db.delete(Schedule.TABLE_NAME,
+                Schedule._ID + " = ? ", new String[]{schedule.getId()});
         return row > 0;
     }
 

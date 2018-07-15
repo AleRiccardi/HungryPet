@@ -10,7 +10,7 @@ import com.aleric.hungrypet._data.shedule.Schedule;
 public class DbScheduleHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "my_hungrypet.db";
-    private static final int DATABASE_VERSION = 9;
+    private static final int DATABASE_VERSION = 16;
 
     public DbScheduleHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -18,14 +18,15 @@ public class DbScheduleHelper extends SQLiteOpenHelper {
 
     public static final String CREATE_TABLE_SCHEDULE = "CREATE TABLE " +
             Schedule.TABLE_NAME + " (" +
-            Schedule.COLUMN_MAC + " VARCHAR(12) NOT NULL, " +
+            Schedule._ID + " VARCHAR(40) NOT NULL, " +
+            Schedule.COLUMN_MAC + " VARCHAR(20) NOT NULL, " +
             Schedule.COLUMN_WEEK_DAY + " INTEGER NOT NULL, " +
             Schedule.COLUMN_HOUR + " INTEGER NOT NULL, " +
             Schedule.COLUMN_DATE_CREATE + " DATETIME NOT NULL, " +
             Schedule.COLUMN_DATE_UPDATE + " DATETIME NOT NULL, " +
-            " PRIMARY KEY (" + Schedule.COLUMN_MAC + ", " +
-            Schedule.COLUMN_WEEK_DAY + ", " + Schedule.COLUMN_HOUR + "),  " +
-            " FOREIGN KEY (" + Schedule.COLUMN_MAC + ") REFERENCES station(mac)" +
+            "PRIMARY KEY (" + Schedule._ID + "), " +
+            "CONSTRAINT UC_Schedule UNIQUE (" + Schedule.COLUMN_MAC + ", " + Schedule.COLUMN_WEEK_DAY + ", " + Schedule.COLUMN_HOUR + "), " +
+            "FOREIGN KEY (" + Schedule.COLUMN_MAC + ") REFERENCES station(mac)" +
             ")";
 
     @Override
