@@ -15,14 +15,12 @@ import java.util.Date;
 public class Station {
 
     public static final String TABLE_NAME = "station";
-    public static final String _ID = "id";
-    public static final String COLUMN_MAC = "mac";
+    public static final String _MAC = "mac";
     public static final String COLUMN_NAME = "name";
     public static final String COLUMN_IP = "ip";
     public static final String COLUMN_DATE_CEATE = "date_create";
     public static final String COLUMN_DATE_UPDATE = "date_update";
 
-    private int mId;
     private String mMac;
     private String mName;
     private String mIp;
@@ -38,20 +36,17 @@ public class Station {
     }
 
     public Station(Cursor cursor) {
-        this.mId = cursor.getInt(cursor.getColumnIndex(_ID));
-        this.mMac = cursor.getString(cursor.getColumnIndex(COLUMN_MAC));
+        this.mMac = cursor.getString(cursor.getColumnIndex(_MAC));
         this.mName = cursor.getString(cursor.getColumnIndex(COLUMN_NAME));
         this.mIp = cursor.getString(cursor.getColumnIndex(COLUMN_IP));
 
+        SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss z");
         String curCreate = cursor.getString(cursor.getColumnIndex(COLUMN_DATE_CEATE));
-        SimpleDateFormat dateFormatCreate = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss z");
-
         String curUpdate = cursor.getString(cursor.getColumnIndex(COLUMN_DATE_CEATE));
-        SimpleDateFormat dateFormatUpdate = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss z");
 
         try {
-            this.mDateCreate = dateFormatCreate.parse(curCreate);
-            this.mDateUpdate = dateFormatUpdate.parse(curUpdate);
+            this.mDateCreate = format.parse(curCreate);
+            this.mDateUpdate = format.parse(curUpdate);
         } catch (ParseException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -75,10 +70,6 @@ public class Station {
         this.mDateUpdate = dateUpdate;
     }
 
-    public int getId() {
-        return mId;
-    }
-
     public String getMac() {
         return mMac;
     }
@@ -100,12 +91,15 @@ public class Station {
     }
 
     public ContentValues getContentValues() {
+        // Formatting time
+        SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss z");
+
         ContentValues cv = new ContentValues();
-        cv.put(_ID, mId);
-        cv.put(COLUMN_MAC, mMac);
+        cv.put(_MAC, mMac);
+        cv.put(COLUMN_IP, mIp);
         cv.put(COLUMN_NAME, mName);
-        cv.put(COLUMN_DATE_CEATE, mDateCreate.toString());
-        cv.put(COLUMN_DATE_UPDATE, mDateUpdate.toString());
+        cv.put(COLUMN_DATE_CEATE, format.format(mDateCreate));
+        cv.put(COLUMN_DATE_UPDATE, format.format(mDateCreate));
         return cv;
     }
 }

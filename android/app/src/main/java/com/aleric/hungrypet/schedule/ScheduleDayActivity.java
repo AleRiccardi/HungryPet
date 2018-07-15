@@ -146,7 +146,7 @@ public class ScheduleDayActivity extends AppCompatActivity {
         int hourInt = selectedHour * 100 + selectedMinute;
         String hourString = Schedule.createStringHour(hourInt);
         Toast.makeText(this, "Added schedule at " + hourString, Toast.LENGTH_LONG).show();
-        Schedule schedule = new Schedule(dayNum, hourInt, mStation.getId());
+        Schedule schedule = new Schedule(mStation.getMac(), dayNum, hourInt);
         mDbScheduleManager.addSchedule(schedule);
         refreshLsvSchedules();
     }
@@ -155,10 +155,11 @@ public class ScheduleDayActivity extends AppCompatActivity {
         Integer dayNum = Arrays.asList(Schedule.WEEK_DAYS).indexOf(mWeekString);
         int hourInt = selectedHour * 100 + selectedMinute;
         String hourString = Schedule.createStringHour(hourInt);
+        Schedule oldSchedule = schedule.clone();
         // Updating MODEL
         schedule.setHour(hourInt); // Update hour
         schedule.setUpdate(); // Update date
-        mDbScheduleManager.updateSchedule(schedule);
+        mDbScheduleManager.updateSchedule(oldSchedule, schedule);
         // Updating VIEW
         Toast.makeText(this, "Updated schedule at " + hourString, Toast.LENGTH_LONG).show();
         refreshLsvSchedules();

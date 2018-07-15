@@ -24,21 +24,47 @@ public class DbScheduleManager {
         return row > 0;
     }
 
-    public boolean updateSchedule(Schedule schedule) {
+    public boolean updateSchedule(Schedule scheduleOld, Schedule scheduleNew) {
+        String macS = String.valueOf(scheduleOld.getMac());
+        String weekDS = String.valueOf(scheduleOld.getWeekDay());
+        String hourS = String.valueOf(scheduleOld.getHour());
+        String selection =
+                Schedule.COLUMN_MAC + " = ? AND " +
+                        Schedule.COLUMN_WEEK_DAY + " = ? AND " +
+                        Schedule.COLUMN_HOUR + " = ? ";
+        String[] selectionArg = new String[]{macS, weekDS, hourS};
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        long row = db.update(Schedule.TABLE_NAME, schedule.getContentValues(),
-                Schedule._ID + " = ? ", new String[]{String.valueOf(schedule.getId())});
+        long row = db.update(
+                Schedule.TABLE_NAME,
+                scheduleNew.getContentValues(),
+                selection,
+                selectionArg
+        );
         return row > 0;
     }
 
     public boolean deleteSchedule(Schedule schedule) {
+        String macS = String.valueOf(schedule.getMac());
+        String weekDS = String.valueOf(schedule.getWeekDay());
+        String hourS = String.valueOf(schedule.getHour());
+        String selection =
+                Schedule.COLUMN_MAC + " = ? AND " +
+                        Schedule.COLUMN_WEEK_DAY + " = ? AND " +
+                        Schedule.COLUMN_HOUR + " = ? ";
+        String[] selectionArg = new String[]{macS, weekDS, hourS};
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        long row = db.delete(Schedule.TABLE_NAME,
-                Schedule._ID + " = ? ", new String[]{String.valueOf(schedule.getId())});
+
+        long row = db.delete(
+                Schedule.TABLE_NAME,
+                selection,
+                selectionArg
+        );
+
         return row > 0;
     }
 
-    public List<Schedule> getSchedules(String idStation) {
+
+    public List<Schedule> getSchedules(String mac) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         List<Schedule> schedules = new ArrayList<>();
@@ -46,7 +72,7 @@ public class DbScheduleManager {
 
         try {
             String query = "SELECT * FROM " + Schedule.TABLE_NAME +
-                    " WHERE " + Schedule._ID_STATION + " = '" + idStation + "'" +
+                    " WHERE mac = '" + mac + "'" +
                     " ORDER BY " + Schedule.COLUMN_WEEK_DAY + " ASC";
             cursor = db.rawQuery(query, null);
             while (cursor.moveToNext()) {

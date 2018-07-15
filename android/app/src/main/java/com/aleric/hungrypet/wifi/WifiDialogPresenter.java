@@ -25,7 +25,7 @@ public class WifiDialogPresenter implements WifiContract.PresenterDialog {
     private final WifiDirectory mDir;
     private CommDirectory mComm;
     private WifiCell mWifi;
-    static String messageReed;
+    static String messageReed = "";
 
 
     public WifiDialogPresenter(@NonNull WifiContract.ViewDialog view) {

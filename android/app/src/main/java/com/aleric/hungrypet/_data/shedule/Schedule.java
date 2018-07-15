@@ -11,54 +11,49 @@ import java.util.Date;
 public class Schedule {
 
     public static final String TABLE_NAME = "schedule";
-    public static final String _ID = "id";
+    public static final String COLUMN_MAC = "mac";
     public static final String COLUMN_WEEK_DAY = "week_day";
     public static final String COLUMN_HOUR = "hour";
     public static final String COLUMN_DATE_CREATE = "date_create";
     public static final String COLUMN_DATE_UPDATE = "date_update";
-    public static final String _ID_STATION = "id_station";
     static public String[] WEEK_DAYS = new String[]{"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
 
-    private int mId;
+    private String mMac;
     private int mWeekDay;
     private int mHour;
     private Date mDateCreate;
     private Date mDateUpdate;
-    private int mIdStation;
 
 
-    public Schedule(int weekDay, int hour, int idStation) {
+    public Schedule(String mac, int weekDay, int hour) {
+        mMac = mac;
         mWeekDay = weekDay;
         mHour = hour;
         mDateCreate = Calendar.getInstance().getTime();
         mDateUpdate = Calendar.getInstance().getTime();
-        mIdStation = idStation;
     }
 
-    public Schedule(int id, int weekDay, int hour, Date dateCreate, int idStation) {
-        mId = id;
+    public Schedule(String mac, int weekDay, int hour, Date dateCreate) {
+        mMac = mac;
         mWeekDay = weekDay;
         mHour = hour;
         mDateCreate = dateCreate;
         mDateUpdate = Calendar.getInstance().getTime();
-        mIdStation = idStation;
     }
 
     public Schedule(Cursor cursor) {
-        this.mId = cursor.getInt(cursor.getColumnIndex(_ID));
+
+        this.mMac = cursor.getString(cursor.getColumnIndex(COLUMN_MAC));
         this.mWeekDay = Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_WEEK_DAY)));
         this.mHour = Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_HOUR)));
-        this.mIdStation = cursor.getInt(cursor.getColumnIndex(_ID_STATION));
 
+        SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss z");
         String curCreate = cursor.getString(cursor.getColumnIndex(COLUMN_DATE_CREATE));
-        SimpleDateFormat dateFormatCreate = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss z");
-
         String curUpdate = cursor.getString(cursor.getColumnIndex(COLUMN_DATE_UPDATE));
-        SimpleDateFormat dateFormatUpdate = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss z");
 
         try {
-            this.mDateCreate = dateFormatCreate.parse(curCreate);
-            this.mDateUpdate = dateFormatUpdate.parse(curUpdate);
+            this.mDateCreate = format.parse(curCreate);
+            this.mDateUpdate = format.parse(curUpdate);
         } catch (ParseException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -75,11 +70,12 @@ public class Schedule {
     }
 
     public void setUpdate() {
-        this.mDateUpdate = Calendar.getInstance().getTime();;
+        this.mDateUpdate = Calendar.getInstance().getTime();
+        ;
     }
 
-    public int getId() {
-        return mId;
+    public String getMac() {
+        return mMac;
     }
 
     public int getWeekDay() {
@@ -100,18 +96,20 @@ public class Schedule {
 
 
     public ContentValues getContentValues() {
+        // Formatting time
+        SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss z");
 
         ContentValues cv = new ContentValues();
-        cv.put(_ID, mId);
+        cv.put(COLUMN_MAC, mMac);
         cv.put(COLUMN_WEEK_DAY, mWeekDay);
         cv.put(COLUMN_HOUR, mHour);
-        cv.put(COLUMN_DATE_CREATE, mDateCreate.toString());
-        cv.put(COLUMN_DATE_UPDATE, mDateUpdate.toString());
+        cv.put(COLUMN_DATE_CREATE, format.format(mDateCreate));
+        cv.put(COLUMN_DATE_UPDATE, format.format(mDateCreate));
         return cv;
     }
 
     public Schedule clone() {
-        return new Schedule(mId, mWeekDay, mHour, mDateCreate, mIdStation);
+        return new Schedule(mMac, mWeekDay, mHour, mDateCreate);
     }
 
 
