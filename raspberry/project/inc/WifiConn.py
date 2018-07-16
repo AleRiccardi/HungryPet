@@ -5,15 +5,18 @@ import time
 import os
 import json
 import subprocess
+import socket
+import threading
 from .WifiScan import WifiScan
 
 
-class WifiConn:
+class WifiConn(threading.Thread):
     # ___General strings___
     TAG = 'WifiConn'
     PATH_WIFI = '/etc/wpa_supplicant/wpa_supplicant.conf'
-    CMD_SUDO = 'sudo '
+    CMD_SUDO = 'sudo'
     NOT_SET = '<Not Set>'
+    REMOTE_SERVER = "www.google.com"
 
     # ___STATUS___
     A_WIFI_ON = 'conn-on'
@@ -36,6 +39,10 @@ class WifiConn:
     # Other
     serial_ard = 0
 
+    def __init__(self):
+        threading.Thread.__init__(self)
+        self.print_msg("Thread initialized")
+
     def set_connection_with_arduino(self):
         try:
             self.serial_ard = serial.Serial('/dev/ttyACM0', 9600)  # enable the serial port
@@ -55,6 +62,7 @@ class WifiConn:
 
     def run(self):
         """Detect data from paired device."""
+        self.print_msg("Thread started")
         # Check if the wired connection with arduino is available.
         ready = self.set_connection_with_arduino()
         if not ready:
@@ -95,11 +103,14 @@ class WifiConn:
 
                     elif data['action'] == self.A_BT_DISCONNECT:
                         """ Closing connection """
-                        self.print_msg('Connection closed')
-                        return self.close_phone_connection()
+                        self.print_msg("Thread Closed")
+                        if self.close_phone_connection() and self.is_connected():
+                            self.loop = False
 
                 except KeyError as err:
                     self.print_msg('Wrong key access: ' + str(err))
+
+        self.print_msg("Thread Closed")
         return True
 
     def send_to_serial(self, msg):
@@ -110,7 +121,10 @@ class WifiConn:
 
     def read_from_serial(self):
         msg = self.serial_ard.readline()
-        return msg.rstrip().decode()
+        if msg is not "".encode():
+            return msg.rstrip().decode()
+        else:
+            return ""
 
     def is_json(self, json_p):
         """Check if it is a Json file."""
@@ -136,15 +150,17 @@ class WifiConn:
         result = wifi_sc.parse(connect)
         js_response = '{"action":"' + self.A_WIFI_GET + '","content":['
         for wifi in result:
-            all_wifi += [wifi['essid']]
-            js_wifi = '{"ssid":"' + wifi['essid'] + '","encryption":"' + wifi['encryption'] + '"}'
-            js_response += '' + js_wifi + ','
+            if wifi['essid'] != "":
+                all_wifi += [wifi['essid']]
+                js_wifi = '{"ssid":"' + wifi['essid'] + '","encryption":"' + wifi['encryption'] + '"}'
+                js_response += '' + js_wifi + ','
 
         js_response = js_response[:-1]
         js_response += ']}'
 
-        self.print_msg('Scaned wifi: ' + str(all_wifi))
-        self.send_to_serial(str(js_response))
+        self.print_msg('Scanned wifi: ' + str(all_wifi))
+        if all_wifi:
+            self.send_to_serial(str(js_response))
 
     def send_device_info_to_bt(self, ip_address):
         mac_address = self.NOT_SET
@@ -189,21 +205,22 @@ class WifiConn:
         f.close()
         time.sleep(1)
 
-        # Place the file with the new wifi credential
-        cmd = self.CMD_SUDO + ' mv wifi.conf ' + self.PATH_WIFI
-        cmd_result = os.system(cmd)
-        if cmd_result != 0:
+        # Place the file
+        args = [self.CMD_SUDO, "mv", "-f", "wifi.conf", self.PATH_WIFI]
+        res = subprocess.check_output(args)
+        if len(res.decode()) > 0:
             return ip_address
+
         self.print_msg('Wifi file placed')
         time.sleep(1)
 
         # Configure the new wifi
-        cmd = 'wpa_cli -i wlan0 reconfigure'
-        cmd_result = os.system(cmd)
-        if cmd_result != 0:
+        args = ["wpa_cli", "-i", "wlan0", "reconfigure"]
+        subprocess.run(args)
+        if len(res.decode()) > 0:
             return ip_address
-        self.print_msg('Wifi activating ...')
-        time.sleep(12)
+        self.print_msg('Wifi activating …')
+        time.sleep(11)
 
         # Get the new configuration
         args = ["dig", "+short", "myip.opendns.com", "@resolver1.opendns.com"]
@@ -220,4 +237,17 @@ class WifiConn:
         print(self.TAG + ' ~ ' + str(msg))
 
     def is_connected(self):
+        import socket
+        try:
+            # see if we can resolve the host name -- tells us if there is
+            # a DNS listening
+            host = socket.gethostbyname(self.REMOTE_SERVER)
+            # connect to the host -- tells us if the host is actually
+            # reachable
+            s = socket.create_connection((host, 80), 2)
+            self.connected = True
+            return self.connected
+        except Exception as err:
+            self.print_msg(err)
+        self.connected = False
         return self.connected

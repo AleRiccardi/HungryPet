@@ -16,12 +16,11 @@ class Core:
     def run(self):
         self.wifi_conn = WifiConn()
         self.db_manage = DbManage(self)
-
-        while not self.wifi_conn.is_connected():
-            if self.wifi_conn.run():
-                self.print_msg("Device connected to wifi")
-            else:
+        while True:
+            if not self.wifi_conn.isAlive() and not self.wifi_conn.is_connected() :
                 self.print_msg("Device NOT connected to wifi")
+                self.wifi_conn = WifiConn()
+                self.wifi_conn.start()
 
     def is_wifi_connected(self):
         return self.wifi_conn.is_connected()
