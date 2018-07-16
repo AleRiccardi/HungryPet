@@ -8,7 +8,7 @@
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
-    <!-- Layout to contain contents of main body of screen (drawer will slide over this) -->
+    <!-- Layout to contain contents of main body of screen (drawer will slide over  -->
     <include
         layout="@layout/app_bar_overview"
         android:layout_width="match_parent"

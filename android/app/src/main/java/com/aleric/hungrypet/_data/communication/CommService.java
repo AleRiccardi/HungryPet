@@ -18,7 +18,7 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * This class does all the work for setting up and managing Bluetooth
+ * class does all the work for setting up and managing Bluetooth
  * connections with other devices. It has a thread that listens for
  * incoming connections, a thread for connecting with a device, and a
  * thread for performing data transmissions when connected.
@@ -33,7 +33,7 @@ public class CommService {
     private static final String NAME_SECURE = "BluetoothChatSecure";
     private static final String NAME_INSECURE = "BluetoothChatInsecure";
 
-    // Unique UUID for this application
+    // Unique UUID for application
     private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
     // Member fields
@@ -224,7 +224,7 @@ public class CommService {
         updateUserInterfaceTitle();
 
         // Start the service over to restart listening mode
-        //CommService.this.prepare();
+        //CommService.prepare();
     }
 
     /**
@@ -244,12 +244,12 @@ public class CommService {
         updateUserInterfaceTitle();
 
         // Start the service over to restart listening mode
-        //CommService.this.prepare();
+        //CommService.prepare();
     }
 
 
     /**
-     * This thread runs while attempting to make an outgoing connection
+     * thread runs while attempting to make an outgoing connection
      * with a device. It runs straight through; the connection either
      * succeeds or fails.
      */
@@ -281,7 +281,7 @@ public class CommService {
 
             // Make a connection to the BluetoothSocket
             try {
-                // This is a blocking call and will only return on a
+                // is a blocking call and will only return on a
                 // successful connection or an exception
                 mmSocket.connect();
             } catch (IOException e) {
@@ -292,7 +292,7 @@ public class CommService {
                     Log.e(TAG, "unable to close() during connection failure", e2);
                 }
                 connectionFailed();
-                this.cancel();
+                cancel();
                 return;
             }
 
@@ -315,7 +315,7 @@ public class CommService {
     }
 
     /**
-     * This thread runs during a connection with a remote station.
+     * thread runs during a connection with a remote station.
      * It handles all incoming and outgoing transmissions.
      */
     private class ConnectedThread extends Thread {
@@ -366,7 +366,7 @@ public class CommService {
                 } catch (IOException e) {
                     Log.e(TAG, "disconnected", e);
                     connectionLost();
-                    this.cancel();
+                    cancel();
                     break;
                 }
             }

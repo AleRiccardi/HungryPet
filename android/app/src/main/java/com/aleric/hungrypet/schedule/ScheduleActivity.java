@@ -1,39 +1,18 @@
 package com.aleric.hungrypet.schedule;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.NavUtils;
-import android.support.v4.app.TaskStackBuilder;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Pair;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.TextView;
 
+import com.aleric.hungrypet.DownloadListener;
 import com.aleric.hungrypet.R;
-import com.aleric.hungrypet._data.database.DbScheduleManager;
-import com.aleric.hungrypet._data.shedule.Schedule;
-import com.aleric.hungrypet._data.station.Station;
-import com.aleric.hungrypet._data.station.StationDirectory;
-import com.aleric.hungrypet.main.MainActivity;
-import com.aleric.hungrypet.overview.OverviewActivity;
-import com.aleric.hungrypet.settings.SettingsActivity;
-import com.aleric.hungrypet.wifi.WifiActivity;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-public class ScheduleActivity extends AppCompatActivity implements ScheduleFragment.ListListener, DownloadFragment.DownloadListener {
+public class ScheduleActivity extends AppCompatActivity implements ScheduleFragment.ListListener, DownloadListener {
 
     static final public String INTENT_KEY = "day";
     Context mContext;

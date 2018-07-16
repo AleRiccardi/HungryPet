@@ -31,7 +31,7 @@ public class ScheduleDayAdapter extends ArrayAdapter<Schedule> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_schedule_day, parent, false);
         }
         mSchedule = (Schedule) getItem(position);
-        // Get the data item for this position
+        // Get the data item for position
         String hourAndMinutes = Schedule.createStringHour(mSchedule.getHour());
         // Check if an existing view is being reused, otherwise inflate the view
         TextView txvHour = (TextView) convertView.findViewById(R.id.txv_hour);

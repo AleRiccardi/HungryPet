@@ -6,13 +6,13 @@ public class WifiCell {
     private String pswd;
 
     public WifiCell(String ssid, String encryption){
-        this.ssid = ssid;
-        this.encryption = encryption;
-        this.pswd = null;
+        ssid = ssid;
+        encryption = encryption;
+        pswd = null;
     }
 
     public void setPassword(String pswd){
-        this.pswd = pswd;
+        pswd = pswd;
     }
 
     public String getSsid(){

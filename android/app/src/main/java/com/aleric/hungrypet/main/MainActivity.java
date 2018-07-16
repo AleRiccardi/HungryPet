@@ -70,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Check if exist in the database a recent station.
+     *
      * @return true if exist, false otherwise.
      */
     public boolean existStation() {

@@ -10,7 +10,7 @@ import com.aleric.hungrypet._data.station.Station;
 public class DbStationHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "my_hungrypet.db";
-    private static final int DATABASE_VERSION = 16;
+    private static final int DATABASE_VERSION = 17;
 
     public DbStationHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);

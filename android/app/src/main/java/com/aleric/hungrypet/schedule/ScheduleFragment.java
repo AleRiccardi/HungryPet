@@ -65,7 +65,7 @@ public class ScheduleFragment extends Fragment {
             ArrayList<Pair<String, Integer>> arrayOfSchedule = new ArrayList<>();
             mAdapterSchedule = new ScheduleAdapter(getContext(), arrayOfSchedule);
             mLtvShedule.setAdapter(mAdapterSchedule);
-            this.populateLsvDays();
+            populateLsvDays();
 
             // Listener of the ListView day
             mLtvShedule.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
@@ -104,7 +104,7 @@ public class ScheduleFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        this.populateLsvDays();
+        populateLsvDays();
     }
 
 
@@ -132,15 +132,15 @@ public class ScheduleFragment extends Fragment {
             case android.R.id.home:
                 Intent upIntent = NavUtils.getParentActivityIntent(getActivity());
                 if (NavUtils.shouldUpRecreateTask(getActivity(), upIntent)) {
-                    // This activity is NOT part of this app's task, so create a new task
+                    // activity is NOT part of app's task, so create a new task
                     // when navigating up, with a synthesized back stack.
                     TaskStackBuilder.create(getContext())
-                            // Add all of this activity's parents to the back stack
+                            // Add all of activity's parents to the back stack
                             .addNextIntentWithParentStack(upIntent)
                             // Navigate up to the closest parent
                             .startActivities();
                 } else {
-                    // This activity is part of this app's task, so simply
+                    // activity is part of app's task, so simply
                     // navigate up to the logical parent activity.
                     NavUtils.navigateUpTo(getActivity(), upIntent);
                 }
@@ -163,7 +163,7 @@ public class ScheduleFragment extends Fragment {
                 int numSchedule = 0;
                 int weekInt = Arrays.asList(Schedule.WEEK_DAYS).indexOf(day);
                 for (Schedule schedule : schedules) {
-                    if (schedule.getWeekDay() == weekInt) {
+                    if (schedule.isAvailable() && schedule.getWeekDay() == weekInt) {
                         numSchedule++;
                     }
                 }

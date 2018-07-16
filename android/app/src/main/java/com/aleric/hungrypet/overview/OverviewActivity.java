@@ -42,8 +42,8 @@ public class OverviewActivity extends AppCompatActivity implements NavigationVie
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,
+                drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
@@ -84,7 +84,7 @@ public class OverviewActivity extends AppCompatActivity implements NavigationVie
 
         //calling the method displayselectedscreen and passing the id of selected menu
         displaySelectedScreen(item.getItemId());
-        //make this method blank
+        //make method blank
         return true;
     }
 
@@ -110,7 +110,7 @@ public class OverviewActivity extends AppCompatActivity implements NavigationVie
         }
     }
 
-    private void initComponents(){
+    private void initComponents() {
         txvStationName = findViewById(R.id.txv_station_name);
         txvState = findViewById(R.id.txv_state);
         txvLastFeedTime = findViewById(R.id.txv_last_feed_time);
@@ -119,7 +119,7 @@ public class OverviewActivity extends AppCompatActivity implements NavigationVie
         btnFeedNow = findViewById(R.id.btn_feed_now);
 
         mStation = StationDirectory.getInstance().getStation();
-        if(mStation != null) {
+        if (mStation != null) {
             txvStationName.setText(mStation.getName());
             txvState.setText("To set");
             txvLastFeedTime.setText("To set");

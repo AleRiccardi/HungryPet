@@ -55,7 +55,7 @@ public class ScheduleDayActivity extends AppCompatActivity {
             actionBar.setTitle(mWeekString);
             // Components of view
             final ListView ltvShedule = findViewById(R.id.lsv_schedule_day);
-            FloatingActionButton fabAddSchedule = this.findViewById(R.id.fab_add_schedule);
+            FloatingActionButton fabAddSchedule = findViewById(R.id.fab_add_schedule);
             // Set the list of schedules
             mSchedulesList = new ArrayList<>();
             mDbScheduleManager = new DbScheduleManager(this);
@@ -112,15 +112,15 @@ public class ScheduleDayActivity extends AppCompatActivity {
             case android.R.id.home:
                 Intent upIntent = NavUtils.getParentActivityIntent(this);
                 if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
-                    // This activity is NOT part of this app's task, so create a new task
+                    // activity is NOT part of app's task, so create a new task
                     // when navigating up, with a synthesized back stack.
                     TaskStackBuilder.create(this)
-                            // Add all of this activity's parents to the back stack
+                            // Add all of activity's parents to the back stack
                             .addNextIntentWithParentStack(upIntent)
                             // Navigate up to the closest parent
                             .startActivities();
                 } else {
-                    // This activity is part of this app's task, so simply
+                    // activity is part of app's task, so simply
                     // navigate up to the logical parent activity.
                     NavUtils.navigateUpTo(this, upIntent);
                 }
@@ -133,7 +133,7 @@ public class ScheduleDayActivity extends AppCompatActivity {
         mSchedulesList = new ArrayList<>();
         List<Schedule> schedules = mDbScheduleManager.getSchedules(mStation.getMac());
         for (Schedule schedule : schedules) {
-            if (schedule.getWeekDay() == mWeekInt) {
+            if (schedule.isAvailable() && schedule.getWeekDay() == mWeekInt) {
                 mSchedulesList.add(schedule);
             }
         }
@@ -165,12 +165,14 @@ public class ScheduleDayActivity extends AppCompatActivity {
     }
 
     public void deleteSchedule(Schedule schedule) {
-        mDbScheduleManager.deleteSchedule(schedule);
+        schedule.delete(true);
+        mDbScheduleManager.updateSchedule(schedule);
         refreshLsvSchedules();
     }
 
     public void undoDeleteSchedule(Schedule schedule) {
-        mDbScheduleManager.addSchedule(schedule);
+        schedule.delete(false);
+        mDbScheduleManager.updateSchedule(schedule);
         refreshLsvSchedules();
     }
 

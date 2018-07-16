@@ -12,10 +12,10 @@
 #   public *;
 #}
 
-# Uncomment this to preserve the line number information for
+# Uncomment to preserve the line number information for
 # debugging stack traces.
 #-keepattributes SourceFile,LineNumberTable
 
-# If you keep the line number information, uncomment this to
+# If you keep the line number information, uncomment to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile

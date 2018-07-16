@@ -20,7 +20,7 @@ public class ScheduleAdapter extends ArrayAdapter<Pair<String, Integer>> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        // Get the data item for this position
+        // Get the data item for position
         Pair<String, Integer> daySchedule = (Pair<String, Integer>) getItem(position);
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {

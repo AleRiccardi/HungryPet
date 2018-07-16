@@ -18,9 +18,12 @@ public class Schedule {
     public static final String COLUMN_HOUR = "hour";
     public static final String COLUMN_DATE_CREATE = "date_create";
     public static final String COLUMN_DATE_UPDATE = "date_update";
+    public static final String COLUMN_DELETED = "mDeleted";
 
     public static final String PATTERN_DATE = "yyyy-MM-dd HH:mm:ss";
+    public static final SimpleDateFormat FORMAT_DATA = new SimpleDateFormat(PATTERN_DATE);
     static public String[] WEEK_DAYS = new String[]{"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
+
 
     private String mId;
     private String mMac;
@@ -28,6 +31,7 @@ public class Schedule {
     private int mHour;
     private Date mDateCreate;
     private Date mDateUpdate;
+    private int mDeleted = 0;
 
 
     public Schedule(String mac, int weekDay, int hour) {
@@ -39,37 +43,38 @@ public class Schedule {
         mId = generateId(mac, mDateCreate);
     }
 
-    public Schedule(String id, String mac, int weekDay, int hour, Date dateCreate) {
+    public Schedule(String id, String mac, int weekDay, int hour, Date dateCreate, int deleted) {
         mId = id;
         mMac = mac;
         mWeekDay = weekDay;
         mHour = hour;
         mDateCreate = dateCreate;
         mDateUpdate = Calendar.getInstance().getTime();
+        mDeleted = deleted;
     }
 
-    public Schedule(String id, String mac, int weekDay, int hour, Date dateCreate, Date dateUpdate) {
+    public Schedule(String id, String mac, int weekDay, int hour, Date dateCreate, Date dateUpdate, int deleted) {
         mId = id;
         mMac = mac;
         mWeekDay = weekDay;
         mHour = hour;
         mDateCreate = dateCreate;
         mDateUpdate = dateUpdate;
+        mDeleted = deleted;
     }
 
     public Schedule(Cursor cursor) {
-        this.mId = cursor.getString(cursor.getColumnIndex(_ID));
-        this.mMac = cursor.getString(cursor.getColumnIndex(COLUMN_MAC));
-        this.mWeekDay = Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_WEEK_DAY)));
-        this.mHour = Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_HOUR)));
-
-        SimpleDateFormat format = new SimpleDateFormat(this.PATTERN_DATE);
+        mId = cursor.getString(cursor.getColumnIndex(_ID));
+        mMac = cursor.getString(cursor.getColumnIndex(COLUMN_MAC));
+        mWeekDay = Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_WEEK_DAY)));
+        mHour = Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_HOUR)));
+        mDeleted = Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_DELETED)));
         String curCreate = cursor.getString(cursor.getColumnIndex(COLUMN_DATE_CREATE));
         String curUpdate = cursor.getString(cursor.getColumnIndex(COLUMN_DATE_UPDATE));
 
         try {
-            this.mDateCreate = format.parse(curCreate);
-            this.mDateUpdate = format.parse(curUpdate);
+            mDateCreate = FORMAT_DATA.parse(curCreate);
+            mDateUpdate = FORMAT_DATA.parse(curUpdate);
         } catch (ParseException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -77,8 +82,7 @@ public class Schedule {
     }
 
     private String generateId(String mac, Date dateCreate) {
-        SimpleDateFormat format = new SimpleDateFormat(this.PATTERN_DATE);
-        return mac + "-" + format.format(dateCreate);
+        return mac + "-" + FORMAT_DATA.format(dateCreate);
     }
 
     public void setWeekDay(int weekDay) {
@@ -90,7 +94,7 @@ public class Schedule {
     }
 
     public void setUpdate() {
-        this.mDateUpdate = Calendar.getInstance().getTime();
+        mDateUpdate = Calendar.getInstance().getTime();
         ;
     }
 
@@ -111,17 +115,29 @@ public class Schedule {
     }
 
     public Date getDateCreate() {
-        return this.mDateCreate;
+        return mDateCreate;
     }
 
-    public Date getmDateUpdate() {
-        return this.mDateUpdate;
+    public Date getDateUpdate() {
+        return mDateUpdate;
+    }
+
+    public String getDateCreateToString() {
+        return FORMAT_DATA.format(mDateCreate);
+    }
+
+    public String getDateUpdateToString() {
+        return FORMAT_DATA.format(mDateUpdate);
+    }
+
+    public int getDeleted(){
+        return mDeleted;
     }
 
 
     public ContentValues getContentValues() {
         // Formatting time
-        SimpleDateFormat format = new SimpleDateFormat(this.PATTERN_DATE);
+        SimpleDateFormat format = new SimpleDateFormat(PATTERN_DATE);
 
         ContentValues cv = new ContentValues();
         cv.put(_ID, mId);
@@ -130,18 +146,48 @@ public class Schedule {
         cv.put(COLUMN_HOUR, mHour);
         cv.put(COLUMN_DATE_CREATE, format.format(mDateCreate));
         cv.put(COLUMN_DATE_UPDATE, format.format(mDateCreate));
+        cv.put(COLUMN_DELETED, mDeleted);
         return cv;
     }
 
-    public Schedule clone() {
-        return new Schedule(mId, mMac, mWeekDay, mHour, mDateCreate);
+    public void delete(boolean delete) {
+        mDeleted = delete ? 1 : 0;
     }
 
+    public boolean isAvailable() {
+        return mDeleted == 0;
+    }
 
     public static String createStringHour(int hourAndMinutes) {
         int hour = hourAndMinutes / 100;
         int minutes = hourAndMinutes % 100;
         String hourString = "" + hour + ":" + ((minutes / 10 == 0) ? "0" + minutes : minutes);
         return hourString;
+    }
+
+    @Override
+    public Schedule clone() {
+        return new Schedule(mId, mMac, mWeekDay, mHour, mDateCreate, mDeleted);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+
+        // If the object is compared with itself then return true
+        if (o == this){
+            return true;
+        }
+
+        /* Check if o is an instance of Schedule or not
+          "null instanceof [type]" also returns false */
+        if (!(o instanceof Schedule)) {
+            return false;
+        }
+
+        // typecast o to Complex so that we can compare data members
+        Schedule c = (Schedule) o;
+
+        // Compare the data members and return accordingly
+        return mId.equals(c.mId);
     }
 }

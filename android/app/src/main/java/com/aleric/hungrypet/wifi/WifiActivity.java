@@ -49,7 +49,7 @@ public class WifiActivity extends AppCompatActivity {
     }
 
     // Save UI state changes to the savedInstanceState.
-    // This bundle will be passed to onCreate if the process is
+    // bundle will be passed to onCreate if the process is
     // killed and restarted.
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
@@ -60,7 +60,7 @@ public class WifiActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
+        // Inflate the menu; adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_wifi, menu);
         return true;
     }
