@@ -1,30 +1,30 @@
 package com.aleric.hungrypet._data.wifi;
 
 public class WifiCell {
-    private String ssid;
-    private String encryption;
-    private String pswd;
+    private String mSsid;
+    private String mEncryption;
+    private String mPswd;
 
     public WifiCell(String ssid, String encryption){
-        ssid = ssid;
-        encryption = encryption;
-        pswd = null;
+        mSsid = ssid;
+        mEncryption = encryption;
+        mPswd = null;
     }
 
     public void setPassword(String pswd){
-        pswd = pswd;
+        mPswd = pswd;
     }
 
     public String getSsid(){
-        return ssid;
+        return mSsid;
     }
 
     public String getEncryption(){
-        return encryption;
+        return mEncryption;
     }
 
     public String getPswd(){
-        return pswd;
+        return mPswd;
     }
 
 }

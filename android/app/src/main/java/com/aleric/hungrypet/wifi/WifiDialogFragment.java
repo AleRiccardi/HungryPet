@@ -82,8 +82,7 @@ public class WifiDialogFragment extends DialogFragment implements WifiContract.V
     @Override
     public void startInitActivity() {
         Intent intent = new Intent(getActivity(), InitActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
 

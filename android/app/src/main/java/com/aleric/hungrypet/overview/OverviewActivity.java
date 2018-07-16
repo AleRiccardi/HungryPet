@@ -12,7 +12,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -25,12 +24,12 @@ import com.aleric.hungrypet.station.StationActivity;
 
 public class OverviewActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    private TextView txvStationName;
-    private TextView txvState;
-    private TextView txvLastFeedTime;
-    private ProgressBar pgbLevelContainer;
-    private ProgressBar pgbLevelBowl;
-    private Button btnFeedNow;
+    private TextView mTxvStationName;
+    private TextView mTxvState;
+    private TextView mTxvLastFeedTime;
+    private ProgressBar mPgbLevelContainer;
+    private ProgressBar mPgbLevelBowl;
+    private Button mBtnFeedNow;
 
     private Station mStation;
 
@@ -42,8 +41,8 @@ public class OverviewActivity extends AppCompatActivity implements NavigationVie
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,
-                drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
@@ -84,7 +83,7 @@ public class OverviewActivity extends AppCompatActivity implements NavigationVie
 
         //calling the method displayselectedscreen and passing the id of selected menu
         displaySelectedScreen(item.getItemId());
-        //make method blank
+        //make this method blank
         return true;
     }
 
@@ -110,24 +109,24 @@ public class OverviewActivity extends AppCompatActivity implements NavigationVie
         }
     }
 
-    private void initComponents() {
-        txvStationName = findViewById(R.id.txv_station_name);
-        txvState = findViewById(R.id.txv_state);
-        txvLastFeedTime = findViewById(R.id.txv_last_feed_time);
-        pgbLevelContainer = findViewById(R.id.pgb_level_container);
-        pgbLevelBowl = findViewById(R.id.pgb_level_bowl);
-        btnFeedNow = findViewById(R.id.btn_feed_now);
+    private void initComponents(){
+        mTxvStationName = findViewById(R.id.txv_station_name);
+        mTxvState = findViewById(R.id.txv_state);
+        mTxvLastFeedTime = findViewById(R.id.txv_last_feed_time);
+        mPgbLevelContainer = findViewById(R.id.pgb_level_container);
+        mPgbLevelBowl = findViewById(R.id.pgb_level_bowl);
+        mBtnFeedNow = findViewById(R.id.btn_feed_now);
 
         mStation = StationDirectory.getInstance().getStation();
-        if (mStation != null) {
-            txvStationName.setText(mStation.getName());
-            txvState.setText("To set");
-            txvLastFeedTime.setText("To set");
-            btnFeedNow.setEnabled(true);
-            btnFeedNow.setClickable(true);
+        if(mStation != null) {
+            mTxvStationName.setText(mStation.getName());
+            mTxvState.setText("To set");
+            mTxvLastFeedTime.setText("To set");
+            mBtnFeedNow.setEnabled(true);
+            mBtnFeedNow.setClickable(true);
         } else {
-            btnFeedNow.setEnabled(false);
-            btnFeedNow.setClickable(false);
+            mBtnFeedNow.setEnabled(false);
+            mBtnFeedNow.setClickable(false);
         }
     }
 

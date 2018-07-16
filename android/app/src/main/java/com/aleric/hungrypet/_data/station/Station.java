@@ -56,16 +56,16 @@ public class Station {
     }
 
 
-    public void setMac(String mMac) {
-        mMac = mMac;
+    public void setMac(String mac) {
+        mMac = mac;
     }
 
-    public void setName(String mName) {
-        mName = mName;
+    public void setName(String name) {
+        mName = name;
     }
 
-    public void setIp(String mIp) {
-        mIp = mIp;
+    public void setIp(String ip) {
+        mIp = ip;
     }
 
     public void setDateUpdate(Date dateUpdate) {

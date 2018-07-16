@@ -15,19 +15,19 @@ import com.aleric.hungrypet.overview.OverviewActivity;
 import com.aleric.hungrypet._data.station.StationDirectory;
 import com.aleric.hungrypet._data.database.DbStationManager;
 
-public class InitActivity extends AppCompatActivity{
+import java.util.List;
+
+public class InitActivity extends AppCompatActivity {
     private DbStationManager mDbManager;
     private Station mStation;
     private EditText edtName;
     private TextView txvIp;
     private TextView txvMac;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_init);
-
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(myToolbar);
 
         mDbManager = new DbStationManager(this);
         mStation = StationDirectory.getInstance().getStation();
@@ -39,6 +39,7 @@ public class InitActivity extends AppCompatActivity{
 
         txvIp.setText(mStation.getIp());
         txvMac.setText(mStation.getMac());
+
 
         btnFinish.setOnClickListener((new View.OnClickListener() {
             @Override
@@ -53,9 +54,9 @@ public class InitActivity extends AppCompatActivity{
         startActivity(intent);
     }
 
-    public void configure(){
+    public void configure() {
         String name = edtName.getText().toString();
-        if(name.length() > 3) {
+        if (name.length() > 3) {
             mStation.setName(name);
             StationDirectory.getInstance().setStation(mStation);
             mDbManager.addStation(mStation);
@@ -65,4 +66,5 @@ public class InitActivity extends AppCompatActivity{
             edtName.setError("Minimum 4 characters");
         }
     }
+
 }

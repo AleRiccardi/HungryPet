@@ -26,6 +26,8 @@ public class WifiDialogPresenter implements WifiContract.PresenterDialog {
     private CommDirectory mComm;
     private WifiCell mWifi;
     static String messageReed = "";
+    private String mJsScanMsg = "";
+    private int mTentativeError = 0;
 
 
     public WifiDialogPresenter(@NonNull WifiContract.ViewDialog view) {
@@ -106,9 +108,13 @@ public class WifiDialogPresenter implements WifiContract.PresenterDialog {
                                 mView.showToast("Disconnected to wifi", false);
                                 mView.dismiss();
                             }
-
+                            mTentativeError = 0;
                         } catch (JSONException e) {
                             Log.e(TAG, "Json error:", e);
+                            if(mTentativeError < 4){
+                                mComm.sendMessage(mJsScanMsg);
+                                mTentativeError++;
+                            }
                         } finally {
                             messageReed = "";
                         }
@@ -137,13 +143,13 @@ public class WifiDialogPresenter implements WifiContract.PresenterDialog {
         mWifi.setPassword(password);
         boolean success = false;
         try {
-            String jsScanMsg = new JSONObject()
+            mJsScanMsg = new JSONObject()
                     .put("action", CommDirectory.A_WIFI_SET)
                     .put("content", new JSONObject()
                             .put("ssid", mWifi.getSsid())
                             .put("pswd", mWifi.getPswd()))
                     .toString();
-            success = mComm.sendMessage(jsScanMsg);
+            success = mComm.sendMessage(mJsScanMsg);
         } catch (JSONException e) {
             e.printStackTrace();
         }

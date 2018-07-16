@@ -30,8 +30,7 @@
 
         <activity
             android:name=".init.InitActivity"
-            android:label="@string/initialize"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="@string/initialize" />
 
         <activity
             android:name=".overview.OverviewActivity"
