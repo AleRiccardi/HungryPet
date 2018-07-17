@@ -46,10 +46,8 @@ class WifiConn(threading.Thread):
     def set_connection_with_arduino(self):
         try:
             self.serial_ard = serial.Serial('/dev/ttyACM0', 9600)  # enable the serial port
-            self.print_msg('Arduino connected')
             return True
-        except Exception as inst:
-            print(inst)
+        except:
             return False
 
     def close_phone_connection(self):
@@ -67,6 +65,8 @@ class WifiConn(threading.Thread):
         ready = self.set_connection_with_arduino()
         if not ready:
             return False
+        else:
+            self.print_msg('Arduino connected')
 
         self.print_msg('Waiting messages')
 
@@ -219,7 +219,7 @@ class WifiConn(threading.Thread):
         subprocess.run(args)
         if len(res.decode()) > 0:
             return ip_address
-        self.print_msg('Wifi activating …')
+        self.print_msg('Wifi activating ...')
         time.sleep(11)
 
         # Get the new configuration
