@@ -4,10 +4,10 @@
 ExcangeInfo* ExcangeInfo::instance = 0;
 
 ExcangeInfo::ExcangeInfo() {
-  this->currentBtMsg = NULL;
-  this->btMsgAvailable = false;
-  this->currentSerialMsg = NULL;
-  this->serialMsgAvailable = false;
+  //this->currentMsgToSerial = {NULL};
+  this->indexMsgToSerial = -1;
+  this->currentMsgFromSerial = NULL;
+  this->availableMsgFromSerial = false;
 }
 
 ExcangeInfo* ExcangeInfo::getInstance() {
@@ -17,40 +17,52 @@ ExcangeInfo* ExcangeInfo::getInstance() {
   return instance;
 }
 
-void ExcangeInfo::setBluetoothMsg(String msg) {
-  this->currentBtMsg = new Msg(msg);
-  this->btMsgAvailable = true;
+void ExcangeInfo::setToSerialMsg(String msg) {
+  this->indexMsgToSerial += 1;
+  this->currentMsgToSerial[this->indexMsgToSerial] = new Msg(msg);
 }
 
-void ExcangeInfo::setSerialMsg(String msg) {
-  this->currentSerialMsg = new Msg(msg);
-  this->serialMsgAvailable = true;
+void ExcangeInfo::setFromSerialMsg(String msg) {
+  this->currentMsgFromSerial = new Msg(msg);
+  this->availableMsgFromSerial = true;
 }
 
-bool ExcangeInfo::isBluetoothMsgAvailable(){
-  return this->btMsgAvailable;
+bool ExcangeInfo::isToSerialMsgAvailable() {
+  return this->indexMsgToSerial > -1;
 }
 
-bool ExcangeInfo::isSerialMsgAvailable(){
-  return this->serialMsgAvailable;
+bool ExcangeInfo::isFromSerialMsgAvailable() {
+  return this->availableMsgFromSerial;
 }
 
-Msg* ExcangeInfo::getBluetoothMsg() {
-  if (btMsgAvailable) {
-    Msg* msg = currentBtMsg;
-    btMsgAvailable = false;
-    currentBtMsg = NULL;
+Msg* ExcangeInfo::getToSerialMsg() {
+  if (this->indexMsgToSerial > -1) {
+    Msg* msg = currentMsgToSerial[0];
+
+    if (this->indexMsgToSerial > 0) {
+      int i = 0;
+      Msg* tmp = NULL;
+      for (i = indexMsgToSerial; i < 0; i--) {
+        tmp = currentMsgToSerial[i - 1];
+        currentMsgToSerial[i - 1] = currentMsgToSerial[i];
+      }
+      this->indexMsgToSerial--;
+    } else {
+      this->indexMsgToSerial = -1;
+    }
     return msg;
   } else {
     return NULL;
   }
 }
 
-Msg* ExcangeInfo::getSerialMsg() {
-  if (serialMsgAvailable) {
-    Msg* msg = currentSerialMsg;
-    serialMsgAvailable = false;
-    currentSerialMsg = NULL;
+
+Msg* ExcangeInfo::getFromSerialMsg() {
+  if (availableMsgFromSerial) {
+    Msg* msg = currentMsgFromSerial;
+    currentMsgFromSerial = NULL;
+    availableMsgFromSerial = false;
+
     return msg;
   } else {
     return NULL;

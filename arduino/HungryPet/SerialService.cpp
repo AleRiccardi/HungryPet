@@ -28,13 +28,13 @@ void SerialService::tick() {
 
 void SerialService::checkAction(String content) {
   if (content != "") {
-    this->excange->setSerialMsg(content);
+    this->excange->setFromSerialMsg(content);
   }
 }
 
 void SerialService::listenBluetoothMsg() {
-  if(this->excange->isBluetoothMsgAvailable()){
-    Msg* msg = this->excange->getBluetoothMsg();
+  if(this->excange->isToSerialMsgAvailable()){
+    Msg* msg = this->excange->getToSerialMsg();
     String message = msg->getContent();
 
     if (message != "") {

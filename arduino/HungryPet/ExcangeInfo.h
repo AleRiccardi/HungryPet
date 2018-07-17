@@ -8,21 +8,21 @@ class ExcangeInfo {
   private:
     static ExcangeInfo* instance;
 
-    Msg* currentBtMsg;
-    bool btMsgAvailable;
+    Msg* currentMsgToSerial[20] = {NULL};
+    int indexMsgToSerial;
 
-    Msg* currentSerialMsg;
-    bool serialMsgAvailable;
+    Msg* currentMsgFromSerial;
+    bool availableMsgFromSerial;
 
   public:
     ExcangeInfo();
     static ExcangeInfo* getInstance();
-    void setBluetoothMsg(String msg);
-    void setSerialMsg(String msg);
-    bool isBluetoothMsgAvailable();
-    bool isSerialMsgAvailable();
-    Msg* getBluetoothMsg();
-    Msg* getSerialMsg();
+    void setToSerialMsg(String msg);
+    void setFromSerialMsg(String msg);
+    bool isToSerialMsgAvailable();
+    bool isFromSerialMsgAvailable();
+    Msg* getToSerialMsg();
+    Msg* getFromSerialMsg();
 
 };
 

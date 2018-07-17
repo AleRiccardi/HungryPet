@@ -7,7 +7,6 @@ void MsgServiceTask::init(int period) {
   Task::init(period);
 
   this->startSerial();
-  this->content.reserve(256);
   this->content = "";
   this->currentMsg = NULL;
   this->msgAvailable = false;
@@ -74,5 +73,4 @@ Msg* MsgServiceTask::receiveMsg(Pattern& pattern) {
   }
 
 }
-
 

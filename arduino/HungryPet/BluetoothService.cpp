@@ -26,19 +26,19 @@ void BluetoothService::tick() {
   }
 
   // Listen data from Serial (Raspberry)
-  this->listenSerialMsg();
+  this->listenFromSerialMsg();
 
 }
 
 void BluetoothService::checkAction(String content) {
   if (content != "") {
-    this->excange->setBluetoothMsg(content);
+    this->excange->setToSerialMsg(content);
   }
 }
 
-void BluetoothService::listenSerialMsg() {
-  if (this->excange->isSerialMsgAvailable()) {
-    Msg* msg = this->excange->getSerialMsg();
+void BluetoothService::listenFromSerialMsg() {
+  if (this->excange->isFromSerialMsgAvailable()) {
+    Msg* msg = this->excange->getFromSerialMsg();
     String message = msg->getContent();
 
     if (message != "") {
