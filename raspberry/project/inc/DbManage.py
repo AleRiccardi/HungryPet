@@ -41,7 +41,6 @@ class DbManage(threading.Thread):
                         for schedule_l in schedules_local:
                             if schedule_r.get_id() == schedule_l.get_id():
                                 if self.check_data(schedule_r, schedule_l) == 1:
-                                    print(schedule_r.get_date_update(), schedule_l.get_date_update())
                                     to_update += [schedule_r]
 
                     else:
