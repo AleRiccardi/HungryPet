@@ -16,13 +16,18 @@ class Core:
     def run(self):
         self.wifi_conn = WifiConn()
         self.db_manage = DbManage(self)
+
         while True:
             if not self.wifi_conn.isAlive():
                 self.wifi_conn = WifiConn()
                 self.wifi_conn.start()
 
-    def is_wifi_connected(self):
-        return self.wifi_conn.is_connected()
+            if not self.db_manage.isAlive():
+                self.db_manage = DbManage(self.wifi_conn)
+                self.db_manage.start()
+
+
+
 
     def print_msg(self, msg):
         """Print class msg."""

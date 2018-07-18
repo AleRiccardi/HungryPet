@@ -1,13 +1,11 @@
+from .WifiScan import WifiScan
+from .Colors import Colors
 from builtins import chr
-
+import subprocess
+import threading
 import serial
 import time
-import os
 import json
-import subprocess
-import socket
-import threading
-from .WifiScan import WifiScan
 
 
 class WifiConn(threading.Thread):
@@ -41,7 +39,7 @@ class WifiConn(threading.Thread):
 
     def __init__(self):
         threading.Thread.__init__(self)
-        self.print_msg("Thread initialized")
+        # self.print_msg("Thread initialized")
 
     def set_connection_with_arduino(self):
         try:
@@ -60,58 +58,54 @@ class WifiConn(threading.Thread):
 
     def run(self):
         """Detect data from paired device."""
-        self.print_msg("Thread started")
+        self.print_msg('Thread started')
+        # self.print_msg("Thread started")
         # Check if the wired connection with arduino is available.
         ready = self.set_connection_with_arduino()
-        if not ready:
-            return False
+        if ready:
+
+            # Start the loop
+            while self.loop:
+                # Read data
+                time.sleep(0.3)
+                data = self.read_from_serial()
+                if self.is_json(str(data)):
+                    data = json.loads(str(data))
+                    # selection of action
+                    try:
+                        if data['action'] == self.A_WIFI_GET:
+                            """ Request of wifi """
+                            self.send_wifi_to_bt()
+
+                        elif data['action'] == self.A_WIFI_SET:
+                            """ Set wifi """
+                            ssid = data['content']['ssid']
+                            pswd = data['content']['pswd']
+                            self.print_msg('Request to set wifi: ' + ssid)
+                            ip_address = self.connect_to_wifi(ssid, pswd)  # Connection
+
+                            if ip_address == self.NOT_SET:
+                                self.print_msg('Couldn\'t connect to wifi: ' + ssid + '\n')
+                                data['action'] = self.A_WIFI_SET
+                                data['content'] = {'status': "fail"}
+                                json_data = json.dumps(data)
+                                self.send_to_serial(json_data)
+
+                            else:
+                                self.connected = True
+                                self.print_msg('Connected to wifi: ' + ssid + '\n')
+                                self.send_device_info_to_bt(ip_address)
+
+                        elif data['action'] == self.A_BT_DISCONNECT:
+                            """ Closing connection """
+                            self.print_msg("End of comunication")
+
+                    except KeyError as err:
+                        self.print_e('Wrong key access: ' + str(err))
+                time.sleep(0.2)
         else:
-            self.print_msg('Arduino connected')
-
-        self.print_msg('Waiting messages')
-
-        # Start the loop
-        while self.loop:
-            # Read data
-            data = self.read_from_serial()
-            if self.is_json(str(data)):
-                data = json.loads(str(data))
-                # selection of action
-                try:
-                    if data['action'] == self.A_WIFI_GET:
-                        """ Request of wifi """
-                        self.send_wifi_to_bt()
-
-                    elif data['action'] == self.A_WIFI_SET:
-                        """ Set wifi """
-                        ssid = data['content']['ssid']
-                        pswd = data['content']['pswd']
-                        self.print_msg('Request to set wifi: ' + ssid)
-                        ip_address = self.connect_to_wifi(ssid, pswd)  # Connection
-
-                        if ip_address == self.NOT_SET:
-                            self.print_msg('Couldn\'t connect to wifi: ' + ssid + '\n')
-                            data['action'] = self.A_WIFI_SET
-                            data['content'] = {'status': "fail"}
-                            json_data = json.dumps(data)
-                            self.send_to_serial(json_data)
-
-                        else:
-                            self.connected = True
-                            self.print_msg('Connected to wifi: ' + ssid + '\n')
-                            self.send_device_info_to_bt(ip_address)
-
-                    elif data['action'] == self.A_BT_DISCONNECT:
-                        """ Closing connection """
-                        self.print_msg("Thread Closed")
-                        if self.close_phone_connection() and self.is_connected():
-                            self.loop = False
-
-                except KeyError as err:
-                    self.print_msg('Wrong key access: ' + str(err))
-
-        self.print_msg("Thread Closed")
-        return True
+            self.print_msg("Arduino not connected, waiting 10 sec and check again the wired connection")
+            time.sleep(10)
 
     def send_to_serial(self, msg):
         msg += chr(13)
@@ -138,7 +132,7 @@ class WifiConn(threading.Thread):
                 return False
 
         except ValueError as err:
-            self.print_msg(err)
+            self.print_e(err)
             return False
 
         return True
@@ -232,10 +226,6 @@ class WifiConn(threading.Thread):
 
         return ip_address
 
-    def print_msg(self, msg):
-        """Print class msg."""
-        print(self.TAG + ' ~ ' + str(msg))
-
     def is_connected(self):
         import socket
         try:
@@ -246,8 +236,15 @@ class WifiConn(threading.Thread):
             # reachable
             s = socket.create_connection((host, 80), 2)
             self.connected = True
-            return self.connected
-        except Exception as err:
-            self.print_msg(err)
-        self.connected = False
+        except:
+            self.connected = False
+
         return self.connected
+
+    def print_msg(self, msg):
+        """Print class msg."""
+        print(self.TAG + ' ~ ' + str(msg))
+
+    def print_e(self, msg):
+        """Print class msg."""
+        print(Colors.FAIL + self.TAG + ' ~ ' + str(msg) + Colors.ENDC)
