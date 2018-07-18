@@ -16,6 +16,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.aleric.hungrypet.R;
+import com.aleric.hungrypet._data.DownloadData;
 import com.aleric.hungrypet._data.database.DbScheduleManager;
 import com.aleric.hungrypet._data.shedule.Schedule;
 import com.aleric.hungrypet._data.station.Station;
@@ -145,9 +146,12 @@ public class ScheduleDayActivity extends AppCompatActivity {
         Integer dayNum = Arrays.asList(Schedule.WEEK_DAYS).indexOf(mWeekString);
         int hourInt = selectedHour * 100 + selectedMinute;
         String hourString = Schedule.createStringHour(hourInt);
-        Toast.makeText(this, "Added schedule at " + hourString, Toast.LENGTH_LONG).show();
+        // MODEL
         Schedule schedule = new Schedule(mStation.getMac(), dayNum, hourInt);
         mDbScheduleManager.addSchedule(schedule);
+        new DownloadData(this, null).execute(); // Trigger update thread
+        // Updating VIEW
+        Toast.makeText(this, "Added schedule at " + hourString, Toast.LENGTH_LONG).show();
         refreshLsvSchedules();
     }
 
@@ -155,24 +159,31 @@ public class ScheduleDayActivity extends AppCompatActivity {
         Integer dayNum = Arrays.asList(Schedule.WEEK_DAYS).indexOf(mWeekString);
         int hourInt = selectedHour * 100 + selectedMinute;
         String hourString = Schedule.createStringHour(hourInt);
-        // Updating MODEL
+        // MODEL
         schedule.setHour(hourInt); // Update hour
         schedule.setUpdate(); // Update date
         mDbScheduleManager.updateSchedule(schedule);
-        // Updating VIEW
+        new DownloadData(this, null).execute(); // Trigger update thread
+        // VIEW
         Toast.makeText(this, "Updated schedule at " + hourString, Toast.LENGTH_LONG).show();
         refreshLsvSchedules();
     }
 
     public void deleteSchedule(Schedule schedule) {
         schedule.delete(true);
+        schedule.setUpdate(); // Update date
         mDbScheduleManager.updateSchedule(schedule);
+        new DownloadData(this, null).execute(); // Trigger update thread
+
         refreshLsvSchedules();
     }
 
     public void undoDeleteSchedule(Schedule schedule) {
         schedule.delete(false);
+        schedule.setUpdate(); // Update date
         mDbScheduleManager.updateSchedule(schedule);
+        new DownloadData(this, null).execute(); // Trigger update thread
+
         refreshLsvSchedules();
     }
 

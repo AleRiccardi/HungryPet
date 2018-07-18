@@ -95,7 +95,6 @@ public class Schedule {
 
     public void setUpdate() {
         mDateUpdate = Calendar.getInstance().getTime();
-        ;
     }
 
     public String getId() {
@@ -145,7 +144,7 @@ public class Schedule {
         cv.put(COLUMN_WEEK_DAY, mWeekDay);
         cv.put(COLUMN_HOUR, mHour);
         cv.put(COLUMN_DATE_CREATE, format.format(mDateCreate));
-        cv.put(COLUMN_DATE_UPDATE, format.format(mDateCreate));
+        cv.put(COLUMN_DATE_UPDATE, format.format(mDateUpdate));
         cv.put(COLUMN_DELETED, mDeleted);
         return cv;
     }

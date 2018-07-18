@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.aleric.hungrypet.R;
+import com.aleric.hungrypet._data.DownloadData;
 import com.aleric.hungrypet._data.shedule.Schedule;
 
 import java.util.ArrayList;
@@ -47,6 +48,7 @@ public class ScheduleDayAdapter extends ArrayAdapter<Schedule> {
             public void onClick(View v) {
                 mContext.deleteSchedule(mSchedule);
                 Snackbar mySnackbar = Snackbar.make(v, "Deleted schedule", Snackbar.LENGTH_LONG);
+
                 mySnackbar.setAction("undo", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
