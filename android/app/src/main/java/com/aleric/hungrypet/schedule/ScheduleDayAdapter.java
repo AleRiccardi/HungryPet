@@ -59,8 +59,8 @@ public class ScheduleDayAdapter extends ArrayAdapter<Schedule> {
             @Override
             public void onClick(View v) {
                 mListener.deleteSchedule(mSchedule);
-                Snackbar mySnackbar = Snackbar.make(v, "Deleted schedule", Snackbar.LENGTH_LONG);
                 mFragment.refreshLsvSchedules(); // Refresh VIEW
+                Snackbar mySnackbar = Snackbar.make(v, "Deleted schedule", Snackbar.LENGTH_LONG);
                 mySnackbar.setAction("undo", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
