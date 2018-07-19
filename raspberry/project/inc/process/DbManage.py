@@ -1,6 +1,6 @@
-from .Colors import Colors
+from inc.util.Colors import Colors
+from inc.util.data import Schedule
 from datetime import datetime
-from .data import Schedule
 import urllib.request
 import MySQLdb
 import threading
@@ -146,3 +146,4 @@ class DbManage(threading.Thread):
     def print_e(self, msg):
         """Print class msg."""
         print(Colors.FAIL + self.TAG + ' ~ ' + str(msg) + Colors.ENDC)
+

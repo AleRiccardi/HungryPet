@@ -1,5 +1,5 @@
-from .WifiConn import WifiConn
-from .DbManage import DbManage
+from .process.WifiConn import WifiConn
+from .process.DbManage import DbManage
 
 
 class Core:
@@ -25,9 +25,6 @@ class Core:
             if not self.db_manage.isAlive():
                 self.db_manage = DbManage(self.wifi_conn)
                 self.db_manage.start()
-
-
-
 
     def print_msg(self, msg):
         """Print class msg."""
