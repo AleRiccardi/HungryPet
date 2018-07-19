@@ -51,7 +51,8 @@
         <activity
             android:name=".schedule.ScheduleDayActivity"
             android:label="@string/scheduleDay"
-            android:parentActivityName=".schedule.ScheduleActivity">
+            android:parentActivityName=".schedule.ScheduleActivity"
+            tools:targetApi="jelly_bean">
             <!-- The meta-data element is needed for versions lower than 4.1 -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

@@ -35,7 +35,6 @@ public class DownloadFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_download, container, false);
         mActivity = getActivity();
         new DownloadData(getActivity(), mListener).execute();
-
         return rootView;
     }
 

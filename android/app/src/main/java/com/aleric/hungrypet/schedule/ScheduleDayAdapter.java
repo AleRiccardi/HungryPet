@@ -1,6 +1,7 @@
 package com.aleric.hungrypet.schedule;
 
 import android.app.Activity;
+import android.content.Context;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
@@ -17,13 +18,19 @@ import com.aleric.hungrypet._data.shedule.Schedule;
 import java.util.ArrayList;
 
 public class ScheduleDayAdapter extends ArrayAdapter<Schedule> {
-    ScheduleDayActivity mContext;
-    static Schedule mSchedule;
+    private Context mContext;
+    private ScheduleDayFragment mFragment;
+    private ScheduleDayFragment.DeleteDayListener mListener;
+    private static Schedule mSchedule;
 
 
-    public ScheduleDayAdapter(Activity context, ArrayList<Schedule> schedules) {
+    public ScheduleDayAdapter(Activity context, ScheduleDayFragment fragment,
+                              ScheduleDayFragment.DeleteDayListener listener,
+                              ArrayList<Schedule> schedules) {
         super(context, 0, schedules);
-        mContext = (ScheduleDayActivity) context;
+        mContext = context;
+        mFragment = fragment;
+        mListener = listener;
     }
 
     @Override
@@ -33,6 +40,11 @@ public class ScheduleDayAdapter extends ArrayAdapter<Schedule> {
         }
         mSchedule = (Schedule) getItem(position);
         // Get the data item for position
+
+        if(mSchedule == null){
+            return convertView;
+        }
+
         String hourAndMinutes = Schedule.createStringHour(mSchedule.getHour());
         // Check if an existing view is being reused, otherwise inflate the view
         TextView txvHour = (TextView) convertView.findViewById(R.id.txv_hour);
@@ -46,13 +58,14 @@ public class ScheduleDayAdapter extends ArrayAdapter<Schedule> {
         holder.imvDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mContext.deleteSchedule(mSchedule);
+                mListener.deleteSchedule(mSchedule);
                 Snackbar mySnackbar = Snackbar.make(v, "Deleted schedule", Snackbar.LENGTH_LONG);
-
+                mFragment.refreshLsvSchedules(); // Refresh VIEW
                 mySnackbar.setAction("undo", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mContext.undoDeleteSchedule(mSchedule);
+                        mListener.undoDeleteSchedule(mSchedule);
+                        mFragment.refreshLsvSchedules(); // Refresh VIEW
                     }
                 });
                 mySnackbar.setActionTextColor(ContextCompat.getColor(mContext, R.color.bootstrapGray));
