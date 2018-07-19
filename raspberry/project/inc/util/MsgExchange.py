@@ -1,4 +1,6 @@
+
 class MsgExchange:
+    TAG = 'MsgExchange'
     # Here will be the instance stored.
     __instance = None
     reader = ['WifiConn', 'DbManage', 'ScheduleController']
@@ -21,6 +23,7 @@ class MsgExchange:
         return MsgExchange.__instance
 
     def put_to_serial(self, msg):
+
         self.messages_to_serial += [msg]
 
     def pop_to_serial(self):

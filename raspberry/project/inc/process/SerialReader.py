@@ -35,7 +35,7 @@ class SerialReader(threading.Thread):
         """ Send messages to serial """
         msg += chr(13)
         msg = msg.replace(" ", "")
-        Log.i(self.TAG, msg)
+        Log.g(self.TAG, msg)
         self.serial_conn.write(msg.encode())
 
     def serial_read(self):
@@ -52,6 +52,7 @@ class SerialReader(threading.Thread):
                             msg = msg.decode()
                         if msg[-1:] == '\n':
                             msg = msg[:-1]
+                        Log.b(self.TAG, msg)
                         msg_exc.put_from_serial(msg)
                     except Exception as e:
                         Log.e(self.TAG, e)

@@ -25,11 +25,11 @@ class Schedule:
     def get_mac(self):
         return self.mac
 
-    def get_week_day(self):
-        return self.week_day
+    def get_week_day(self) -> int:
+        return int(self.week_day)
 
-    def get_hour(self):
-        return self.hour
+    def get_hour(self) -> int:
+        return int(self.hour)
 
     def get_date_create(self):
         return self.date_create

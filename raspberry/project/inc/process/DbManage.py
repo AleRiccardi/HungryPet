@@ -115,12 +115,12 @@ class DbManage(threading.Thread):
                 "INSERT INTO schedule(id, mac, week_day, hour, date_create, date_update, deleted) "
                 "VALUES ('" +
                 schedule.get_id() + "', '" +
-                schedule.get_mac() + "','" +
-                schedule.get_week_day() + "','" +
-                schedule.get_hour() + "','" +
+                schedule.get_mac() + "', '" +
+                str(schedule.get_week_day()) + "','" +
+                str(schedule.get_hour()) + "','" +
                 schedule.get_date_create() + "','" +
                 schedule.get_date_update() + "','" +
-                schedule.get_deleted() + "')"
+                str(schedule.get_deleted()) + "')"
             )
 
     def update_to_local(self, schedules):
@@ -129,12 +129,12 @@ class DbManage(threading.Thread):
                 "UPDATE schedule SET "
                 "id='" + schedule.get_id() + "', " +
                 "mac='" + schedule.get_mac() + "', " +
-                "week_day='" + schedule.get_week_day() + "', " +
-                "hour='" + schedule.get_hour() + "', " +
+                "week_day='" + str(schedule.get_week_day()) + "', " +
+                "hour='" + str(schedule.get_hour()) + "', " +
                 "date_create='" + schedule.get_date_create() + "', " +
                 "date_update='" + schedule.get_date_update() + "', " +
                 "deleted='" + schedule.get_deleted() + "' " +
-                "WHERE id='" + schedule.get_id() + "'"
+                "WHERE id='" + str(schedule.get_id()) + "'"
             )
 
     def get_mac(self):
@@ -155,4 +155,3 @@ class DbManage(threading.Thread):
     def print_e(self, msg):
         """Print class msg."""
         print(Colors.FAIL + self.TAG + ' ~ ' + str(msg) + Colors.ENDC)
-

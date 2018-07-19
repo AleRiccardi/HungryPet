@@ -2,12 +2,27 @@ class Log:
 
     @staticmethod
     def i(TAG, msg):
-        """Print class msg."""
+        """ Print information log """
         print(TAG + ' ~ ' + str(msg))
 
     @staticmethod
+    def g(TAG, msg):
+        """ Print green log """
+        print(Colors.OKGREEN + TAG + ' ~ ' + str(msg) + Colors.ENDC)
+
+    @staticmethod
+    def b(TAG, msg):
+        """ Print blue log """
+        print(Colors.OKBLUE + TAG + ' ~ ' + str(msg) + Colors.ENDC)
+
+    @staticmethod
+    def w(TAG, msg):
+        """ Print warming msg """
+        print(Colors.WARNING + TAG + ' ~ ' + str(msg) + Colors.ENDC)
+
+    @staticmethod
     def e(TAG, msg):
-        """Print class msg."""
+        """Print error msg."""
         print(Colors.FAIL + TAG + ' ~ ' + str(msg) + Colors.ENDC)
 
 
