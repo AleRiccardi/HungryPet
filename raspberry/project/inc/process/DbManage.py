@@ -1,16 +1,18 @@
-from inc.util.Colors import Colors
 from inc.util.data import Schedule
+from inc.util.log import Log
 from datetime import datetime
 import urllib.request
 import MySQLdb
 import threading
+import subprocess
 import json
 import time
+import uuid
 
 
 class DbManage(threading.Thread):
     TAG = 'DbManage'
-    REQUEST_URL = 'http://hungrypet.altervista.org/request_data.php?table=schedule&mac=b8:27:eb:44:56:55'
+    REQUEST_URL = 'http://hungrypet.altervista.org/request_data.php?table=schedule&mac='
     loop = True
     wifi_conn = 0
     cursor = 0
@@ -21,13 +23,8 @@ class DbManage(threading.Thread):
         db = MySQLdb.connect(host="localhost", user="root", passwd="", db="my_hungrypet")
         self.cursor = db.cursor()
 
-    def create_local_connection(self):
-        """ create a database connection to a database that resides
-            in the memory
-        """
-
     def run(self):
-        self.print_msg("Thread started")
+        Log.i(self.TAG, "Thread started")
         while self.loop:
 
             to_insert = []
@@ -47,9 +44,9 @@ class DbManage(threading.Thread):
                         to_insert += [schedule_r]
 
             if len(to_insert) > 0:
-                self.print_msg("Inserted " + str(len(to_insert)) + " schedule")
+                Log.i(self.TAG, "Inserted " + str(len(to_insert)) + " schedule")
             if len(to_update) > 0:
-                self.print_msg("Updated " + str(len(to_update)) + " schedule")
+                Log.i(self.TAG, "Updated " + str(len(to_update)) + " schedule")
 
             self.insert_to_local(to_insert)
             self.update_to_local(to_update)
@@ -58,8 +55,9 @@ class DbManage(threading.Thread):
     def get_remote_schedules(self):
         schedules = []
         if self.wifi_conn.is_connected():
+            url = self.REQUEST_URL + self.get_mac()
             try:
-                contents = urllib.request.urlopen(self.REQUEST_URL).read()
+                contents = urllib.request.urlopen(url).read()
                 js_cont = json.loads(contents.decode("utf-8"))
 
                 for js_schedule in js_cont['data']:
@@ -76,7 +74,7 @@ class DbManage(threading.Thread):
 
                 return schedules
             except Exception as e:
-                self.print_e(e)
+                Log.e(self.TAG, e)
                 return None
 
     def get_local_schedules(self):
@@ -138,6 +136,17 @@ class DbManage(threading.Thread):
                 "deleted='" + schedule.get_deleted() + "' " +
                 "WHERE id='" + schedule.get_id() + "'"
             )
+
+    def get_mac(self):
+        p = subprocess.Popen(['ifconfig', 'eth0'], stdout=subprocess.PIPE,
+                             stderr=subprocess.PIPE)
+
+        out, err = p.communicate()
+
+        for l in out.split(b'\n'):
+            if l.strip().startswith(b'ether '):
+                mac = l.strip().split(b'ether ')[1].split(b' ')[0]
+        return mac.decode()
 
     def print_msg(self, msg):
         """Print class msg."""
