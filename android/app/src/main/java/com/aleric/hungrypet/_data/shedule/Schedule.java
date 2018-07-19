@@ -160,8 +160,7 @@ public class Schedule {
     public static String createStringHour(int hourAndMinutes) {
         int hour = hourAndMinutes / 100;
         int minutes = hourAndMinutes % 100;
-        String hourString = "" + hour + ":" + ((minutes / 10 == 0) ? "0" + minutes : minutes);
-        return hourString;
+        return hour + ":" + ((minutes / 10 == 0) ? "0" + minutes : minutes);
     }
 
     @Override
