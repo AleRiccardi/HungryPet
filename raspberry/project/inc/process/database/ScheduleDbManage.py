@@ -32,8 +32,8 @@ class ScheduleDbManage(threading.Thread):
 
             to_insert = []
             to_update = []
-            schedules_remote = self.get_remote_schedules()
-            schedules_local = self.get_local_schedules()
+            schedules_remote = self.get_remote()
+            schedules_local = self.get_local()
 
             if schedules_remote:
                 for schedule_r in schedules_remote:
@@ -51,13 +51,13 @@ class ScheduleDbManage(threading.Thread):
             if len(to_update) > 0:
                 Log.i(self.TAG, "Updated " + str(len(to_update)) + " schedule")
 
-            self.insert_to_local(to_insert)
-            self.update_to_local(to_update)
+            self.insert_local(to_insert)
+            self.update_local(to_update)
 
             # Sleeping time
             time.sleep(self.TIME)
 
-    def get_remote_schedules(self):
+    def get_remote(self):
         schedules = []
         if self.wifi_conn.is_connected():
             url = self.REQUEST_URL + self.wifi_conn.get_mac()
@@ -82,7 +82,7 @@ class ScheduleDbManage(threading.Thread):
                 Log.e(self.TAG, e)
                 return None
 
-    def get_local_schedules(self):
+    def get_local(self):
         schedules = []
 
         self.cursor.execute("SELECT * FROM schedule")
@@ -100,7 +100,8 @@ class ScheduleDbManage(threading.Thread):
 
         return schedules
 
-    def check_data(self, schedule1, schedule2):
+    @staticmethod
+    def check_data(schedule1, schedule2):
         """ Check the date of two Schedule
             return 1 if the first is newer of the second
         """
@@ -114,7 +115,7 @@ class ScheduleDbManage(threading.Thread):
         else:
             return 0
 
-    def insert_to_local(self, schedules):
+    def insert_local(self, schedules):
         for schedule in schedules:
             self.cursor.execute(
                 "INSERT INTO schedule(id, mac, week_day, hour, date_create, date_update, deleted) "
@@ -128,7 +129,7 @@ class ScheduleDbManage(threading.Thread):
                 str(schedule.get_deleted()) + "')"
             )
 
-    def update_to_local(self, schedules):
+    def update_local(self, schedules):
         for schedule in schedules:
             self.cursor.execute(
                 "UPDATE schedule SET "

@@ -56,7 +56,7 @@ class FoodLevel:
         self.date_update = date_update
 
     def __eq__(self, other):
-        return self.id == other.get_id()
+        return self.mac == other.get_mac() and self.type == other.get_type()
 
     def get_mac(self):
         return self.mac
@@ -65,7 +65,7 @@ class FoodLevel:
         return self.type
 
     def get_level(self) -> int:
-        return int(self.week_day)
+        return int(self.level)
 
     def get_date_create(self):
         return self.date_create
