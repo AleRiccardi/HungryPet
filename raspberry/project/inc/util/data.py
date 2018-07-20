@@ -72,3 +72,35 @@ class FoodLevel:
 
     def get_date_update(self):
         return self.date_update
+
+class InstantFood:
+    id = ""
+    mac = ""
+    done = 0
+    date_create = ""
+    date_update = ""
+
+    def __init__(self, id, mac, done, date_create, date_update):
+        self.id = id
+        self.mac = mac
+        self.done = done
+        self.date_create = date_create
+        self.date_update = date_update
+
+    def __eq__(self, other):
+        return self.id == other.get_id()
+
+    def get_id(self):
+        return self.id
+
+    def get_mac(self):
+        return self.mac
+
+    def get_done(self):
+        return self.done
+
+    def get_date_create(self):
+        return self.date_create
+
+    def get_date_update(self):
+        return self.date_update
