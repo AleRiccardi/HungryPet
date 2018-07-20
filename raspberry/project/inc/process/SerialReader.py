@@ -2,10 +2,12 @@ from inc.util.MsgExchange import MsgExchange
 from inc.util.log import Log
 import threading
 import serial
+import time
 
 
 class SerialReader(threading.Thread):
     TAG = 'SerialReader'
+    TIME = 0.1  # seconds
     loop = True
     serial_conn = 0
     read_thread = 0
@@ -23,6 +25,9 @@ class SerialReader(threading.Thread):
             msg = msg_exc.pop_to_serial()
             if msg:
                 self.serial_send(msg)
+
+            # Sleeping time
+            time.sleep(self.TIME)
 
     def set_connection_with_arduino(self):
         try:

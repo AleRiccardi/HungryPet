@@ -10,6 +10,7 @@ import serial
 
 class ScheduleController(threading.Thread):
     TAG = 'ScheduleController'
+    TIME = 5  # seconds
     loop = True
     wifi_conn = 0
     cursor = 0
@@ -37,7 +38,6 @@ class ScheduleController(threading.Thread):
                 food_done = False
 
             # print("Now: " + str(week_day_now) + " " + str(hour_now) + " " + str(minutes_now))
-            time.sleep(5)
             schedules = self.get_local_schedules()
             for schedule in schedules:
                 schedule_week_day = int(schedule.get_week_day())
@@ -51,6 +51,9 @@ class ScheduleController(threading.Thread):
                     # Give the food
                     food_done = True
                     msg_exc.put_to_serial("{'action': 'food-time'}")
+
+            # Sleeping time
+            time.sleep(self.TIME)
 
     def get_local_schedules(self):
         schedules = []

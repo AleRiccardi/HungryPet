@@ -12,6 +12,7 @@ import uuid
 
 class DbManage(threading.Thread):
     TAG = 'DbManage'
+    TIME = 3  # seconds
     REQUEST_URL = 'http://hungrypet.altervista.org/request_data.php?table=schedule&mac='
     loop = True
     wifi_conn = 0
@@ -50,7 +51,9 @@ class DbManage(threading.Thread):
 
             self.insert_to_local(to_insert)
             self.update_to_local(to_update)
-            time.sleep(3)
+
+            # Sleeping time
+            time.sleep(self.TIME)
 
     def get_remote_schedules(self):
         schedules = []

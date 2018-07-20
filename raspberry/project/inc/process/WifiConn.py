@@ -16,6 +16,8 @@ class WifiConn(threading.Thread):
 
     # ___General strings___
     TAG = 'WifiConn'
+    TIME = 0.3  # seconds
+    TIME_E = 10  # seconds
     PATH_WIFI = '/etc/wpa_supplicant/wpa_supplicant.conf'
     CMD_SUDO = 'sudo'
     NOT_SET = '<Not Set>'
@@ -78,7 +80,7 @@ class WifiConn(threading.Thread):
                         ip_address = self.connect_to_wifi(ssid, pswd)  # Connection
 
                         if ip_address == self.NOT_SET:
-                            Log.i(self.TAG, 'Couldn\'t connect to wifi: ' + ssid )
+                            Log.i(self.TAG, 'Couldn\'t connect to wifi: ' + ssid)
                             data['action'] = self.A_WIFI_SET
                             data['content'] = {'status': "fail"}
                             json_data = json.dumps(data)
@@ -95,10 +97,14 @@ class WifiConn(threading.Thread):
 
                 except KeyError as err:
                     Log.e(self.TAG, 'Wrong key access: ' + str(err))
-            time.sleep(0.3)
+
+            # Sleeping time
+            time.sleep(self.TIME)
         else:
             Log.i(self.TAG, "Arduino not connected, waiting 10 sec and check again the wired connection")
-            time.sleep(10)
+
+            # Sleeping time with error
+            time.sleep(self.TIME_E)
 
     def is_json(self, js_data):
         """Check if it is a Json file."""

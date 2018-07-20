@@ -2,10 +2,12 @@ from .process.SerialReader import SerialReader
 from .process.WifiConn import WifiConn
 from .process.DbManage import DbManage
 from .process.ScheduleController import ScheduleController
+import time
 
 
 class Core:
     TAG = 'Core'
+    TIME = 0.1  # seconds
     serial_reader = 0
     wifi_conn = 0
     db_manage = 0
@@ -44,6 +46,9 @@ class Core:
             if not self.schedule_cont.isAlive():
                 self.schedule_cont = ScheduleController()
                 self.schedule_cont.start()
+
+            # Sleeping time
+            time.sleep(self.TIME)
 
     def print_msg(self, msg):
         """Print class msg."""
