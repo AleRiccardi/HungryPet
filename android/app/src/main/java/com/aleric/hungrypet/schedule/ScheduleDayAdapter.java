@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.aleric.hungrypet.R;
-import com.aleric.hungrypet._data.DownloadData;
 import com.aleric.hungrypet._data.shedule.Schedule;
 
 import java.util.ArrayList;

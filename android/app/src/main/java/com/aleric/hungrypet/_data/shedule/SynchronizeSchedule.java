@@ -1,4 +1,4 @@
-package com.aleric.hungrypet._data;
+package com.aleric.hungrypet._data.shedule;
 
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -8,7 +8,6 @@ import android.util.Log;
 
 import com.aleric.hungrypet.DownloadListener;
 import com.aleric.hungrypet._data.database.DbScheduleManager;
-import com.aleric.hungrypet._data.shedule.Schedule;
 import com.aleric.hungrypet._data.station.Station;
 import com.aleric.hungrypet._data.station.StationDirectory;
 
@@ -29,9 +28,9 @@ import java.util.Date;
 import java.util.List;
 
 
-public class DownloadData extends AsyncTask<Void, Void, List<Schedule>> {
+public class SynchronizeSchedule extends AsyncTask<Void, Void, List<Schedule>> {
 
-    private static final String TAG = "DownloadData";
+    private static final String TAG = "SynchronizeSchedule";
     private static final String JSON_SUCCESS = "success";
     private static final String JSON_DATA = "data";
     private static final String JSON_NAME = "nome";
@@ -44,7 +43,7 @@ public class DownloadData extends AsyncTask<Void, Void, List<Schedule>> {
     private Activity mActivity;
     private DownloadListener mListener;
 
-    public DownloadData(Activity activity, DownloadListener listener) {
+    public SynchronizeSchedule(Activity activity, DownloadListener listener) {
         mActivity = activity;
         mListener = listener;
     }
@@ -111,6 +110,8 @@ public class DownloadData extends AsyncTask<Void, Void, List<Schedule>> {
             Log.e(TAG, "Errore durante la deserializzazioen della risposta", e);
         } catch (ParseException e) {
             Log.e(TAG, "Errore durante la coneversione in formato Data", e);
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             if (connection != null)
                 connection.disconnect();
@@ -179,7 +180,7 @@ public class DownloadData extends AsyncTask<Void, Void, List<Schedule>> {
                 dbSchedule.addScheduleWithCheck(toLocal);
             }
 
-            new UploadData(mActivity, toRemote).execute();
+            new UploadSchedule(mActivity, toRemote).execute();
 
             if (mListener != null) {
                 mListener.onFinishDownload();

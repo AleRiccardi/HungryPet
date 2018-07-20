@@ -12,4 +12,10 @@
     <color name="bootstrapGray">#e9ecef</color>
 
     <color name="badgeText">#303131</color>
+
+
+    <color name="colorRed">#dc3545</color>
+    <color name="colorYellow">#ffc107</color>
+    <color name="colorGreen">#28a745</color>
+    <color name="colorBlue">#007bff</color>
 </resources>

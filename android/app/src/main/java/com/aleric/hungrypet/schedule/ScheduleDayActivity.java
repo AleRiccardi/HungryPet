@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 import com.aleric.hungrypet.DownloadListener;
 import com.aleric.hungrypet.R;
-import com.aleric.hungrypet._data.DownloadData;
+import com.aleric.hungrypet._data.shedule.SynchronizeSchedule;
 import com.aleric.hungrypet._data.database.DbScheduleManager;
 import com.aleric.hungrypet._data.shedule.Schedule;
 import com.aleric.hungrypet._data.station.Station;
@@ -69,7 +69,7 @@ public class ScheduleDayActivity extends AppCompatActivity implements ScheduleDa
         Schedule schedule = new Schedule(mStation.getMac(), dayNum, hourInt);
         Boolean inserted = dbScheduleManager.addScheduleWithCheck(schedule);
         if (inserted) {
-            new DownloadData(this, null).execute(); // Trigger update thread
+            new SynchronizeSchedule(this, null).execute(); // Trigger update thread
             // Updating VIEW
             Toast.makeText(this, "Added schedule at " + hourString, Toast.LENGTH_LONG).show();
         } else {
@@ -89,7 +89,7 @@ public class ScheduleDayActivity extends AppCompatActivity implements ScheduleDa
 
         Boolean inserted = dbScheduleManager.updateSchedule(schedule);
         if (inserted) {
-            new DownloadData(this, null).execute(); // Trigger update thread
+            new SynchronizeSchedule(this, null).execute(); // Trigger update thread
             // Updating VIEW
             Toast.makeText(this, "Updated schedule at " + hourString, Toast.LENGTH_LONG).show();
         } else {
@@ -103,7 +103,7 @@ public class ScheduleDayActivity extends AppCompatActivity implements ScheduleDa
         schedule.setDelete(true);
         schedule.setUpdate(); // Update date
         dbScheduleManager.updateSchedule(schedule);
-        new DownloadData(this, null).execute(); // Trigger update thread
+        new SynchronizeSchedule(this, null).execute(); // Trigger update thread
     }
 
     @Override
@@ -112,7 +112,7 @@ public class ScheduleDayActivity extends AppCompatActivity implements ScheduleDa
         schedule.setDelete(false);
         schedule.setUpdate(); // Update date
         dbScheduleManager.updateSchedule(schedule);
-        new DownloadData(this, null).execute(); // Trigger update thread
+        new SynchronizeSchedule(this, null).execute(); // Trigger update thread
     }
 
 

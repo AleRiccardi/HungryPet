@@ -1,7 +1,12 @@
 package com.aleric.hungrypet.overview;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -16,6 +21,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.aleric.hungrypet.R;
+import com.aleric.hungrypet._data.SynchronizeProgressBar;
+import com.aleric.hungrypet._data.UploadInstantFood;
 import com.aleric.hungrypet._data.station.Station;
 import com.aleric.hungrypet._data.station.StationDirectory;
 import com.aleric.hungrypet.schedule.ScheduleActivity;
@@ -25,14 +32,14 @@ import com.aleric.hungrypet.station.StationActivity;
 public class OverviewActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private TextView mTxvStationName;
-    private TextView mTxvState;
     private TextView mTxvLastFeedTime;
     private ProgressBar mPgbLevelContainer;
     private ProgressBar mPgbLevelBowl;
     private Button mBtnFeedNow;
-
+    private SynchronizeProgressBar threadLevel;
     private Station mStation;
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,7 +72,24 @@ public class OverviewActivity extends AppCompatActivity implements NavigationVie
         }
 
         // Initialize the component
-        initComponents();
+        this.initComponents();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mStation != null) {
+            threadLevel = new SynchronizeProgressBar(this, mPgbLevelContainer, mPgbLevelBowl);
+            threadLevel.start();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mStation != null) {
+            threadLevel.cancel();
+        }
     }
 
     @Override
@@ -109,21 +133,32 @@ public class OverviewActivity extends AppCompatActivity implements NavigationVie
         }
     }
 
-    private void initComponents(){
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void initComponents() {
+        final Activity activity = this;
         mTxvStationName = findViewById(R.id.txv_station_name);
-        mTxvState = findViewById(R.id.txv_state);
         mTxvLastFeedTime = findViewById(R.id.txv_last_feed_time);
         mPgbLevelContainer = findViewById(R.id.pgb_level_container);
         mPgbLevelBowl = findViewById(R.id.pgb_level_bowl);
         mBtnFeedNow = findViewById(R.id.btn_feed_now);
 
         mStation = StationDirectory.getInstance().getStation();
-        if(mStation != null) {
+        if (mStation != null) {
             mTxvStationName.setText(mStation.getName());
-            mTxvState.setText("To set");
             mTxvLastFeedTime.setText("To set");
+            // BUTTON FEED NOW
             mBtnFeedNow.setEnabled(true);
             mBtnFeedNow.setClickable(true);
+            mBtnFeedNow.setOnClickListener((new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    new UploadInstantFood(activity).execute();
+                }
+            }));
+            // PROGRESSBAR
+            mPgbLevelContainer.setProgress(0, true);
+            mPgbLevelBowl.setProgress(0, true);
+
         } else {
             mBtnFeedNow.setEnabled(false);
             mBtnFeedNow.setClickable(false);

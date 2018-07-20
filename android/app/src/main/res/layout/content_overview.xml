@@ -35,29 +35,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/textView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:text="State:"
-            app:layout_constraintEnd_toStartOf="@+id/txv_state"
-            app:layout_constraintTop_toTopOf="@+id/txv_state" />
-
-        <TextView
-            android:id="@+id/txv_state"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginRight="24dp"
-            android:layout_marginTop="8dp"
-            android:text="Disconnected"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
     </android.support.constraint.ConstraintLayout>
 
     <android.support.v7.widget.CardView

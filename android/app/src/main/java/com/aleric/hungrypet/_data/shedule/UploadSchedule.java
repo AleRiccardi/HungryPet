@@ -1,4 +1,4 @@
-package com.aleric.hungrypet._data;
+package com.aleric.hungrypet._data.shedule;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -27,9 +27,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class UploadData extends AsyncTask<Void, Void, Boolean> {
+public class UploadSchedule extends AsyncTask<Void, Void, Boolean> {
 
-    private static final String TAG = "UploadData";
+    private static final String TAG = "UploadSchedule";
     private static final String JSON_SUCCESS = "success";
     private static final String JSON_ACTION = "action";
     private static final String ACTION = "upload";
@@ -40,7 +40,7 @@ public class UploadData extends AsyncTask<Void, Void, Boolean> {
     private List<Schedule> mSchedules = null;
     private DownloadListener mListener = null;
 
-    public UploadData(Activity activity, List<Schedule> schedules) {
+    public UploadSchedule(Activity activity, List<Schedule> schedules) {
         mActivity = activity;
         mSchedules = schedules;
     }
