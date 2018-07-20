@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TimePicker;
 
@@ -36,6 +37,7 @@ public class ScheduleDayFragment extends Fragment {
     private Station mStation;
     private Integer mWeekInt;
 
+    private ImageView mImvBackgorund;
     public interface ActionDayListener {
         int getWeekDay();
         void createSchedule(int selectedHour, int selectedMinute);
@@ -70,6 +72,7 @@ public class ScheduleDayFragment extends Fragment {
         // Components of view
         final ListView ltvShedule = rootView.findViewById(R.id.lsv_schedule_day);
         FloatingActionButton fabAddSchedule = rootView.findViewById(R.id.fab_add_schedule);
+        mImvBackgorund = rootView.findViewById(R.id.imv_bg_no_items);
         // Set the list of schedules
         mSchedulesList = new ArrayList<>();
         mDbScheduleManager = new DbScheduleManager(getContext());
@@ -183,6 +186,11 @@ public class ScheduleDayFragment extends Fragment {
             }
         }
         mScheduleAdapter.clear();
-        mScheduleAdapter.addAll(mSchedulesList);
+        if(mSchedulesList.size() > 0) {
+            mImvBackgorund.setVisibility(View.INVISIBLE);
+            mScheduleAdapter.addAll(mSchedulesList);
+        } else {
+            mImvBackgorund.setVisibility(View.VISIBLE);
+        }
     }
 }

@@ -1,22 +1,11 @@
 package com.aleric.hungrypet.schedule;
 
-import android.app.TimePickerDialog;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.NavUtils;
-import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Pair;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.aleric.hungrypet.DownloadListener;
@@ -27,10 +16,7 @@ import com.aleric.hungrypet._data.shedule.Schedule;
 import com.aleric.hungrypet._data.station.Station;
 import com.aleric.hungrypet._data.station.StationDirectory;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.List;
 
 public class ScheduleDayActivity extends AppCompatActivity implements ScheduleDayFragment.ActionDayListener,
         ScheduleDayFragment.DeleteDayListener, DownloadListener {
@@ -81,10 +67,14 @@ public class ScheduleDayActivity extends AppCompatActivity implements ScheduleDa
         String hourString = Schedule.createStringHour(hourInt);
         // MODEL
         Schedule schedule = new Schedule(mStation.getMac(), dayNum, hourInt);
-        dbScheduleManager.addSchedule(schedule);
-        new DownloadData(this, null).execute(); // Trigger update thread
-        // Updating VIEW
-        Toast.makeText(this, "Added schedule at " + hourString, Toast.LENGTH_LONG).show();
+        Boolean inserted = dbScheduleManager.addScheduleWithCheck(schedule);
+        if (inserted) {
+            new DownloadData(this, null).execute(); // Trigger update thread
+            // Updating VIEW
+            Toast.makeText(this, "Added schedule at " + hourString, Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(this, "Error with the insertion of " + hourString, Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
@@ -96,16 +86,21 @@ public class ScheduleDayActivity extends AppCompatActivity implements ScheduleDa
         // MODEL
         schedule.setHour(hourInt); // Update hour
         schedule.setUpdate(); // Update date
-        dbScheduleManager.updateSchedule(schedule);
-        new DownloadData(this, null).execute(); // Trigger update thread
-        // VIEW
-        Toast.makeText(this, "Updated schedule at " + hourString, Toast.LENGTH_LONG).show();
+
+        Boolean inserted = dbScheduleManager.updateSchedule(schedule);
+        if (inserted) {
+            new DownloadData(this, null).execute(); // Trigger update thread
+            // Updating VIEW
+            Toast.makeText(this, "Updated schedule at " + hourString, Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(this, "Error with the update of " + hourString, Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
     public void deleteSchedule(Schedule schedule) {
         DbScheduleManager dbScheduleManager = new DbScheduleManager(this);
-        schedule.delete(true);
+        schedule.setDelete(true);
         schedule.setUpdate(); // Update date
         dbScheduleManager.updateSchedule(schedule);
         new DownloadData(this, null).execute(); // Trigger update thread
@@ -114,7 +109,7 @@ public class ScheduleDayActivity extends AppCompatActivity implements ScheduleDa
     @Override
     public void undoDeleteSchedule(Schedule schedule) {
         DbScheduleManager dbScheduleManager = new DbScheduleManager(this);
-        schedule.delete(false);
+        schedule.setDelete(false);
         schedule.setUpdate(); // Update date
         dbScheduleManager.updateSchedule(schedule);
         new DownloadData(this, null).execute(); // Trigger update thread

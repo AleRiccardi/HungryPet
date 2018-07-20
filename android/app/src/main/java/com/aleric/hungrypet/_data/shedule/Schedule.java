@@ -149,7 +149,7 @@ public class Schedule {
         return cv;
     }
 
-    public void delete(boolean delete) {
+    public void setDelete(boolean delete) {
         mDeleted = delete ? 1 : 0;
     }
 

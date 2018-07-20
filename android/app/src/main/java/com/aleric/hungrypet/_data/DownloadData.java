@@ -176,7 +176,7 @@ public class DownloadData extends AsyncTask<Void, Void, List<Schedule>> {
             }
 
             for (Schedule toLocal : remoteSchedules) {
-                dbSchedule.addSchedule(toLocal);
+                dbSchedule.addScheduleWithCheck(toLocal);
             }
 
             new UploadData(mActivity, toRemote).execute();
