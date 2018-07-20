@@ -77,7 +77,6 @@ class InstantFoodDbManage(threading.Thread):
         instant_foods = []
         if self.wifi_conn.is_connected():
             url = self.REQUEST_URL + self.wifi_conn.get_mac()
-            Log.i(self.TAG, url)
 
             try:
                 contents = urllib.request.urlopen(url).read()
