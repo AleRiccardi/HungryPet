@@ -1,17 +1,21 @@
+from .process.ScheduleController import ScheduleController
 from .process.SerialReader import SerialReader
 from .process.WifiConn import WifiConn
-from .process.DbManage import DbManage
-from .process.ScheduleController import ScheduleController
+from .process.database.ScheduleDbManage import ScheduleDbManage
+from .process.database.FoodLevelDbManage import FoodLevelDbManage
 import time
 
 
 class Core:
     TAG = 'Core'
     TIME = 0.1  # seconds
+
+    # Processes
     serial_reader = 0
     wifi_conn = 0
     db_manage = 0
     schedule_cont = 0
+    food_level = 0
 
     def __init__(self):
         print("\n####### HungryPet ########\n")
@@ -22,8 +26,9 @@ class Core:
     def run(self):
         self.serial_reader = SerialReader()
         self.wifi_conn = WifiConn()
-        self.db_manage = DbManage(self)
+        self.db_manage = ScheduleDbManage(self.wifi_conn)
         self.schedule_cont = ScheduleController()
+        self.food_level = FoodLevelDbManage(self.wifi_conn)
 
         while True:
 
@@ -39,7 +44,7 @@ class Core:
 
             # DbManage
             if not self.db_manage.isAlive():
-                self.db_manage = DbManage(self.wifi_conn)
+                self.db_manage = ScheduleDbManage(self.wifi_conn)
                 self.db_manage.start()
 
             # ScheduleController
@@ -47,6 +52,10 @@ class Core:
                 self.schedule_cont = ScheduleController()
                 self.schedule_cont.start()
 
+            # ScheduleController
+            if not self.food_level.isAlive():
+                self.food_level = FoodLevelDbManage(self.wifi_conn)
+                self.food_level.start()
             # Sleeping time
             time.sleep(self.TIME)
 

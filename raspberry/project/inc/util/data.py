@@ -39,3 +39,36 @@ class Schedule:
 
     def get_deleted(self):
         return self.deleted
+
+
+class FoodLevel:
+    mac = ""
+    type = 0
+    level = 0
+    date_create = ""
+    date_update = ""
+
+    def __init__(self, mac, type, level, date_create, date_update):
+        self.mac = mac
+        self.type = type
+        self.level = level
+        self.date_create = date_create
+        self.date_update = date_update
+
+    def __eq__(self, other):
+        return self.id == other.get_id()
+
+    def get_mac(self):
+        return self.mac
+
+    def get_type(self):
+        return self.type
+
+    def get_level(self) -> int:
+        return int(self.week_day)
+
+    def get_date_create(self):
+        return self.date_create
+
+    def get_date_update(self):
+        return self.date_update

@@ -64,7 +64,7 @@ class WifiConn(threading.Thread):
         while self.loop:
             # Read data
             data = self.msg_exc.pop_from_serial(self.TAG)
-            if self.is_json(str(data)):
+            if data:
                 data = json.loads(str(data))
                 # selection of action
                 try:
@@ -96,7 +96,7 @@ class WifiConn(threading.Thread):
                         Log.i(self.TAG, "End of comunication")
 
                 except KeyError as err:
-                    Log.e(self.TAG, 'Wrong key access: ' + str(err))
+                    Log.e(self.TAG, 'Wrong json access: ' + str(err))
 
             # Sleeping time
             time.sleep(self.TIME)
@@ -105,24 +105,6 @@ class WifiConn(threading.Thread):
 
             # Sleeping time with error
             time.sleep(self.TIME_E)
-
-    def is_json(self, js_data):
-        """Check if it is a Json file."""
-        if js_data:
-            try:
-                json_object = json.loads(js_data)
-                if isinstance(json_object, int):
-                    return False
-
-                if len(json_object) == 0:
-                    return False
-
-            except ValueError as err:
-                Log.e(self.TAG, err)
-                return False
-
-            return True
-        return False
 
     def send_wifi_to_bt(self):
         all_wifi = []
@@ -227,6 +209,18 @@ class WifiConn(threading.Thread):
             self.connected = False
 
         return self.connected
+
+    @staticmethod
+    def get_mac():
+        p = subprocess.Popen(['ifconfig', 'eth0'], stdout=subprocess.PIPE,
+                             stderr=subprocess.PIPE)
+
+        out, err = p.communicate()
+
+        for l in out.split(b'\n'):
+            if l.strip().startswith(b'ether '):
+                mac = l.strip().split(b'ether ')[1].split(b' ')[0]
+        return mac.decode()
 
 
 class WifiScan:

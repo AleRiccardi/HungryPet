@@ -10,10 +10,12 @@ import time
 import uuid
 
 
-class DbManage(threading.Thread):
-    TAG = 'DbManage'
-    TIME = 3  # seconds
+class ScheduleDbManage(threading.Thread):
+    # Main
+    TAG = 'ScheduleDbManage'
     REQUEST_URL = 'http://hungrypet.altervista.org/request_data.php?table=schedule&mac='
+    TIME = 3  # seconds
+
     loop = True
     wifi_conn = 0
     cursor = 0
@@ -58,7 +60,7 @@ class DbManage(threading.Thread):
     def get_remote_schedules(self):
         schedules = []
         if self.wifi_conn.is_connected():
-            url = self.REQUEST_URL + self.get_mac()
+            url = self.REQUEST_URL + self.wifi_conn.get_mac()
             try:
                 contents = urllib.request.urlopen(url).read()
                 js_cont = json.loads(contents.decode("utf-8"))
@@ -139,17 +141,6 @@ class DbManage(threading.Thread):
                 "deleted='" + schedule.get_deleted() + "' " +
                 "WHERE id='" + str(schedule.get_id()) + "'"
             )
-
-    def get_mac(self):
-        p = subprocess.Popen(['ifconfig', 'eth0'], stdout=subprocess.PIPE,
-                             stderr=subprocess.PIPE)
-
-        out, err = p.communicate()
-
-        for l in out.split(b'\n'):
-            if l.strip().startswith(b'ether '):
-                mac = l.strip().split(b'ether ')[1].split(b' ')[0]
-        return mac.decode()
 
     def print_msg(self, msg):
         """Print class msg."""

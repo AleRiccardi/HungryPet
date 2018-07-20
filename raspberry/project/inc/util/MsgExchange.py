@@ -1,9 +1,10 @@
+from inc.util.log import Log
 
 class MsgExchange:
     TAG = 'MsgExchange'
     # Here will be the instance stored.
     __instance = None
-    reader = ['WifiConn', 'DbManage', 'ScheduleController']
+    reader = ['WifiConn', 'ScheduleDbManage', 'ScheduleController', 'FoodLevelDbManage']
     messages_from_serial = []
     messages_to_serial = []
 
@@ -53,5 +54,8 @@ class MsgExchange:
                         del self.messages_from_serial[i][tag_cass]
                 except:
                     pass
+        else:
+            Log.w(self.TAG, tag_cass + " not allowed to listen for messages")
+
         self.messages_from_serial = [i for i in self.messages_from_serial if i]
         return msg_ret

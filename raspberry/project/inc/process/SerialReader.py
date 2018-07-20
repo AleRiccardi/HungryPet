@@ -3,9 +3,14 @@ from inc.util.log import Log
 import threading
 import serial
 import time
+import json
 
 
 class SerialReader(threading.Thread):
+    """ Listen for all the messages the arrive from serial
+        and write all the messages that read from the class
+        MsgExchange """
+
     TAG = 'SerialReader'
     TIME = 0.1  # seconds
     loop = True
@@ -57,7 +62,27 @@ class SerialReader(threading.Thread):
                             msg = msg.decode()
                         if msg[-1:] == '\n':
                             msg = msg[:-1]
-                        Log.b(self.TAG, msg)
-                        msg_exc.put_from_serial(msg)
+
+                        if self.is_json(msg):
+                            Log.b(self.TAG, msg)
+                            msg_exc.put_from_serial(msg)
                     except Exception as e:
                         Log.e(self.TAG, e)
+
+    def is_json(self, js_data):
+        """Check if it is a Json file."""
+        if js_data:
+            try:
+                json_object = json.loads(js_data)
+                if isinstance(json_object, int):
+                    return False
+
+                if len(json_object) == 0:
+                    return False
+
+            except ValueError as err:
+                Log.e(self.TAG, "Json error: " + str(err) + " \n  Msg: " + str(js_data))
+                return False
+
+            return True
+        return False
