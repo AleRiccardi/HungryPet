@@ -9,20 +9,13 @@ import com.aleric.hungrypet._data.station.Station;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by elia.dipasquale on 16/03/2017.
- */
-
-/**
- * Per dettagli vedere: db-example.
- */
 public class DbStationManager {
 
-    private DbStationHelper dbHelper;
+    private DbHelper dbHelper;
 
 
     public DbStationManager(Context context) {
-        dbHelper = new DbStationHelper(context);
+        dbHelper = new DbHelper(context);
     }
 
 

@@ -2,8 +2,6 @@ package com.aleric.hungrypet.overview;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -87,6 +85,14 @@ public class OverviewActivity extends AppCompatActivity implements NavigationVie
     @Override
     public void onStop() {
         super.onStop();
+        if (mStation != null) {
+            threadLevel.cancel();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
         if (mStation != null) {
             threadLevel.cancel();
         }

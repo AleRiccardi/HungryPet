@@ -8,10 +8,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-/**
- * Created by aleric on 05/04/2018.
- */
-
 public class Station {
 
     public static final String TABLE_NAME = "station";

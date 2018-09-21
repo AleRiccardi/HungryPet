@@ -18,7 +18,7 @@ public class Schedule {
     public static final String COLUMN_HOUR = "hour";
     public static final String COLUMN_DATE_CREATE = "date_create";
     public static final String COLUMN_DATE_UPDATE = "date_update";
-    public static final String COLUMN_DELETED = "mDeleted";
+    public static final String COLUMN_DELETED = "deleted";
 
     public static final String PATTERN_DATE = "yyyy-MM-dd HH:mm:ss";
     public static final SimpleDateFormat FORMAT_DATA = new SimpleDateFormat(PATTERN_DATE);

@@ -13,9 +13,7 @@ import com.aleric.hungrypet.DownloadListener;
 import com.aleric.hungrypet.R;
 import com.aleric.hungrypet._data.shedule.SynchronizeSchedule;
 
-/**
- * Per dettagli vedere: server-connection-example, exercise-2 (laboratorio 1).
- */
+
 public class DownloadFragment extends Fragment {
 
     private DownloadListener mListener;
@@ -34,7 +32,7 @@ public class DownloadFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_download, container, false);
         mActivity = getActivity();
-        new SynchronizeSchedule(getActivity(), mListener).execute();
+        new SynchronizeSchedule(getContext(), mListener).execute();
         return rootView;
     }
 

@@ -44,7 +44,7 @@ public class CommDirectory {
             return E_BT_OFF;
         } else {
             if (mComm == null) {
-                // Create and start the communication services
+                // Create and check the communication services
                 mComm = new CommService(handler);
                 mComm.start();
             } else if (mComm.getState() == CommService.STATE_NONE) {

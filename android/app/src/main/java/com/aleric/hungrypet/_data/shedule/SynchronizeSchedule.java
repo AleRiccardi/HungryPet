@@ -1,6 +1,7 @@
 package com.aleric.hungrypet._data.shedule;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
@@ -40,11 +41,11 @@ public class SynchronizeSchedule extends AsyncTask<Void, Void, List<Schedule>> {
 
     private static final String BASE_URL = "http://hungrypet.altervista.org/request_data.php?table=schedule&mac=";
 
-    private Activity mActivity;
+    private Context mContext;
     private DownloadListener mListener;
 
-    public SynchronizeSchedule(Activity activity, DownloadListener listener) {
-        mActivity = activity;
+    public SynchronizeSchedule(Context context, DownloadListener listener) {
+        mContext = context;
         mListener = listener;
     }
 
@@ -132,7 +133,7 @@ public class SynchronizeSchedule extends AsyncTask<Void, Void, List<Schedule>> {
         if (remoteSchedules == null) {
             Log.d(TAG, "Errore nel download dei dati");
 
-            new AlertDialog.Builder(mActivity)
+            new AlertDialog.Builder(mContext)
                     .setCancelable(false)
                     .setTitle("Attenzione")
                     .setMessage("Non è stato possibile ottenere i dati dal server, controlla la tua connessione e riprova più tardi")
@@ -149,7 +150,7 @@ public class SynchronizeSchedule extends AsyncTask<Void, Void, List<Schedule>> {
         } else {
             Log.d(TAG, "Download completato correttamente");
 
-            DbScheduleManager dbSchedule = new DbScheduleManager(mActivity);
+            DbScheduleManager dbSchedule = new DbScheduleManager(mContext);
             List<Schedule> localSchedules = dbSchedule.getSchedules(StationDirectory.getInstance().getStation().getMac());
             List<Schedule> toRemote = new ArrayList<>();
             for (Schedule localSchedule : localSchedules) {
@@ -180,7 +181,7 @@ public class SynchronizeSchedule extends AsyncTask<Void, Void, List<Schedule>> {
                 dbSchedule.addScheduleWithCheck(toLocal);
             }
 
-            new UploadSchedule(mActivity, toRemote).execute();
+            new UploadSchedule(mContext, toRemote).execute();
 
             if (mListener != null) {
                 mListener.onFinishDownload();

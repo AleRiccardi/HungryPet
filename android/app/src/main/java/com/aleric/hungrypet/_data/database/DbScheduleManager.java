@@ -10,11 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DbScheduleManager {
-    private DbScheduleHelper dbHelper;
+    private DbHelper dbHelper;
 
 
     public DbScheduleManager(Context context) {
-        dbHelper = new DbScheduleHelper(context);
+        dbHelper = new DbHelper(context);
     }
 
 

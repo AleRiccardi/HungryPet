@@ -23,7 +23,7 @@ import java.util.UUID;
  * incoming connections, a thread for connecting with a device, and a
  * thread for performing data transmissions when connected.
  *
- * @// TODO: 20/05/2018 in the start() func. starts a communication also if the device it's not connected
+ * @// TODO: 20/05/2018 in the check() func. starts a communication also if the device it's not connected
  */
 public class CommService {
     // Debugging

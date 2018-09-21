@@ -1,17 +1,13 @@
 package com.aleric.hungrypet._data.shedule;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.DialogInterface;
+import android.content.Context;
 import android.os.AsyncTask;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
-import android.view.View;
 
 import com.aleric.hungrypet.DownloadListener;
 import com.aleric.hungrypet._data.database.DbScheduleManager;
-import com.aleric.hungrypet._data.shedule.Schedule;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,12 +32,12 @@ public class UploadSchedule extends AsyncTask<Void, Void, Boolean> {
     private static final String BASE_URL = "http://hungrypet.altervista.org/upload_data.php?" +
             "table=schedule&id=%s&mac=%s&week_day=%s&hour=%s&date_create=%s&date_update=%s&deleted=%d";
 
-    private Activity mActivity = null;
+    private Context mContext = null;
     private List<Schedule> mSchedules = null;
     private DownloadListener mListener = null;
 
-    public UploadSchedule(Activity activity, List<Schedule> schedules) {
-        mActivity = activity;
+    public UploadSchedule(Context context, List<Schedule> schedules) {
+        mContext = context;
         mSchedules = schedules;
     }
 
@@ -51,7 +47,7 @@ public class UploadSchedule extends AsyncTask<Void, Void, Boolean> {
 
         BufferedReader bufferedReader = null;
         HttpURLConnection connection = null;
-        DbScheduleManager dbScheduleManager = new DbScheduleManager(mActivity);
+        DbScheduleManager dbScheduleManager = new DbScheduleManager(mContext);
         List<Schedule> errorUploadSchedules = new ArrayList<>();
         String urlString = "";
         boolean success = true;
@@ -122,8 +118,8 @@ public class UploadSchedule extends AsyncTask<Void, Void, Boolean> {
         super.onPostExecute(success);
         if (!success) {
 
-            if (mActivity != null) {
-                new AlertDialog.Builder(mActivity)
+            if (mContext != null) {
+                new AlertDialog.Builder(mContext)
                         .setCancelable(false)
                         .setTitle("Attention")
                         .setMessage("Upload data with errors, check your connection and try again later")

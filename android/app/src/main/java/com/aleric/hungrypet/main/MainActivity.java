@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // If the station is already set, then start the Overview activity.
+        // If the station is already set, then check the Overview activity.
         if (existStation()) {
             StationDirectory.getInstance().setStation(mStation);
             goToOverview();

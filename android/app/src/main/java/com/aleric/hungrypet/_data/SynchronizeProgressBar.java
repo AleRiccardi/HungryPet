@@ -27,7 +27,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 
-public class SynchronizeProgressBar extends Thread {
+public class SynchronizeProgressBar extends Thread{
 
     private static final String TAG = "SynchronizeSchedule";
     private static final String JSON_SUCCESS = "success";
@@ -51,7 +51,6 @@ public class SynchronizeProgressBar extends Thread {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    @Override
     public void run() {
         Station station = StationDirectory.getInstance().getStation();
         final String finalUrl = BASE_URL + station.getMac();
