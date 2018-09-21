@@ -1,6 +1,6 @@
-from inc.util.MsgExchange import MsgExchange
-from inc.util.data import FoodLevel
-from inc.util.log import Log
+from ..util.MsgExchange import MsgExchange
+from ..util.data import FoodLevel
+from ..util.log import Log
 import urllib.request
 import threading
 import MySQLdb
@@ -24,6 +24,7 @@ class FoodLevelDbManage(threading.Thread):
 
     # class var
     loop = True
+    is_running = True
     cursor = 0
 
     # external class
@@ -31,24 +32,39 @@ class FoodLevelDbManage(threading.Thread):
     msg_exc = 0
 
     def __init__(self, wifi_conn):
+        """
+        Init function.
+        :param wifi_conn: WifiConn class.
+        """
         threading.Thread.__init__(self)
         db = MySQLdb.connect(host="localhost", user="root", passwd="", db="my_hungrypet")
         self.cursor = db.cursor()
         self.msg_exc = MsgExchange.get_instance()
         self.wifi_conn = wifi_conn
 
+    def close(self):
+        self.loop = False
+
     def run(self):
-        """ Method triggered from thread """
+        """
+        Method triggered from thread.
+        """
         Log.i(self.TAG, 'Thread started')
 
         while self.loop:
             self.check_message_from_serial()
-            self.check_update_to_remote()
+            self.sync_remote_to_local()
 
             # Sleeping time
             time.sleep(self.TIME)
 
+        Log.i(self.TAG, 'Thread closed')
+        self.is_running = False
+
     def check_message_from_serial(self):
+        """
+        Listen for message that comes from the serial.
+        """
         data = self.msg_exc.pop_from_serial(self.TAG)
         if data:
             data = json.loads(str(data))
@@ -69,45 +85,54 @@ class FoodLevelDbManage(threading.Thread):
             except KeyError as err:
                 Log.e(self.TAG, 'Wrong json access: ' + str(err))
 
-    def check_update_to_remote(self):
-        foods_remote = self.get_remote()
-        foods_local = self.get_local()
-        to_remote = []
-        to_local = []
+    def sync_remote_to_local(self):
+        """
+        Sync remote information with local.
+        """
+        if self.wifi_conn.is_connected():
+            foods_remote = self.get_remote()
+            foods_local = self.get_local()
+            to_remote = []
+            to_local = []
 
-        # loop local
-        for local in foods_local:
-            if local in foods_remote:
-                # loop remote
-                for remote in foods_remote:
-                    if local.get_type() == remote.get_type():
+            # loop local
+            for local in foods_local:
+                if local in foods_remote:
+                    # loop remote
+                    for remote in foods_remote:
+                        if local.get_type() == remote.get_type():
 
-                        data_local = datetime.strptime(local.get_date_update(), '%Y-%m-%d %H:%M:%S')
-                        data_remote = datetime.strptime(remote.get_date_update(), '%Y-%m-%d %H:%M:%S')
-                        if data_remote > data_local:
-                            # Check if remote is more recent of local, then upload on local
-                            to_local += [remote]
-                        elif data_remote < data_local:
-                            to_remote += [local]
-            else:
-                to_remote += [local]
+                            data_local = datetime.strptime(local.get_date_update(), '%Y-%m-%d %H:%M:%S')
+                            data_remote = datetime.strptime(remote.get_date_update(), '%Y-%m-%d %H:%M:%S')
+                            if data_remote > data_local:
+                                # Check if remote is more recent of local, then upload on local
+                                to_local += [remote]
+                            elif data_remote < data_local:
+                                to_remote += [local]
+                else:
+                    to_remote += [local]
 
-        # Check if we have to insert a remote level
-        for remote in foods_remote:
-            if remote not in foods_local:
-                to_local += remote
+            # Check if we have to insert a remote level
+            for remote in foods_remote:
+                if remote not in foods_local:
+                    to_local += remote
 
-        if len(to_local) > 0:
-            Log.i(self.TAG, "Upload " + str(len(to_local)) + " food level to local")
-            for local in to_local:
-                self.update_local(local.get_type(), local.get_level())
+            if len(to_local) > 0:
+                Log.i(self.TAG, "Upload " + str(len(to_local)) + " food level to local")
+                for local in to_local:
+                    self.update_local(local.get_type(), local.get_level())
 
-        if len(to_remote) > 0:
-            Log.i(self.TAG, "Upload " + str(len(to_remote)) + " food level to remote")
-            for remote in to_remote:
-                self.update_remote(remote)
+            if len(to_remote) > 0:
+                Log.i(self.TAG, "Upload " + str(len(to_remote)) + " food level to remote")
+                for remote in to_remote:
+                    self.update_remote(remote)
 
     def update_remote(self, food_level):
+        """
+        Send and update information to remote database.
+        :param food_level:
+        :return:
+        """
         if self.wifi_conn.is_connected():
             url = (self.UPDATE_URL + "&mac=" + food_level.get_mac() + "&type=" + food_level.get_type() + "&level=" +
                    str(food_level.get_level()) + "&date_create=" + food_level.get_date_create() + "&date_update=" +
@@ -127,18 +152,24 @@ class FoodLevelDbManage(threading.Thread):
 
         return False
 
-    def update_local(self, type, level):
+    def update_local(self, type_container, level):
+        """
+        Update on own local database.
+        :param type_container: contain a string where specify the kind of container.
+        :param level: contain the value of the level.
+        :return: True if worked, False if not.
+        """
         mac = self.wifi_conn.get_mac()
         food_levels = self.get_local()
         date_now = datetime.today().strftime('%Y-%m-%d %H:%M:%S')
 
         try:
             for food_level in food_levels:
-                if food_level.get_mac() == mac and food_level.get_type() == type and \
+                if food_level.get_mac() == mac and food_level.get_type() == type_container and \
                         food_level.get_level() == int(level):
                     # UPDATE
                     sql = ("UPDATE food_level SET level=" + str(level) + ", date_update='" + date_now +
-                           "' WHERE mac='" + mac + "'and type='" + type + "'")
+                           "' WHERE mac='" + mac + "'and type='" + type_container + "'")
                     print(sql)
                     self.cursor.execute(sql)
 
@@ -146,7 +177,7 @@ class FoodLevelDbManage(threading.Thread):
 
             # INSERT
             sql = ("INSERT INTO food_level(mac, type, level, date_create, date_update) VALUES ('" + mac + "', '" +
-                   type + "', " + str(level) + ", '" + date_now + "', '" + date_now + "')")
+                   type_container + "', " + str(level) + ", '" + date_now + "', '" + date_now + "')")
             print(sql)
             self.cursor.execute(sql)
 
@@ -157,6 +188,10 @@ class FoodLevelDbManage(threading.Thread):
         return True
 
     def get_local(self):
+        """
+        Get local food level.
+        :return: a list of food level.
+        """
         food_levels = []
 
         self.cursor.execute("SELECT * FROM food_level WHERE mac='" + self.wifi_conn.get_mac() + "'")
@@ -173,6 +208,10 @@ class FoodLevelDbManage(threading.Thread):
         return food_levels
 
     def get_remote(self):
+        """
+        Get remote food level.
+        :return: a list of food level.
+        """
         food_levels = []
         if self.wifi_conn.is_connected():
             url = self.REQUEST_URL + "&mac=" + self.wifi_conn.get_mac()

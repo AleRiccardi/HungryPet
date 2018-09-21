@@ -1,5 +1,5 @@
-from inc.util.data import Schedule
-from inc.util.log import Log
+from ..util.data import Schedule
+from ..util.log import Log
 from datetime import datetime
 import urllib.request
 import MySQLdb
@@ -17,6 +17,7 @@ class ScheduleDbManage(threading.Thread):
     TIME = 3  # seconds
 
     loop = True
+    is_running = True
     wifi_conn = 0
     cursor = 0
 
@@ -25,6 +26,9 @@ class ScheduleDbManage(threading.Thread):
         self.wifi_conn = wifi_conn
         db = MySQLdb.connect(host="localhost", user="root", passwd="", db="my_hungrypet")
         self.cursor = db.cursor()
+
+    def close(self):
+        self.loop = False
 
     def run(self):
         Log.i(self.TAG, "Thread started")
@@ -56,6 +60,9 @@ class ScheduleDbManage(threading.Thread):
 
             # Sleeping time
             time.sleep(self.TIME)
+
+        Log.i(self.TAG, 'Thread closed')
+        self.is_running = False
 
     def get_remote(self):
         schedules = []

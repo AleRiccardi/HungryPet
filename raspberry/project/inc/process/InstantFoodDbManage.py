@@ -1,6 +1,6 @@
-from inc.util.MsgExchange import MsgExchange
-from inc.util.data import InstantFood
-from inc.util.log import Log
+from ..util.MsgExchange import MsgExchange
+from ..util.data import InstantFood
+from ..util.log import Log
 import urllib.request
 import threading
 import MySQLdb
@@ -22,6 +22,7 @@ class InstantFoodDbManage(threading.Thread):
 
     # class var
     loop = True
+    is_running = True
     cursor = 0
 
     # external class
@@ -35,6 +36,9 @@ class InstantFoodDbManage(threading.Thread):
         self.msg_exc = MsgExchange.get_instance()
         self.wifi_conn = wifi_conn
 
+    def close(self):
+        self.loop = False
+
     def run(self):
         """ Method triggered from thread """
         Log.i(self.TAG, 'Thread started')
@@ -43,6 +47,9 @@ class InstantFoodDbManage(threading.Thread):
             self.check_remote()
             # Sleeping time
             time.sleep(self.TIME)
+
+        Log.i(self.TAG, 'Thread closed')
+        self.is_running = False
 
     def check_remote(self):
         instant_remote = self.get_remote()

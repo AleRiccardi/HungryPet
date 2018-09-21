@@ -1,11 +1,9 @@
-from inc.util.MsgExchange import MsgExchange
-from inc.util.log import Log
-from builtins import chr
+from ..util.MsgExchange import MsgExchange
+from ..util.log import Log
 
 import re
 import subprocess
 import threading
-import serial
 import time
 import json
 
@@ -39,6 +37,7 @@ class WifiConn(threading.Thread):
     # ___VARIABLES___
     # Boolean
     loop = True
+    is_running = True
     connected = False
 
     # Other
@@ -47,6 +46,9 @@ class WifiConn(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
         self.msg_exc = MsgExchange.get_instance()
+
+    def close(self):
+        self.loop = False
 
     def close_phone_connection(self):
         if self.connected:
@@ -98,13 +100,11 @@ class WifiConn(threading.Thread):
                 except KeyError as err:
                     Log.e(self.TAG, 'Wrong json access: ' + str(err))
 
-            # Sleeping time
-            time.sleep(self.TIME)
-        else:
-            Log.i(self.TAG, "Arduino not connected, waiting 10 sec and check again the wired connection")
+                # Sleeping time
+                time.sleep(self.TIME)
 
-            # Sleeping time with error
-            time.sleep(self.TIME_E)
+        Log.i(self.TAG, 'Thread closed')
+        self.is_running = False
 
     def send_wifi_to_bt(self):
         all_wifi = []

@@ -1,5 +1,4 @@
 # Code for Raspberry PI
-import time
 import serial
 
 ser = serial.Serial('/dev/ttyACM0', 9600)  # enable the serial port

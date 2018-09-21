@@ -1,4 +1,7 @@
-from inc.Core import Core
+from inc.core import Core
+import signal
 
-core = Core()
-core.run()
+if __name__ == '__main__':
+    core = Core()
+    signal.signal(signal.SIGINT, core.close)
+    core.run()

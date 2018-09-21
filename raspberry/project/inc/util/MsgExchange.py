@@ -1,4 +1,4 @@
-from inc.util.log import Log
+from ..util.log import Log
 
 class MsgExchange:
     TAG = 'MsgExchange'

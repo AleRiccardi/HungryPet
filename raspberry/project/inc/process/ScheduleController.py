@@ -1,24 +1,30 @@
-from inc.util.MsgExchange import MsgExchange
-from inc.util.data import Schedule
-from inc.util.log import Log
+from ..util.MsgExchange import MsgExchange
+from ..util.data import Schedule
+from ..util.log import Log
 import threading
 import datetime
 import MySQLdb
 import time
-import serial
 
 
 class ScheduleController(threading.Thread):
     TAG = 'ScheduleController'
     TIME = 5  # seconds
     loop = True
+    is_running = True
     wifi_conn = 0
     cursor = 0
+
+    # Json message
+    JS_FOOD_TIME = "{'action': 'food_time'}"
 
     def __init__(self):
         threading.Thread.__init__(self)
         db = MySQLdb.connect(host="localhost", user="root", passwd="", db="my_hungrypet")
         self.cursor = db.cursor()
+
+    def close(self):
+        self.loop = False
 
     def run(self):
         """Detect data from paired device."""
@@ -50,10 +56,13 @@ class ScheduleController(threading.Thread):
                         and schedule_min == min_now and not food_done):
                     # Give the food
                     food_done = True
-                    msg_exc.put_to_serial("{'action': 'food-time'}")
+                    msg_exc.put_to_serial(self.JS_FOOD_TIME)
 
             # Sleeping time
             time.sleep(self.TIME)
+
+        Log.i(self.TAG, 'Thread closed')
+        self.is_running = False
 
     def get_local_schedules(self):
         schedules = []

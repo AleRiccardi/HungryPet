@@ -1,5 +1,5 @@
-from inc.util.MsgExchange import MsgExchange
-from inc.util.log import Log
+from ..util.MsgExchange import MsgExchange
+from ..util.log import Log
 import threading
 import serial
 import time
@@ -13,13 +13,19 @@ class SerialReader(threading.Thread):
 
     TAG = 'SerialReader'
     TIME = 0.1  # seconds
+    TIME_E = 5  # seconds
     loop = True
+    is_running = True
     serial_conn = 0
     read_thread = 0
 
     def __init__(self):
         threading.Thread.__init__(self)
         self.read_thread = threading.Thread(target=self.serial_read)
+
+    def close(self):
+        self.loop = False
+        self.serial_conn.close()  # very important
 
     def run(self):
         """ Core of the thread """
@@ -34,12 +40,17 @@ class SerialReader(threading.Thread):
             # Sleeping time
             time.sleep(self.TIME)
 
+        Log.i(self.TAG, 'Thread closed')
+        self.is_running = False
+
     def set_connection_with_arduino(self):
         try:
             self.serial_conn = serial.Serial('/dev/ttyACM0', 9600)  # Enable the serial port
             return True
-        except:
-            return False
+        except Exception as e:
+            Log.e(self.TAG, e)
+            self.serial_conn.close()
+            time.sleep(self.TIME_E)
 
     def serial_send(self, msg):
         """ Send messages to serial """
@@ -51,23 +62,27 @@ class SerialReader(threading.Thread):
     def serial_read(self):
         """ Read messages from serial (secondary thread) """
         msg_exc = MsgExchange.get_instance()
-        while True:
+        while self.loop:
             ready = self.set_connection_with_arduino()
             if ready:
-                msg = self.serial_conn.readline()
-                if msg is not "".encode():
-                    try:
-                        msg = bytes(msg)
-                        if isinstance(msg, bytes):
-                            msg = msg.decode()
-                        if msg[-1:] == '\n':
-                            msg = msg[:-1]
+                try:
+                    msg = self.serial_conn.readline()
+                    if msg is not "".encode():
+                        try:
+                            msg = bytes(msg)
+                            if isinstance(msg, bytes):
+                                msg = msg.decode()
+                            if msg[-1:] == '\n':
+                                msg = msg[:-1]
 
-                        if self.is_json(msg):
-                            Log.b(self.TAG, msg)
-                            msg_exc.put_from_serial(msg)
-                    except Exception as e:
-                        Log.e(self.TAG, e)
+                            if self.is_json(msg):
+                                Log.b(self.TAG, msg)
+                                msg_exc.put_from_serial(msg)
+                        except Exception as e:
+                            Log.e(self.TAG, e)
+                except Exception as e:
+                    #Log.e(self.TAG + "2", e)
+                    self.serial_conn.close()
 
     def is_json(self, js_data):
         """Check if it is a Json file."""
