@@ -1,6 +1,6 @@
 #include "Task.h"
 #include "Scheduler.h"
-#include "ExcangeInfo.h"
+#include "ExchangeInfo.h"
 #include "MsgService.h"
 #include "BluetoothService.h"
 #include "SerialService.h"

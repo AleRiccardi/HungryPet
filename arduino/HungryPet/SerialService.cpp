@@ -5,36 +5,35 @@ String cmd2 = "ping";
 
 void SerialService::init(int period) {
   MsgServiceTask::init(period);
-  this->excange = ExcangeInfo::getInstance();
+  this->exchange = ExchangeInfo::getInstance();
 }
 
 
 void SerialService::tick() {
-   
-  // Read data from Serial (Raspberry)
+  // Read incoming msg from Serial (Raspberry)
   if (this->availableSerial()) {
     this->serialEvent();
     if (this->isMsgAvailable()) {
       Msg* msg = this->receiveMsg();
-      this->checkAction(msg->getContent());
+      this->checkIncomingMsg(msg->getContent());
       delete msg;
     }
   }
   
   // Listen data from Android (Phone App)
-  this->listenBluetoothMsg();
+  this->listenToSerialMsg();
 
 }
 
-void SerialService::checkAction(String content) {
+void SerialService::checkIncomingMsg(String content) {
   if (content != "") {
-    this->excange->setFromSerialMsg(content);
+    this->exchange->setFromSerialMsg(content);
   }
 }
 
-void SerialService::listenBluetoothMsg() {
-  if(this->excange->isToSerialMsgAvailable()){
-    Msg* msg = this->excange->getToSerialMsg();
+void SerialService::listenToSerialMsg() {
+  if(this->exchange->isToSerialMsgAvailable()){
+    Msg* msg = this->exchange->getToSerialMsg();
     String message = msg->getContent();
 
     if (message != "") {

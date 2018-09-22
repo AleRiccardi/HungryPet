@@ -1,7 +1,7 @@
 #ifndef __BLUETOOTHSERVICE__
 #define __BLUETOOTHSERVICE__
 
-#include "ExcangeInfo.h"
+#include "ExchangeInfo.h"
 #include "MsgService.h"
 
 class BluetoothService : public MsgServiceTask {
@@ -13,7 +13,7 @@ class BluetoothService : public MsgServiceTask {
     bool active;
 
   private:
-    ExcangeInfo* excange;
+    ExchangeInfo* exchange;
     void startSerial();
     bool availableSerial();
     char readChar();

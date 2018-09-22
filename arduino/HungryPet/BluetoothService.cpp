@@ -9,7 +9,7 @@ SoftwareSerial blueSerial(rxPin, txPin);
 
 void BluetoothService::init(int period) {
   MsgServiceTask::init(period);
-  this->excange = ExcangeInfo::getInstance();
+  this->exchange = ExchangeInfo::getInstance();
   this->active = false;
 }
 
@@ -32,13 +32,13 @@ void BluetoothService::tick() {
 
 void BluetoothService::checkAction(String content) {
   if (content != "") {
-    this->excange->setToSerialMsg(content);
+    this->exchange->setToSerialMsg(content);
   }
 }
 
 void BluetoothService::listenFromSerialMsg() {
-  if (this->excange->isFromSerialMsgAvailable()) {
-    Msg* msg = this->excange->getFromSerialMsg();
+  if (this->exchange->isMsgBluetoothAvailable()) {
+    Msg* msg = this->exchange->getMsgBluetooth();
     String message = msg->getContent();
 
     if (message != "") {

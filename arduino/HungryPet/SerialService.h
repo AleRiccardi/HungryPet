@@ -1,7 +1,7 @@
 #ifndef __SERIALSERVICE__
 #define __SERIALSERVICE__
 
-#include "ExcangeInfo.h"
+#include "ExchangeInfo.h"
 #include "MsgService.h"
 
 class SerialService : public MsgServiceTask {
@@ -13,13 +13,13 @@ class SerialService : public MsgServiceTask {
 
 
   private:
-    ExcangeInfo* excange;
+    ExchangeInfo* exchange;
     void startSerial();
     bool availableSerial();
     char readChar();
     void sendMsg(const String & msg);
-    void listenBluetoothMsg();
-    void checkAction(String content);
+    void listenToSerialMsg();
+    void checkIncomingMsg(String content);
 };
 
 #endif
