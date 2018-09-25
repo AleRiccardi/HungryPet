@@ -1,4 +1,4 @@
-from ..util.data import Schedule
+from ..util.models import Schedule
 from ..util.log import Log
 from datetime import datetime
 import urllib.request

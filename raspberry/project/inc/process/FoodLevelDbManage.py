@@ -1,5 +1,5 @@
 from ..util.MsgExchange import MsgExchange
-from ..util.data import FoodLevel
+from ..util.models import FoodLevel
 from ..util.log import Log
 import urllib.request
 import threading

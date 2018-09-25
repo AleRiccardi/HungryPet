@@ -1,6 +1,7 @@
 from ..util.MsgExchange import MsgExchange
-from ..util.data import Schedule
+from ..util.models import Schedule
 from ..util.log import Log
+from ..util.variables import JsonVar
 import threading
 import datetime
 import MySQLdb
@@ -15,8 +16,8 @@ class ScheduleController(threading.Thread):
     wifi_conn = 0
     cursor = 0
 
-    # Json message
-    JS_FOOD_TIME = "{'action': 'food_time'}"
+    # ____JSON____
+    JS_ENGINE_START = "{'entity':'" + JsonVar.ENTITY_ENGINE + "','action':'" + JsonVar.ACTION_ENGINE_START + "'}"
 
     def __init__(self):
         threading.Thread.__init__(self)
@@ -56,7 +57,7 @@ class ScheduleController(threading.Thread):
                         and schedule_min == min_now and not food_done):
                     # Give the food
                     food_done = True
-                    msg_exc.put_to_serial(self.JS_FOOD_TIME)
+                    msg_exc.put_to_serial(self.JS_ENGINE_START)
 
             # Sleeping time
             time.sleep(self.TIME)

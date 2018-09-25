@@ -1,5 +1,6 @@
 from ..util.MsgExchange import MsgExchange
 from ..util.log import Log
+from ..util.variables import JsonVar
 
 import re
 import subprocess
@@ -13,26 +14,26 @@ class WifiConn(threading.Thread):
     json information with the phone device """
 
     # ___General strings___
-    TAG = 'WifiConn'
+    TAG = "WifiConn"
     TIME = 0.3  # seconds
     TIME_E = 10  # seconds
-    PATH_WIFI = '/etc/wpa_supplicant/wpa_supplicant.conf'
-    CMD_SUDO = 'sudo'
-    NOT_SET = '<Not Set>'
+    PATH_WIFI = "/etc/wpa_supplicant/wpa_supplicant.conf"
+    CMD_SUDO = "sudo"
+    NOT_SET = "<Not Set>"
     REMOTE_SERVER = "www.google.com"
 
     # ___STATUS___
-    A_WIFI_ON = 'conn-on'
-    A_WIFI_OFF = 'conn-off'
-    A_WIFI_GET = 'wifi-get'
-    A_WIFI_SET = 'wifi-set'
-    A_BT_DISCONNECT = 'bt-quit'
+    A_WIFI_ON = "conn-on"
+    A_WIFI_OFF = "conn-off"
+    A_WIFI_GET = "wifi-get"
+    A_WIFI_SET = "wifi-set"
+    A_BT_DISCONNECT = "bt-quit"
 
     # ____JSON____
-    JS_CONN_ON = '{ "action":"' + A_WIFI_ON + '"}'
-    JS_CONN_OFF = '{ "action":"' + A_WIFI_OFF + '"}'
-    JS_WIFI_CONNECTED = '{ "action":"' + A_WIFI_SET + '", "content": "success"}'
-    JS_NO_WIFI_CONNECTED = '{ "action":"' + A_WIFI_SET + '", "content": "fail"}'
+    JS_CONN_ON = "{'entity':'" + JsonVar.ENTITY_BLUETOOTH + "','action':'" + A_WIFI_ON + "'}"
+    JS_CONN_OFF = "{'entity':'" + JsonVar.ENTITY_BLUETOOTH + "','action':'" + A_WIFI_OFF + "'}"
+    JS_WIFI_CONNECTED = "{'entity':'" + JsonVar.ENTITY_BLUETOOTH + "','action':'" + A_WIFI_SET + "', 'content': 'success'}"
+    JS_NO_WIFI_CONNECTED = "{'entity':'" + JsonVar.ENTITY_BLUETOOTH + "','action':'" + A_WIFI_SET + "', 'content': 'fail'}"
 
     # ___VARIABLES___
     # Boolean
@@ -52,7 +53,7 @@ class WifiConn(threading.Thread):
 
     def close_phone_connection(self):
         if self.connected:
-            Log.i('Connection closed')
+            Log.i("Connection closed")
             self.msg_exc.put_to_serial(self.JS_CONN_OFF)
             self.connected = False
 
@@ -60,7 +61,7 @@ class WifiConn(threading.Thread):
 
     def run(self):
         """Detect data from paired device."""
-        Log.i(self.TAG, 'Thread started')
+        Log.i(self.TAG, "Thread started")
 
         # Start the loop
         while self.loop:
@@ -70,40 +71,40 @@ class WifiConn(threading.Thread):
                 data = json.loads(str(data))
                 # selection of action
                 try:
-                    if data['action'] == self.A_WIFI_GET:
+                    if data["action"] == self.A_WIFI_GET:
                         """ Request of wifi """
                         self.send_wifi_to_bt()
 
-                    elif data['action'] == self.A_WIFI_SET:
+                    elif data["action"] == self.A_WIFI_SET:
                         """ Set wifi """
-                        ssid = data['content']['ssid']
-                        pswd = data['content']['pswd']
-                        Log.i(self.TAG, 'Request to set wifi: ' + ssid)
+                        ssid = data["content"]["ssid"]
+                        pswd = data["content"]["pswd"]
+                        Log.i(self.TAG, "Request to set wifi: " + ssid)
                         ip_address = self.connect_to_wifi(ssid, pswd)  # Connection
 
                         if ip_address == self.NOT_SET:
-                            Log.i(self.TAG, 'Couldn\'t connect to wifi: ' + ssid)
-                            data['action'] = self.A_WIFI_SET
-                            data['content'] = {'status': "fail"}
+                            Log.i(self.TAG, "Couldn\"t connect to wifi: " + ssid)
+                            data["action"] = self.A_WIFI_SET
+                            data["content"] = {"status": 'fail'}
                             json_data = json.dumps(data)
                             self.msg_exc.put_to_serial(json_data)
 
                         else:
                             self.connected = True
-                            Log.i(self.TAG, 'Connected to wifi: ' + ssid)
+                            Log.i(self.TAG, "Connected to wifi: " + ssid)
                             self.send_device_info_to_bt(ip_address)
 
-                    elif data['action'] == self.A_BT_DISCONNECT:
+                    elif data["action"] == self.A_BT_DISCONNECT:
                         """ Closing connection """
-                        Log.i(self.TAG, "End of comunication")
+                        Log.i(self.TAG, 'End of comunication')
 
                 except KeyError as err:
-                    Log.e(self.TAG, 'Wrong json access: ' + str(err))
+                    Log.e(self.TAG, "Wrong json access: " + str(err))
 
                 # Sleeping time
                 time.sleep(self.TIME)
 
-        Log.i(self.TAG, 'Thread closed')
+        Log.i(self.TAG, "Thread closed")
         self.is_running = False
 
     def send_wifi_to_bt(self):
@@ -111,36 +112,37 @@ class WifiConn(threading.Thread):
         wifi_sc = WifiScan()
         connect = wifi_sc.scan()
         result = wifi_sc.parse(connect)
-        js_response = '{"action":"' + self.A_WIFI_GET + '","content":['
+        js_response = "{'entity':'" + JsonVar.ENTITY_BLUETOOTH + "','action':'" + self.A_WIFI_GET + "','content':["
         for wifi in result:
-            if wifi['essid'] != "":
-                all_wifi += [wifi['essid']]
-                js_wifi = '{"ssid":"' + wifi['essid'] + '","encryption":"' + wifi['encryption'] + '"}'
-                js_response += '' + js_wifi + ','
+            if wifi["essid"] != '':
+                all_wifi += [wifi["essid"]]
+                js_wifi = "{'ssid':'" + wifi["essid"] + "','encryption':'" + wifi["encryption"] + "'}"
+                js_response += "" + js_wifi + ","
 
         js_response = js_response[:-1]
-        js_response += ']}'
+        js_response += "]}"
 
-        Log.i(self.TAG, 'Scanned wifi: ' + str(all_wifi))
+        Log.i(self.TAG, "Scanned wifi: " + str(all_wifi))
         if all_wifi:
             self.msg_exc.put_to_serial(str(js_response))
 
     def send_device_info_to_bt(self, ip_address):
         mac_address = self.NOT_SET
-        p = subprocess.Popen(['ifconfig', 'eth0'], stdout=subprocess.PIPE,
+        p = subprocess.Popen(["ifconfig", "eth0"], stdout=subprocess.PIPE,
                              stderr=subprocess.PIPE)
 
         out, err = p.communicate()
 
-        for l in out.split(b'\n'):
-            if l.strip().startswith(b'ether '):
-                mac_address = l.strip().split(b'ether ')[1].split(b' ')[0]
+        for l in out.split(b"\n"):
+            if l.strip().startswith(b"ether "):
+                mac_address = l.strip().split(b"ether ")[1].split(b" ")[0]
 
         if mac_address != self.NOT_SET and ip_address != self.NOT_SET:
-            data = {'action': self.A_WIFI_SET,
-                    'content': {'status': "success",
-                                'mac': mac_address.decode(),
-                                'ip': ip_address.decode()}}
+            data = {"entity": JsonVar.ENTITY_BLUETOOTH,
+                    "action": self.A_WIFI_SET,
+                    "content": {"status": 'success',
+                                "mac": mac_address.decode(),
+                                "ip": ip_address.decode()}}
             json_data = json.dumps(data)
             self.msg_exc.put_to_serial(json_data)
 
@@ -155,43 +157,43 @@ class WifiConn(threading.Thread):
         if len(psk) < 8:
             return ip_address
 
-        f = open('wifi.conf', 'w')
-        f.write('ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev\n')
-        f.write('update_config=1\n')
-        f.write('country=US\n')
-        f.write('\n')
-        f.write('network={\n')
-        f.write('    ssid="' + ssid + '"\n')
-        f.write('    psk="' + psk + '"\n')
-        f.write('    key_mgmt=WPA-PSK\n')
-        f.write('}\n')
+        f = open("wifi.conf", "w")
+        f.write("ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev\n")
+        f.write("update_config=1\n")
+        f.write("country=US\n")
+        f.write("\n")
+        f.write("network={\n")
+        f.write("    ssid='" + ssid + "'\n")
+        f.write("    psk='" + psk + "'\n")
+        f.write("    key_mgmt=WPA-PSK\n")
+        f.write("}\n")
         f.close()
         time.sleep(1)
 
         # Place the file
-        args = [self.CMD_SUDO, "mv", "-f", "wifi.conf", self.PATH_WIFI]
+        args = [self.CMD_SUDO, 'mv', '-f', 'wifi.conf', self.PATH_WIFI]
         res = subprocess.check_output(args)
         if len(res.decode()) > 0:
             return ip_address
 
-        Log.i(self.TAG, 'Wifi file placed')
+        Log.i(self.TAG, "Wifi file placed")
         time.sleep(1)
 
         # Configure the new wifi
-        args = ["wpa_cli", "-i", "wlan0", "reconfigure"]
+        args = ['wpa_cli', '-i', 'wlan0', 'reconfigure']
         subprocess.run(args)
         if len(res.decode()) > 0:
             return ip_address
-        Log.i(self.TAG, 'Wifi activating ...')
+        Log.i(self.TAG, "Wifi activating ...")
         time.sleep(11)
 
         # Get the new configuration
-        args = ["dig", "+short", "myip.opendns.com", "@resolver1.opendns.com"]
-        # args = ["curl", "-s", "checkip.dyndns.org", "|", "sed", "-e", ",'s/.*Current IP Address: //' -e 's/<.*$//'"]
+        args = ['dig', '+short', 'myip.opendns.com', '@resolver1.opendns.com']
+        # args = ['curl', '-s', 'checkip.dyndns.org', '|', 'sed', '-e', ',"s/.*Current IP Address: //" -e "s/<.*$//"']
         p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         out, err = p.communicate()
         if not len(err) > 0:
-            ip_address = out.strip().split(b'<')[0]
+            ip_address = out.strip().split(b"<")[0]
 
         return ip_address
 
@@ -212,14 +214,14 @@ class WifiConn(threading.Thread):
 
     @staticmethod
     def get_mac():
-        p = subprocess.Popen(['ifconfig', 'eth0'], stdout=subprocess.PIPE,
+        p = subprocess.Popen(["ifconfig", "eth0"], stdout=subprocess.PIPE,
                              stderr=subprocess.PIPE)
 
         out, err = p.communicate()
 
-        for l in out.split(b'\n'):
-            if l.strip().startswith(b'ether '):
-                mac = l.strip().split(b'ether ')[1].split(b' ')[0]
+        for l in out.split(b"\n"):
+            if l.strip().startswith(b"ether "):
+                mac = l.strip().split(b"ether ")[1].split(b" ")[0]
         return mac.decode()
 
 
@@ -249,16 +251,16 @@ class WifiScan:
     # Runs the comnmand to scan the list of networks.
     # Must run as super user.
     # Does not specify a particular device, so will scan all network devices.
-    def scan(self, interface='wlan0'):
+    def scan(self, interface="wlan0"):
         cmd = ["iwlist", interface, "scan"]
         proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        points = proc.stdout.read().decode('utf-8')
+        points = proc.stdout.read().decode("utf-8")
         return points
 
-    # Parses the response from the command "iwlist scan"
+    # Parses the response from the command "iwlist scan'
     def parse(self, content):
         cells = []
-        lines = content.split('\n')
+        lines = content.split("\n")
         for line in lines:
             line = line.strip()
             cellNumber = self.cellNumberRe.search(line)
@@ -267,18 +269,18 @@ class WifiScan:
                 continue
             wpa = self.wpaRe.search(line)
             if wpa is not None:
-                cells[-1].update({'encryption': 'wpa'})
+                cells[-1].update({"encryption": "wpa"})
             wpa2 = self.wpa2Re.search(line)
             if wpa2 is not None:
-                cells[-1].update({'encryption': 'wpa2'})
+                cells[-1].update({"encryption": "wpa2"})
             for expression in self.regexps:
                 result = expression.search(line)
                 if result is not None:
-                    if 'encryption' in result.groupdict():
-                        if result.groupdict()['encryption'] == 'on':
-                            cells[-1].update({'encryption': 'wep'})
+                    if "encryption" in result.groupdict():
+                        if result.groupdict()["encryption"] == "on":
+                            cells[-1].update({"encryption": "wep"})
                         else:
-                            cells[-1].update({'encryption': 'off'})
+                            cells[-1].update({"encryption": "off"})
                     else:
                         cells[-1].update(result.groupdict())
                     continue

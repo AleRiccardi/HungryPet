@@ -1,6 +1,7 @@
 from ..util.MsgExchange import MsgExchange
-from ..util.data import InstantFood
+from ..util.models import InstantFood
 from ..util.log import Log
+from ..util.variables import JsonVar
 import urllib.request
 import threading
 import MySQLdb
@@ -14,18 +15,18 @@ class InstantFoodDbManage(threading.Thread):
     TAG = "InstantFoodDbManage"
     UPDATE_URL = 'http://hungrypet.altervista.org/upload_data.php?table=instant_food'
     REQUEST_URL = 'http://hungrypet.altervista.org/request_data.php?table=instant_food&mac='
-    TIME = 5  # seconds
+    TIME = 1  # seconds
     TIME_INSTANT_AVAR = 60 * 2  # seconds
 
-    # Json message
-    JS_INSTANT_FOOD = "{'action': 'instant_food'}"
+    # ____JSON____
+    JS_ENGINE_START = "{'entity':'" + JsonVar.ENTITY_ENGINE + "','action':'" + JsonVar.ACTION_ENGINE_START + "'}"
 
-    # class var
+    # ___VARIABLES___
     loop = True
     is_running = True
     cursor = 0
 
-    # external class
+    # ___EXTERNAL_CLASS___
     wifi_conn = 0
     msg_exc = 0
 
@@ -40,7 +41,9 @@ class InstantFoodDbManage(threading.Thread):
         self.loop = False
 
     def run(self):
-        """ Method triggered from thread """
+        """
+        Method triggered from thread
+        """
         Log.i(self.TAG, 'Thread started')
 
         while self.loop:
@@ -52,9 +55,14 @@ class InstantFoodDbManage(threading.Thread):
         self.is_running = False
 
     def check_remote(self):
+        """
+        Core function that permits to send to serial command and
+        updates the remote database.
+        """
         instant_remote = self.get_remote()
         if len(instant_remote) > 0:
-            self.msg_exc.put_to_serial(self.JS_INSTANT_FOOD)
+            # Start the engine
+            self.msg_exc.put_to_serial(self.JS_ENGINE_START)
 
         for instant in instant_remote:
             self.update_remote(instant)
