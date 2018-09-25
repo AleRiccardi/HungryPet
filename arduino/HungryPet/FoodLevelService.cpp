@@ -1,8 +1,8 @@
 #include "FoodLevelService.h"
 #include "JsonConstant.h"
 
-#define PIN_TRIG 10
-#define PIN_ECHO 11
+#define PIN_TRIG 3
+#define PIN_ECHO 5
 #define MAX_DIST 1
 #define MAX_DIST_CONT 0.3
 #define MIN_DIST_CONT 0.0
@@ -33,7 +33,6 @@ void FoodLevelService::checkContainer() {
   distancePercAppr = 0;
   first = distancePerc / 10;
   second = distancePerc % 10;
-  this->exchange->setToSerialMsg(String(distanceNow));
 
   // Make number changing by 5 in 5
   if (second > 5) {
@@ -47,7 +46,7 @@ void FoodLevelService::checkContainer() {
   if ((int)(distancePercAppr / 5) != (int)(this->levelContainerPerc / 5)) {
     this->levelContainerPerc = distancePercAppr;
     content = J_HEAD_CONT + String(this->levelContainerPerc) + J_TAIL_CONT;
-    //this->exchange->setToSerialMsg(content);
+    this->exchange->setToSerialMsg(content);
   }
 }
 
