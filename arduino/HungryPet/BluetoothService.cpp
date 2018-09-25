@@ -2,10 +2,10 @@
 #include <SoftwareSerial.h>
 #include "JsonConstant.h"
 
-#define rxPin A0
-#define txPin A1
+#define PIN_TX A0
+#define PIN_RX A1
 
-SoftwareSerial blueSerial(rxPin, txPin);
+SoftwareSerial blueSerial(PIN_TX, PIN_RX);
 
 void BluetoothService::init(int period) {
   MsgServiceTask::init(period);
@@ -20,7 +20,7 @@ void BluetoothService::tick() {
     this->serialEvent();
     if (this->isMsgAvailable()) {
       Msg* msg = this->receiveMsg();
-      this->checkAction(msg->getContent());
+      this->checkIncomingMsg(msg->getContent());
       delete msg;
     }
   }
@@ -30,7 +30,7 @@ void BluetoothService::tick() {
 
 }
 
-void BluetoothService::checkAction(String content) {
+void BluetoothService::checkIncomingMsg(String content) {
   if (content != "") {
     this->exchange->setToSerialMsg(content);
   }

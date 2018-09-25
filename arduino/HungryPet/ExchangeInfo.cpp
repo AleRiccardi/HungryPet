@@ -8,6 +8,8 @@ ExchangeInfo::ExchangeInfo() {
   this->indexMsgToSerial = -1;
   this->msgBluetooth = NULL;
   this->availableMsgBluetooth = false;
+  this->msgEngine = NULL;
+  this->availableMsgEngine = false;
 }
 
 ExchangeInfo* ExchangeInfo::getInstance() {
@@ -30,6 +32,7 @@ void ExchangeInfo::setFromSerialMsg(String msg) {
   int existEntity = msg.indexOf(ENTITY);
   int existBluetooth = msg.indexOf(ENTITY_BLUETOOTH);
   int existEngine = msg.indexOf(ENTITY_ENGINE);
+
   // In the case the entity name has a distance of more than 11 
   // to the entity field, it will considered something not usefull.
   int offset = existEntity + 11;
@@ -89,8 +92,8 @@ Msg* ExchangeInfo::getToSerialMsg() {
 Msg* ExchangeInfo::getMsgBluetooth() {
   if (this->availableMsgBluetooth) {
     Msg* msg = this->msgBluetooth;
-    msgBluetooth = NULL;
-    availableMsgBluetooth = false;
+    this->msgBluetooth = NULL;
+    this->availableMsgBluetooth = false;
 
     return msg;
   } else {

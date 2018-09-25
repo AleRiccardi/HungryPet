@@ -6,7 +6,6 @@
 #define ENTITY "entity"
 #define ENTITY_BLUETOOTH  "bluetooth"
 #define ENTITY_ENGINE  "engine"
-#define ACTION_ENGINE_START  "engine_start"
 
 class ExchangeInfo {
 

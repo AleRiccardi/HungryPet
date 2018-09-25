@@ -19,7 +19,7 @@ class BluetoothService : public MsgServiceTask {
     char readChar();
     void sendMsg(const String& msg);
     void listenFromSerialMsg();
-    void checkAction(String content);
+    void checkIncomingMsg(String content);
 };
 
 #endif
