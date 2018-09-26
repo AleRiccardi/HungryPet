@@ -18,8 +18,8 @@ class FoodLevelService : public Task {
 
   private:
     ExchangeInfo* exchange;
-    int levelBowlPerc = 0;
-    int levelContainerPerc = 0;
+    int levelBowlPerc;
+    int levelContainerPerc;
     double allLevelBowl[ARRAY_SIZE] = {0.1};
     double allLevelContainer[ARRAY_SIZE] = {0.1};
     void checkBowl();

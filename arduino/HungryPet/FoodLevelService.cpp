@@ -21,6 +21,7 @@ void FoodLevelService::init(int period) {
   this->active = false;
   pinMode(PIN_TRIG, OUTPUT);
   pinMode(PIN_ECHO, INPUT);
+  levelContainerPerc = 0;
 }
 
 void FoodLevelService::tick() {
@@ -41,7 +42,10 @@ void FoodLevelService::checkContainer() {
   distancePerc = transformDistancesToLevelPerc();
   distancePerc = transformPercByFive(distancePerc);
 
-  this->exchange->setToSerialMsg("{'action':'bowl_level', 'content':'" + String(distancePerc) + "'}");
+  if (distancePerc != levelContainerPerc) {
+    levelContainerPerc = distancePerc;
+    this->exchange->setToSerialMsg("{'action':'bowl_level', 'content':'" + String(levelContainerPerc) + "'}");
+  }
 }
 
 double FoodLevelService::getDistanceBowl() {
