@@ -17,15 +17,17 @@ void FoodLevelService::init(int period) {
 void FoodLevelService::tick() {
   // Listen data from Serial (Raspberry)
   //this->checkBowl();
-  this->checkContainer();
+  //this->checkContainer();
+  double distanceNow = getDistanceContainer();
+  this->exchange->setToSerialMsg(String(distanceNow));
 }
 
 void FoodLevelService::checkBowl() {}
 
 void FoodLevelService::checkContainer() {
   String content = "";
-  double distanceNow;
-  int distancePerc , distancePercAppr, first, second;
+  double distanceNow = 0;
+  int distancePerc = 0, distancePercAppr = 0, first = 0, second = 0;
 
   distanceNow = getDistanceContainer();
   putDistanceInArray(distanceNow);
@@ -51,7 +53,9 @@ void FoodLevelService::checkContainer() {
   }
 }
 
-double FoodLevelService::getDistanceBowl() {}
+double FoodLevelService::getDistanceBowl() {
+  return 0.0;
+}
 
 double FoodLevelService::getDistanceContainer() {
   int timeSignal = 0;
