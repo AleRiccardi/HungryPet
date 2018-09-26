@@ -1,11 +1,20 @@
 #include "FoodLevelService.h"
 #include "JsonConstant.h"
 
-#define PIN_TRIG 3
-#define PIN_ECHO 5
-#define MAX_DIST 1
+#define ACTION "action"
+#define ACTION_ENGINE_START  "engine_start"
+#define J_HEAD_BOWL "{'action':'bowl_level', 'content':'"
+#define J_TAIL_BOWL "'}"
+#define J_HEAD_CONT "{'action':'container_level', 'content':'"
+#define J_TAIL_CONT "'}"
+
+#define PIN_TRIG 10
+#define PIN_ECHO 11
+#define MAX_DIST 1.0
 #define MAX_DIST_CONT 0.3
 #define MIN_DIST_CONT 0.0
+
+
 
 void FoodLevelService::init(int period) {
   this->exchange = ExchangeInfo::getInstance();
@@ -17,9 +26,7 @@ void FoodLevelService::init(int period) {
 void FoodLevelService::tick() {
   // Listen data from Serial (Raspberry)
   //this->checkBowl();
-  //this->checkContainer();
-  double distanceNow = getDistanceContainer();
-  this->exchange->setToSerialMsg(String(distanceNow));
+  this->checkContainer();
 }
 
 void FoodLevelService::checkBowl() {}
@@ -31,25 +38,10 @@ void FoodLevelService::checkContainer() {
 
   distanceNow = getDistanceContainer();
   putDistanceInArray(distanceNow);
-  distancePerc = trasformDistancesToLevelPerc();
-  distancePercAppr = 0;
-  first = distancePerc / 10;
-  second = distancePerc % 10;
+  distancePerc = transformDistancesToLevelPerc();
+  distancePerc = transformPercByFive(distancePerc);
 
-  // Make number changing by 5 in 5
-  if (second > 5) {
-    distancePercAppr = (++first * 10) + 0;
-  } else {
-    distancePercAppr = (first * 10) + 5;
-  }
-  distancePercAppr += 5; // Adjust value
-
-  // If there is a real changing of level, then it's time to update
-  if ((int)(distancePercAppr / 5) != (int)(this->levelContainerPerc / 5)) {
-    this->levelContainerPerc = distancePercAppr;
-    content = J_HEAD_CONT + String(this->levelContainerPerc) + J_TAIL_CONT;
-    this->exchange->setToSerialMsg(content);
-  }
+  this->exchange->setToSerialMsg("{'action':'bowl_level', 'content':'" + String(distancePerc) + "'}");
 }
 
 double FoodLevelService::getDistanceBowl() {
@@ -83,7 +75,7 @@ void FoodLevelService::putDistanceInArray(double distance) {
   this->allLevelContainer[0] = distance;
 }
 
-int FoodLevelService::trasformDistancesToLevelPerc() {
+int FoodLevelService::transformDistancesToLevelPerc() {
   double sum = 0, avg = 0;
   int i, perc = 0, validDenominator = 0;
   for (i = 0; i < ARRAY_SIZE; i++) {
@@ -97,6 +89,28 @@ int FoodLevelService::trasformDistancesToLevelPerc() {
   avg = avg > MAX_DIST_CONT ? MAX_DIST_CONT : avg;
   perc = (avg - MIN_DIST_CONT) / (MAX_DIST_CONT - MIN_DIST_CONT) * 100;
   return 100 - perc;
+}
+
+int FoodLevelService::transformPercByFive(int perc) {
+  int percTransformed = 0, first = 0, second = 0;
+
+  if (perc == 100) {
+    // 100 correspond to infinte
+    percTransformed = 0;
+  } else {
+    // For the others cases:
+    first = perc / 10;
+    second = perc % 10;
+
+    // Make number changing by 5 in 5
+    if (second > 5) {
+      percTransformed = (++first * 10) + 0;
+    } else {
+      percTransformed = (first * 10) + 5;
+    }
+    percTransformed += 5; // Adjust value
+  }
+  return percTransformed;
 }
 
 int FoodLevelService::getTimeFromMeters(double meters) {

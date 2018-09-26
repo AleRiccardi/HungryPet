@@ -7,7 +7,6 @@
 #include "EngineService.h"
 #include "FoodLevelService.h"
 
-
 Scheduler sched;
 
 void setup() {
