@@ -30,6 +30,7 @@ class FoodLevelService : public Task {
     int transformDistancesToLevelPerc();
     int transformPercByFive(int perc);
     int getTimeFromMeters(double meters);
+    void sendInfoToSerial(int value);
 };
 
 

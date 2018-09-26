@@ -50,9 +50,9 @@ void Scheduler::sleep(){
 }
 
 void Scheduler::run(){
-  // Serial.println("BEFORE");
+  //Serial.println("BEFORE");
   sleep();
-  // Serial.println("READY");
+  //Serial.println("READY");
   /** The program will continue from here. **/ 
   for (int i = 0; i < nTasks; i++){
     if (taskList[i]->updateAndCheckTime(basePeriod)){

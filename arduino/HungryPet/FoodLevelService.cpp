@@ -14,8 +14,6 @@
 #define MAX_DIST_CONT 0.3
 #define MIN_DIST_CONT 0.0
 
-
-
 void FoodLevelService::init(int period) {
   this->exchange = ExchangeInfo::getInstance();
   this->active = false;
@@ -25,8 +23,6 @@ void FoodLevelService::init(int period) {
 }
 
 void FoodLevelService::tick() {
-  // Listen data from Serial (Raspberry)
-  //this->checkBowl();
   this->checkContainer();
 }
 
@@ -41,11 +37,7 @@ void FoodLevelService::checkContainer() {
   putDistanceInArray(distanceNow);
   distancePerc = transformDistancesToLevelPerc();
   distancePerc = transformPercByFive(distancePerc);
-
-  if (distancePerc != levelContainerPerc) {
-    levelContainerPerc = distancePerc;
-    this->exchange->setToSerialMsg("{'action':'bowl_level', 'content':'" + String(levelContainerPerc) + "'}");
-  }
+  sendInfoToSerial(distancePerc);
 }
 
 double FoodLevelService::getDistanceBowl() {
@@ -119,5 +111,12 @@ int FoodLevelService::transformPercByFive(int perc) {
 
 int FoodLevelService::getTimeFromMeters(double meters) {
   return ((meters * 2) / 0.0343) * 100;
+}
+
+void FoodLevelService::sendInfoToSerial(int value) {
+  if (value != levelContainerPerc) {
+    levelContainerPerc = value;
+    this->exchange->setToSerialMsg("{'action':'container_level', 'content':'" + String(value) + "'}");
+  }
 }
 
