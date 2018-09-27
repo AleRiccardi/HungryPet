@@ -1,7 +1,7 @@
+///////////////////////////
+//  Scheduler.cpp
+//////////////////////////
 #include "Scheduler.h"
-#include "Arduino.h"
-#include <avr/sleep.h>
-#include <avr/power.h>
 
 void Scheduler::init(int basePeriod){
   this->basePeriod = basePeriod;

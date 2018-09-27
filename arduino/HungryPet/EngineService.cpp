@@ -1,9 +1,12 @@
+///////////////////////////
+//  EngineService.cpp
+//////////////////////////
 #include "EngineService.h"
-#include "JsonConstant.h"
 
 #define PIN_ENGINE 9
 
 void EngineService::init(int period) {
+  Task::init(period);
   this->exchange = ExchangeInfo::getInstance();
   this->active = false;
   pinMode(PIN_ENGINE, OUTPUT);
@@ -21,10 +24,10 @@ void EngineService::listenFromSerialMsg() {
 
     int existAction = message.indexOf(ACTION);
     int existEngineStart = message.indexOf(ACTION_ENGINE_START);
-    // In the case the entity name has a distance of more than 11 
+    // In the case the entity name has a distance of more than 11
     // to the entity field, it will considered something not usefull.
     int offset = existAction + 11;
-   
+
     if (existAction != -1 && existEngineStart != -1) {
       this->startEngine(message);
     }
@@ -32,9 +35,9 @@ void EngineService::listenFromSerialMsg() {
   }
 }
 
-void EngineService::startEngine(String msg){
+void EngineService::startEngine(String msg) {
   analogWrite(PIN_ENGINE, 255);
-  delay(5000);  
+  delay(5000);
   analogWrite(PIN_ENGINE, 0);
 }
 

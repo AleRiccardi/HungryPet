@@ -33,7 +33,6 @@ class MsgServiceTask : public Task {
 
     MsgServiceTask() {}
     virtual void init(int period);
-    virtual void tick();
 
   protected:
     virtual void startSerial() = 0;
@@ -43,9 +42,7 @@ class MsgServiceTask : public Task {
 
     void serialEvent();
     bool isMsgAvailable();
-    bool isMsgAvailable(Pattern& pattern);
     Msg* receiveMsg();
-    Msg* receiveMsg(Pattern& pattern);
 };
 
 #endif

@@ -1,6 +1,7 @@
 #ifndef __SERIALSERVICE__
 #define __SERIALSERVICE__
 
+#include "Arduino.h"
 #include "ExchangeInfo.h"
 #include "MsgService.h"
 

@@ -1,5 +1,7 @@
+///////////////////////////
+//  ExchangeInfo.cpp
+//////////////////////////
 #include "ExchangeInfo.h"
-#include "MsgService.h"
 
 ExchangeInfo* ExchangeInfo::instance = 0;
 

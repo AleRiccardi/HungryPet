@@ -1,5 +1,7 @@
-#include "FoodLevelService.h"
-#include "JsonConstant.h"
+///////////////////////////
+//  ConatinerLevelService.cpp
+//////////////////////////
+#include "ConatinerLevelService.h"
 
 #define ACTION "action"
 #define ACTION_ENGINE_START  "engine_start"
@@ -14,37 +16,33 @@
 #define MAX_DIST_CONT 0.3
 #define MIN_DIST_CONT 0.0
 
-void FoodLevelService::init(int period) {
+void ConatinerLevelService::init(int period) {
+  Task::init(period);
   this->exchange = ExchangeInfo::getInstance();
   this->active = false;
+
   pinMode(PIN_TRIG, OUTPUT);
   pinMode(PIN_ECHO, INPUT);
-  levelContainerPerc = 0;
 }
 
-void FoodLevelService::tick() {
+void ConatinerLevelService::tick() {
   this->checkContainer();
 }
 
-void FoodLevelService::checkBowl() {}
-
-void FoodLevelService::checkContainer() {
-  String content = "";
+void ConatinerLevelService::checkContainer() {
   double distanceNow = 0;
-  int distancePerc = 0, distancePercAppr = 0, first = 0, second = 0;
+  int distancePerc = 0;
+  int first = 0;
+  int second = 0;
 
-  distanceNow = getDistanceContainer();
+  distanceNow = readDistanceContainer();
   putDistanceInArray(distanceNow);
-  distancePerc = transformDistancesToLevelPerc();
+  distancePerc = transformDistancesToPerc();
   distancePerc = transformPercByFive(distancePerc);
   sendInfoToSerial(distancePerc);
 }
 
-double FoodLevelService::getDistanceBowl() {
-  return 0.0;
-}
-
-double FoodLevelService::getDistanceContainer() {
+double ConatinerLevelService::readDistanceContainer() {
   int timeSignal = 0;
   double distance = 0;
   digitalWrite(PIN_TRIG, LOW);
@@ -57,7 +55,7 @@ double FoodLevelService::getDistanceContainer() {
   return distance;
 }
 
-void FoodLevelService::putDistanceInArray(double distance) {
+void ConatinerLevelService::putDistanceInArray(double distance) {
   int i = 0;
   double tmp = 0, tmp2 = 0;
   double avarage = 0;
@@ -71,7 +69,7 @@ void FoodLevelService::putDistanceInArray(double distance) {
   this->allLevelContainer[0] = distance;
 }
 
-int FoodLevelService::transformDistancesToLevelPerc() {
+int ConatinerLevelService::transformDistancesToPerc() {
   double sum = 0, avg = 0;
   int i, perc = 0, validDenominator = 0;
   for (i = 0; i < ARRAY_SIZE; i++) {
@@ -87,7 +85,7 @@ int FoodLevelService::transformDistancesToLevelPerc() {
   return 100 - perc;
 }
 
-int FoodLevelService::transformPercByFive(int perc) {
+int ConatinerLevelService::transformPercByFive(int perc) {
   int percTransformed = 0, first = 0, second = 0;
 
   if (perc == 100) {
@@ -109,11 +107,11 @@ int FoodLevelService::transformPercByFive(int perc) {
   return percTransformed;
 }
 
-int FoodLevelService::getTimeFromMeters(double meters) {
+int ConatinerLevelService::getTimeFromMeters(double meters) {
   return ((meters * 2) / 0.0343) * 100;
 }
 
-void FoodLevelService::sendInfoToSerial(int value) {
+void ConatinerLevelService::sendInfoToSerial(int value) {
   if (value != levelContainerPerc) {
     levelContainerPerc = value;
     this->exchange->setToSerialMsg("{'action':'container_level', 'content':'" + String(value) + "'}");

@@ -1,7 +1,7 @@
-#include "Arduino.h"
+///////////////////////////
+//  MsgService.cpp
+//////////////////////////
 #include "MsgService.h"
-
-String cmd = "ping";
 
 void MsgServiceTask::init(int period) {
   Task::init(period);
@@ -10,21 +10,6 @@ void MsgServiceTask::init(int period) {
   this->content = "";
   this->currentMsg = NULL;
   this->msgAvailable = false;
-}
-
-void MsgServiceTask::tick() {
-  this->serialEvent();
-
-  if (this->isMsgAvailable()) {
-    Msg* msg = this->receiveMsg();
-    String mes = msg->getContent();
-
-    if (mes == cmd) {
-      this->sendMsg("pong");
-
-    }
-    delete msg;
-  }
 }
 
 void MsgServiceTask::serialEvent() {
@@ -44,11 +29,6 @@ bool MsgServiceTask::isMsgAvailable() {
   return msgAvailable;
 }
 
-bool MsgServiceTask::isMsgAvailable(Pattern& pattern) {
-  return (msgAvailable && pattern.match(*currentMsg));
-}
-
-
 Msg* MsgServiceTask::receiveMsg() {
   if (msgAvailable) {
     Msg* msg = currentMsg;
@@ -59,18 +39,5 @@ Msg* MsgServiceTask::receiveMsg() {
   } else {
     return NULL;
   }
-}
-
-Msg* MsgServiceTask::receiveMsg(Pattern& pattern) {
-  if (msgAvailable && pattern.match(*currentMsg)) {
-    Msg* msg = currentMsg;
-    msgAvailable = false;
-    currentMsg = NULL;
-    content = "";
-    return msg;
-  } else {
-    return NULL;
-  }
-
 }
 

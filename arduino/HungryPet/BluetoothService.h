@@ -3,6 +3,7 @@
 
 #include "ExchangeInfo.h"
 #include "MsgService.h"
+#include <SoftwareSerial.h>
 
 class BluetoothService : public MsgServiceTask {
 
@@ -14,10 +15,10 @@ class BluetoothService : public MsgServiceTask {
 
   private:
     ExchangeInfo* exchange;
-    void startSerial();
-    bool availableSerial();
-    char readChar();
-    void sendMsg(const String& msg);
+    void startSerial(); // from MsgServiceTask
+    bool availableSerial(); // from MsgServiceTask
+    char readChar(); // from MsgServiceTask
+    void sendMsg(const String& msg); // from MsgServiceTask
     void listenFromSerialMsg();
     void checkIncomingMsg(String content);
 };

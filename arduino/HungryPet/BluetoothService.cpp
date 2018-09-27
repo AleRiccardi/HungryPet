@@ -1,6 +1,7 @@
+///////////////////////////
+//  BluetoothService.cpp
+//////////////////////////
 #include "BluetoothService.h"
-#include <SoftwareSerial.h>
-#include "JsonConstant.h"
 
 #define PIN_TX A0
 #define PIN_RX A1

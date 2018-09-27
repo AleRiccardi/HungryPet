@@ -1,5 +1,5 @@
-#ifndef __FOODLEVELSERVICE__
-#define __FOODLEVELSERVICE__
+#ifndef __CONTAINERLEVELSERVICE__
+#define __CONTAINERLEVELSERVICE__
 
 #include "ExchangeInfo.h"
 #include "MsgService.h"
@@ -8,26 +8,22 @@
 
 #define ARRAY_SIZE 10
 
-class FoodLevelService : public Task {
+class ConatinerLevelService : public Task {
 
   public:
-    FoodLevelService() {}
+    ConatinerLevelService() {}
     void init(int period);
     void tick();
     bool active;
 
   private:
     ExchangeInfo* exchange;
-    int levelBowlPerc;
-    int levelContainerPerc;
-    double allLevelBowl[ARRAY_SIZE] = {0.1};
+    int levelContainerPerc = 0;
     double allLevelContainer[ARRAY_SIZE] = {0.1};
-    void checkBowl();
     void checkContainer();
-    double getDistanceBowl();
-    double getDistanceContainer();
+    double readDistanceContainer();
     void putDistanceInArray(double distance);
-    int transformDistancesToLevelPerc();
+    int transformDistancesToPerc();
     int transformPercByFive(int perc);
     int getTimeFromMeters(double meters);
     void sendInfoToSerial(int value);

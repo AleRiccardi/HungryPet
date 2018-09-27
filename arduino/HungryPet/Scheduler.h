@@ -1,9 +1,12 @@
 #ifndef __SCHEDULER__
 #define __SCHEDULER__
 
+#include "Arduino.h"
 #include "Timer.h"
 #include "Task.h"
 #include "Runnable.h"
+#include <avr/sleep.h>
+#include <avr/power.h>
 
 #define MAX_TASKS 10
 

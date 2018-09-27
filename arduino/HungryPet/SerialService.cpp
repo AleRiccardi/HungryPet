@@ -1,4 +1,6 @@
-#include "Arduino.h"
+///////////////////////////
+//  SerialService.cpp
+//////////////////////////
 #include "SerialService.h"
 
 String cmd2 = "ping";
