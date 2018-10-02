@@ -20,6 +20,8 @@ void ConatinerLevelService::init(int period) {
   Task::init(period);
   this->exchange = ExchangeInfo::getInstance();
   this->active = false;
+  this->levelContainerPerc = 0;
+  this->timeElapsed = 0;
 
   pinMode(PIN_TRIG, OUTPUT);
   pinMode(PIN_ECHO, INPUT);
@@ -112,9 +114,19 @@ int ConatinerLevelService::getTimeFromMeters(double meters) {
 }
 
 void ConatinerLevelService::sendInfoToSerial(int value) {
-  if (value != levelContainerPerc) {
+  if (value != levelContainerPerc && this->timeStabilizer()) {
     levelContainerPerc = value;
-    this->exchange->setToSerialMsg("{'action':'container_level', 'content':'" + String(value) + "'}");
+    this->exchange->setToSerialMsg("{\"action\":\"container_level\", \"content\":\"" + String(value) + "\"}");
+  }
+}
+
+bool ConatinerLevelService::timeStabilizer() {
+  this->timeElapsed ++;
+  if (this->timeElapsed >= 20) {
+    this->timeElapsed = 0;
+    return true;
+  } else {
+    return false;
   }
 }
 

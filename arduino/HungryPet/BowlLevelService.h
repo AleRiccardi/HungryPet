@@ -20,12 +20,14 @@ class BowlLevelService : public Task {
     ExchangeInfo* exchange;
     int levelBowlPerc = -1;
     int allLevelBowl[ARRAY_SIZE] = {0.1};
+    int timeElapsed;
     void checkBowl();
     int readPressureBowl();
     void putPressureInArray(int distance);
     int transformPressureToPerc();
     int transformPercByFive(int perc);
     void sendInfoToSerial(int value);
+    bool timeStabilizer();
 };
 
 

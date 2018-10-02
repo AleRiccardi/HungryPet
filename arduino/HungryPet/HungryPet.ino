@@ -25,10 +25,11 @@ void setup() {
   engineServ->init(50);
   containerServ->init(50);
   bowlServ->init(50);
+  
   sched.addTask(btServ);
   sched.addTask(serServ);
   sched.addTask(engineServ);
-  //sched.addTask(containerServ);
+  sched.addTask(containerServ);
   sched.addTask(bowlServ);
 }
 

@@ -18,8 +18,9 @@ class ConatinerLevelService : public Task {
 
   private:
     ExchangeInfo* exchange;
-    int levelContainerPerc = 0;
+    int levelContainerPerc;
     double allLevelContainer[ARRAY_SIZE] = {0.1};
+    int timeElapsed;
     void checkContainer();
     double readDistanceContainer();
     void putDistanceInArray(double distance);
@@ -27,6 +28,8 @@ class ConatinerLevelService : public Task {
     int transformPercByFive(int perc);
     int getTimeFromMeters(double meters);
     void sendInfoToSerial(int value);
+    bool timeStabilizer();
+
 };
 
 

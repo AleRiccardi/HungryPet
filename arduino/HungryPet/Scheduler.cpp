@@ -8,7 +8,7 @@ void Scheduler::init(int basePeriod){
   timer = new Timer();
   timer->setupPeriod(basePeriod);  
   nTasks = 0;
-  Serial.begin(9600);
+  //Serial.begin(9600);
 }
 
 bool Scheduler::addTask(Task* task){
