@@ -12,7 +12,7 @@ Scheduler sched;
 
 void setup() {
 
-  sched.init(50);
+  sched.init(20);
 
   Task* btServ = new BluetoothService();
   Task* serServ = new SerialService();
@@ -20,11 +20,11 @@ void setup() {
   Task* containerServ = new ConatinerLevelService();
   Task* bowlServ = new BowlLevelService();
 
-  btServ->init(50);
-  serServ->init(50);
-  engineServ->init(50);
-  containerServ->init(50);
-  bowlServ->init(50);
+  btServ->init(20);
+  serServ->init(20);
+  engineServ->init(20);
+  containerServ->init(20);
+  bowlServ->init(20);
   
   sched.addTask(btServ);
   sched.addTask(serServ);

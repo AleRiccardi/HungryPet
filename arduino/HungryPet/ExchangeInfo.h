@@ -14,29 +14,29 @@ class ExchangeInfo {
     String json_bluetooth = "'action':'bluetooth'";
     String json_engine = "'action':'engine'";
 
-    Msg* currentMsgToSerial[20] = {NULL};
+    String currentMsgToSerial[20] = {""};
     int indexMsgToSerial;
 
-    Msg* msgBluetooth;
+    String msgBluetooth;
     bool availableMsgBluetooth;
 
-    Msg* msgEngine;
+    String msgEngine;
     bool availableMsgEngine;
 
   public:
     ExchangeInfo();
     static ExchangeInfo* getInstance();
     // Set messgaes
-    void setToSerialMsg(String msg);
-    void setFromSerialMsg(String msg);
+    void setToSerialMsg(String message);
+    void setFromSerialMsg(String message);
     // Check messages
     bool isToSerialMsgAvailable();
     bool isMsgBluetoothAvailable();
     bool isMsgEngineAvailable();
     // Get messages
-    Msg* getToSerialMsg();
-    Msg* getMsgBluetooth();
-    Msg* getMsgEngine();
+    String getToSerialMsg();
+    String getMsgBluetooth();
+    String getMsgEngine();
 
 };
 

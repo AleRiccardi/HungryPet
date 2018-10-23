@@ -19,8 +19,7 @@ void EngineService::tick() {
 
 void EngineService::listenFromSerialMsg() {
   if (this->exchange->isMsgEngineAvailable()) {
-    Msg* msg = this->exchange->getMsgEngine();
-    String message = msg->getContent();
+    String message = this->exchange->getMsgEngine();
 
     int existAction = message.indexOf(ACTION);
     int existEngineStart = message.indexOf(ACTION_ENGINE_START);
@@ -36,7 +35,6 @@ void EngineService::listenFromSerialMsg() {
     if (existAction != -1 && existEngineStop != -1) {
       engineOn = false;
     }
-    delete msg;
   }
 
   this->engineManage();

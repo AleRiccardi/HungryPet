@@ -18,7 +18,7 @@ class SerialService : public MsgServiceTask {
     void startSerial();
     bool availableSerial();
     char readChar();
-    void sendMsg(const String & msg);
+    void sendMsg(const String & message);
     void listenToSerialMsg();
     void checkIncomingMsg(String content);
 };

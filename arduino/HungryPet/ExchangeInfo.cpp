@@ -8,9 +8,9 @@ ExchangeInfo* ExchangeInfo::instance = 0;
 ExchangeInfo::ExchangeInfo() {
   //this->currentMsgToSerial = {NULL};
   this->indexMsgToSerial = -1;
-  this->msgBluetooth = NULL;
+  this->msgBluetooth = "";
   this->availableMsgBluetooth = false;
-  this->msgEngine = NULL;
+  this->msgEngine = "";
   this->availableMsgEngine = false;
 }
 
@@ -25,14 +25,14 @@ ExchangeInfo* ExchangeInfo::getInstance() {
 //  Set messages
 //////////////////////////////
 
-void ExchangeInfo::setToSerialMsg(String msg) {
-  this->currentMsgToSerial[++this->indexMsgToSerial] = new Msg(msg);
+void ExchangeInfo::setToSerialMsg(String message) {
+  this->currentMsgToSerial[++this->indexMsgToSerial] = message;
 }
 
-void ExchangeInfo::setFromSerialMsg(String msg) {
-  int existEntity = msg.indexOf(ENTITY);
-  int existBluetooth = msg.indexOf(ENTITY_BLUETOOTH);
-  int existEngine = msg.indexOf(ENTITY_ENGINE);
+void ExchangeInfo::setFromSerialMsg(String message) {
+  int existEntity = message.indexOf(ENTITY);
+  int existBluetooth = message.indexOf(ENTITY_BLUETOOTH);
+  int existEngine = message.indexOf(ENTITY_ENGINE);
 
   // In the case the entity name has a distance of more than 11
   // to the entity field, it will considered something not usefull.
@@ -40,17 +40,14 @@ void ExchangeInfo::setFromSerialMsg(String msg) {
 
   if (existEntity != -1 && (existBluetooth < offset && existBluetooth != -1)) {
     // BLUETOOTH message stored
-    this->msgBluetooth = new Msg(msg);
+    this->msgBluetooth = message;
     this->availableMsgBluetooth = true;
   } else if (existEntity != -1 && (existEngine < offset && existEngine != -1) ) {
     // ENGINE message stored
-    this->msgEngine = new Msg(msg);
+    this->msgEngine = message;
     this->availableMsgEngine = true;
   }
   
-  Msg* prova = new Msg(msg);
-  this->setToSerialMsg("length: " + String(prova->getContent().length()));
-  delete prova;
 }
 
 //////////////////////////////
@@ -73,36 +70,36 @@ bool ExchangeInfo::isMsgEngineAvailable() {
 //  Get messages
 //////////////////////////////
 
-Msg* ExchangeInfo::getToSerialMsg() {
+String ExchangeInfo::getToSerialMsg() {
   if (this->indexMsgToSerial == -1) {
-    return NULL;
+    return "";
   } else {
-    Msg* msg = currentMsgToSerial[this->indexMsgToSerial--];
-    return msg;
+    String message = currentMsgToSerial[this->indexMsgToSerial--];
+    return message;
   }
 }
 
-Msg* ExchangeInfo::getMsgBluetooth() {
+String ExchangeInfo::getMsgBluetooth() {
   if (this->availableMsgBluetooth) {
-    Msg* msg = this->msgBluetooth;
-    this->msgBluetooth = NULL;
+    String message = this->msgBluetooth;
+    this->msgBluetooth = "";
     this->availableMsgBluetooth = false;
 
-    return msg;
+    return message;
   } else {
-    return NULL;
+    return "";
   }
 }
 
-Msg* ExchangeInfo::getMsgEngine() {
+String ExchangeInfo::getMsgEngine() {
   if (this->availableMsgEngine) {
-    Msg* msg = this->msgEngine;
-    this->msgEngine = NULL;
+    String message = this->msgEngine;
+    this->msgEngine = "";
     this->availableMsgEngine = false;
 
-    return msg;
+    return message;
   } else {
-    return NULL;
+    return "";
   }
 }
 

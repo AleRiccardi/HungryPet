@@ -8,7 +8,7 @@ void MsgServiceTask::init(int period) {
 
   this->startSerial();
   this->content = "";
-  this->currentMsg = NULL;
+  this->currentMsg = "";
   this->msgAvailable = false;
 }
 
@@ -17,7 +17,7 @@ void MsgServiceTask::serialEvent() {
   while (this->availableSerial()) {
     char ch = (char) this->readChar();
     if (ch == '\n' || ch == '\r' || ch == 13) {
-      this->currentMsg = new Msg(content);
+      this->currentMsg = content;
       this->msgAvailable = true;
     } else {
       content += ch;
@@ -29,15 +29,15 @@ bool MsgServiceTask::isMsgAvailable() {
   return msgAvailable;
 }
 
-Msg* MsgServiceTask::receiveMsg() {
+String MsgServiceTask::receiveMsg() {
   if (msgAvailable) {
-    Msg* msg = currentMsg;
+    String message = currentMsg;
     msgAvailable = false;
-    currentMsg = NULL;
+    currentMsg = "";
     content = "";
-    return msg;
+    return message;
   } else {
-    return NULL;
+    return "";
   }
 }
 

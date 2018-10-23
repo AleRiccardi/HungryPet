@@ -12,13 +12,12 @@ void SerialService::init(int period) {
 
 
 void SerialService::tick() {
-  // Read incoming msg from Serial (Raspberry)
+  // Read incoming message from Serial (Raspberry)
   if (this->availableSerial()) {
     this->serialEvent();
     if (this->isMsgAvailable()) {
-      Msg* msg = this->receiveMsg();
-      this->checkIncomingMsg(msg->getContent());
-      delete msg;
+      String message = this->receiveMsg();
+      this->checkIncomingMsg(message);
     }
   }
   
@@ -27,21 +26,21 @@ void SerialService::tick() {
 
 }
 
-void SerialService::checkIncomingMsg(String content) {
-  if (content != "") {
-    this->exchange->setFromSerialMsg(content);
+void SerialService::checkIncomingMsg(String message) {
+  if (message != "") {
+    this->exchange->setFromSerialMsg(message);
+    this->sendMsg("length: " + String(message.length()));
+
   }
 }
 
 void SerialService::listenToSerialMsg() {
   if(this->exchange->isToSerialMsgAvailable()){
-    Msg* msg = this->exchange->getToSerialMsg();
-    String message = msg->getContent();
+    String message = this->exchange->getToSerialMsg();
 
     if (message != "") {
       this->sendMsg(message);
     }
-    delete msg;
   }
 }
 
@@ -60,7 +59,7 @@ char SerialService::readChar() {
   return Serial.read();
 }
 
-void SerialService::sendMsg(const String& msg) {
-  Serial.println(msg);
+void SerialService::sendMsg(const String& message) {
+  Serial.println(message);
 }
 

@@ -20,9 +20,8 @@ void BluetoothService::tick() {
   if (this->availableSerial()) {
     this->serialEvent();
     if (this->isMsgAvailable()) {
-      Msg* msg = this->receiveMsg();
-      this->checkIncomingMsg(msg->getContent());
-      delete msg;
+      String message = this->receiveMsg();
+      this->checkIncomingMsg(message);
     }
   }
 
@@ -30,20 +29,17 @@ void BluetoothService::tick() {
   this->listenFromSerialMsg();
 }
 
-void BluetoothService::checkIncomingMsg(String content) {
-  if (content != "") {
-    this->exchange->setToSerialMsg(content);
+void BluetoothService::checkIncomingMsg(String message) {
+  if (message != "") {
+    this->exchange->setToSerialMsg(message);
   }
 }
 
 void BluetoothService::listenFromSerialMsg() {
   if (this->exchange->isMsgBluetoothAvailable()) {
-    Msg* msg = this->exchange->getMsgBluetooth();
-    String message = msg->getContent();
+    String message = this->exchange->getMsgBluetooth();
 
     this->sendMsg("lenght: " + String(message.length()));
-    
-    delete msg;
   }
 }
 
@@ -59,7 +55,7 @@ bool BluetoothService::availableSerial() {
 char BluetoothService::readChar() {
   return blueSerial.read();
 }
-void BluetoothService::sendMsg(const String & msg) {
-  msg += (char)4;
-  blueSerial.print(msg);
+void BluetoothService::sendMsg(const String & message) {
+  message += (char)4;
+  blueSerial.print(message);
 }

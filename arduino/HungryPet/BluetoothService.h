@@ -18,7 +18,7 @@ class BluetoothService : public MsgServiceTask {
     void startSerial(); // from MsgServiceTask
     bool availableSerial(); // from MsgServiceTask
     char readChar(); // from MsgServiceTask
-    void sendMsg(const String& msg); // from MsgServiceTask
+    void sendMsg(const String& message); // from MsgServiceTask
     void listenFromSerialMsg();
     void checkIncomingMsg(String content);
 };
