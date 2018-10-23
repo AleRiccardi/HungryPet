@@ -12,6 +12,7 @@ void BowlLevelService::init(int period) {
   this->exchange = ExchangeInfo::getInstance();
   this->active = false;
   this->timeElapsed = 0;
+  this->timeUpdate = 0;
 }
 
 void BowlLevelService::tick() {
@@ -91,7 +92,7 @@ int BowlLevelService::transformPercByFive(int perc) {
 }
 
 void BowlLevelService::sendInfoToSerial(int value) {
-  if (value != this->levelBowlPerc && this->timeStabilizer()) {
+  if ((value != this->levelBowlPerc && this->timeStabilizer()) || this->timeToUpdate()) {
     this->levelBowlPerc = value;
     this->exchange->setToSerialMsg("{\"action\":\"bowl_level\", \"content\":\"" + String(value) + "\"}");
   }
@@ -103,6 +104,18 @@ bool BowlLevelService::timeStabilizer() {
   // in this way, it can stop the engine for the food.
   if (this->timeElapsed >= 5) {
     this->timeElapsed = 0;
+    return true;
+  } else {
+    return false;
+  }
+}
+
+bool BowlLevelService::timeToUpdate() {
+  this->timeUpdate ++;
+  // 10 times more faster than the container level,
+  // in this way, it can stop the engine for the food.
+  if (this->timeUpdate >= 200) {
+    this->timeUpdate = 0;
     return true;
   } else {
     return false;

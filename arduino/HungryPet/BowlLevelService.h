@@ -21,6 +21,7 @@ class BowlLevelService : public Task {
     int levelBowlPerc = -1;
     int allLevelBowl[ARRAY_SIZE] = {0.1};
     int timeElapsed;
+    int timeUpdate;
     void checkBowl();
     int readPressureBowl();
     void putPressureInArray(int distance);
@@ -28,6 +29,7 @@ class BowlLevelService : public Task {
     int transformPercByFive(int perc);
     void sendInfoToSerial(int value);
     bool timeStabilizer();
+    bool timeToUpdate();
 };
 
 

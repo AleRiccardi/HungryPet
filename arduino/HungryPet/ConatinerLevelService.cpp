@@ -22,6 +22,7 @@ void ConatinerLevelService::init(int period) {
   this->active = false;
   this->levelContainerPerc = 0;
   this->timeElapsed = 0;
+  this->timeUpdate = 0;
 
   pinMode(PIN_TRIG, OUTPUT);
   pinMode(PIN_ECHO, INPUT);
@@ -114,7 +115,7 @@ int ConatinerLevelService::getTimeFromMeters(double meters) {
 }
 
 void ConatinerLevelService::sendInfoToSerial(int value) {
-  if (value != levelContainerPerc && this->timeStabilizer()) {
+  if ((value != this->levelContainerPerc && this->timeStabilizer()) || this->timeToUpdate()) {
     levelContainerPerc = value;
     this->exchange->setToSerialMsg("{\"action\":\"container_level\", \"content\":\"" + String(value) + "\"}");
   }
@@ -124,6 +125,18 @@ bool ConatinerLevelService::timeStabilizer() {
   this->timeElapsed ++;
   if (this->timeElapsed >= 20) {
     this->timeElapsed = 0;
+    return true;
+  } else {
+    return false;
+  }
+}
+
+bool ConatinerLevelService::timeToUpdate() {
+  this->timeUpdate ++;
+  // 10 times more faster than the container level,
+  // in this way, it can stop the engine for the food.
+  if (this->timeUpdate >= 200) {
+    this->timeUpdate = 0;
     return true;
   } else {
     return false;

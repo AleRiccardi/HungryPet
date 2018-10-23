@@ -47,6 +47,10 @@ void ExchangeInfo::setFromSerialMsg(String msg) {
     this->msgEngine = new Msg(msg);
     this->availableMsgEngine = true;
   }
+  
+  Msg* prova = new Msg(msg);
+  this->setToSerialMsg("length: " + String(prova->getContent().length()));
+  delete prova;
 }
 
 //////////////////////////////

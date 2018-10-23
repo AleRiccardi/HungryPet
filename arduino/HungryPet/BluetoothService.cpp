@@ -28,7 +28,6 @@ void BluetoothService::tick() {
 
   // Listen data from Serial (Raspberry)
   this->listenFromSerialMsg();
-
 }
 
 void BluetoothService::checkIncomingMsg(String content) {
@@ -42,9 +41,8 @@ void BluetoothService::listenFromSerialMsg() {
     Msg* msg = this->exchange->getMsgBluetooth();
     String message = msg->getContent();
 
-    if (message != "") {
-      this->sendMsg(message);
-    }
+    this->sendMsg("lenght: " + String(message.length()));
+    
     delete msg;
   }
 }
@@ -61,9 +59,7 @@ bool BluetoothService::availableSerial() {
 char BluetoothService::readChar() {
   return blueSerial.read();
 }
-
 void BluetoothService::sendMsg(const String & msg) {
   msg += (char)4;
   blueSerial.print(msg);
 }
-

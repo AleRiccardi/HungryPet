@@ -48,10 +48,6 @@ void SerialService::listenToSerialMsg() {
 
 
 
-
-
-
-
 // ### Default functions ###
 
 void SerialService::startSerial() {

@@ -21,6 +21,7 @@ class ConatinerLevelService : public Task {
     int levelContainerPerc;
     double allLevelContainer[ARRAY_SIZE] = {0.1};
     int timeElapsed;
+    int timeUpdate;
     void checkContainer();
     double readDistanceContainer();
     void putDistanceInArray(double distance);
@@ -29,7 +30,7 @@ class ConatinerLevelService : public Task {
     int getTimeFromMeters(double meters);
     void sendInfoToSerial(int value);
     bool timeStabilizer();
-
+    bool timeToUpdate();
 };
 
 
