@@ -3,16 +3,16 @@
 
 #include "MsgService.h"
 
-#define ENTITY "entity"
-#define ENTITY_BLUETOOTH  "bluetooth"
-#define ENTITY_ENGINE  "engine"
+#define ENTITY "en"
+#define ENTITY_BLUETOOTH "bt"
+#define ENTITY_ENGINE "eng"
 
 class ExchangeInfo {
 
   private:
     static ExchangeInfo* instance;
-    String json_bluetooth = "'action':'bluetooth'";
-    String json_engine = "'action':'engine'";
+    String json_bluetooth = "'ac':'bt'";
+    String json_engine = "'ac':'eng'";
 
     Msg* currentMsgToSerial[20] = {NULL};
     int indexMsgToSerial;

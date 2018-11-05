@@ -101,4 +101,3 @@ Msg* ExchangeInfo::getMsgEngine() {
     return NULL;
   }
 }
-

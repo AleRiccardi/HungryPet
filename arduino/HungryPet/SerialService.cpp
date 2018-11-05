@@ -24,7 +24,6 @@ void SerialService::tick() {
   
   // Listen data from Android (Phone App)
   this->listenToSerialMsg();
-
 }
 
 void SerialService::checkIncomingMsg(String content) {

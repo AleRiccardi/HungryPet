@@ -3,13 +3,6 @@
 //////////////////////////
 #include "ConatinerLevelService.h"
 
-#define ACTION "action"
-#define ACTION_ENGINE_START  "engine_start"
-#define J_HEAD_BOWL "{'action':'bowl_level', 'content':'"
-#define J_TAIL_BOWL "'}"
-#define J_HEAD_CONT "{'action':'container_level', 'content':'"
-#define J_TAIL_CONT "'}"
-
 #define PIN_TRIG 10
 #define PIN_ECHO 11
 #define MAX_DIST 1.0
@@ -116,7 +109,7 @@ int ConatinerLevelService::getTimeFromMeters(double meters) {
 void ConatinerLevelService::sendInfoToSerial(int value) {
   if (value != levelContainerPerc && this->timeStabilizer()) {
     levelContainerPerc = value;
-    this->exchange->setToSerialMsg("{\"action\":\"container_level\", \"content\":\"" + String(value) + "\"}");
+    this->exchange->setToSerialMsg("{\"ac\":\"cnl\", \"cn\":\"" + String(value) + "\"}");
   }
 }
 

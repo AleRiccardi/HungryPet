@@ -93,7 +93,7 @@ int BowlLevelService::transformPercByFive(int perc) {
 void BowlLevelService::sendInfoToSerial(int value) {
   if (value != this->levelBowlPerc && this->timeStabilizer()) {
     this->levelBowlPerc = value;
-    this->exchange->setToSerialMsg("{\"action\":\"bowl_level\", \"content\":\"" + String(value) + "\"}");
+    this->exchange->setToSerialMsg("{\"ac\":\"bwl\", \"cn\":\"" + String(value) + "\"}");
   }
 }
 
