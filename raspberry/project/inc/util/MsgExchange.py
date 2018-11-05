@@ -1,5 +1,6 @@
 from ..util.log import Log
 
+
 class MsgExchange:
     TAG = 'MsgExchange'
     # Here will be the instance stored.
@@ -35,21 +36,35 @@ class MsgExchange:
         return msg_ret
 
     def put_from_serial(self, msg):
+        """
+        Put the message from serial to the array "messages_from_serial"
+        that keep stored all the messages.
+        :param msg: the message the has to be stored
+        :return: no return
+        """
         if msg:
             dic = dict()
-            # Increment pos for each reader
+            # insert in the dictionary the message for every class.
             for num_r in range(len(self.reader)):
                 dic[self.reader[num_r]] = msg
+            # now add to the main array.
             self.messages_from_serial += [dic]
 
     def pop_from_serial(self, tag_cass):
-        msg_ret = ''
+        """
+        Retrieve the last message received from the serial for the right
+        destination (class).
+        :param tag_cass: the name of the class that want to retrieve the
+            message.
+        :return: the string message
+        """
+        msg_received = ''
         if tag_cass in self.reader:
             for i in range(len(self.messages_from_serial)):
                 try:
                     msg_cur = self.messages_from_serial[i][tag_cass]
                     if msg_cur:
-                        msg_ret = msg_cur
+                        msg_received = msg_cur
                         del self.messages_from_serial[i][tag_cass]
                 except:
                     pass
@@ -57,4 +72,4 @@ class MsgExchange:
             Log.w(self.TAG, tag_cass + " not allowed to listen for messages")
 
         self.messages_from_serial = [i for i in self.messages_from_serial if i]
-        return msg_ret
+        return msg_received

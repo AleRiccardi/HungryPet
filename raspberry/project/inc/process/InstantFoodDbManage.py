@@ -19,7 +19,7 @@ class InstantFoodDbManage(threading.Thread):
     TIME_INSTANT_AVAR = 60 * 2  # seconds
 
     # ____JSON____
-    JS_ENGINE_START = "{'entity':'" + JsonVar.ENTITY_ENGINE + "','action':'" + JsonVar.ACTION_ENGINE_START + "'}"
+    JS_ENGINE_START = "{'en':'" + JsonVar.ENTITY_ENGINE + "','ac':'" + JsonVar.ACTION_ENGINE_START + "'}"
 
     # ___VARIABLES___
     loop = True

@@ -17,7 +17,7 @@ class ScheduleController(threading.Thread):
     cursor = 0
 
     # ____JSON____
-    JS_ENGINE_START = "{'entity':'" + JsonVar.ENTITY_ENGINE + "','action':'" + JsonVar.ACTION_ENGINE_START + "'}"
+    JS_ENGINE_START = "{'en':'" + JsonVar.ENTITY_ENGINE + "','ac':'" + JsonVar.ACTION_ENGINE_START + "'}"
 
     def __init__(self):
         threading.Thread.__init__(self)
@@ -44,14 +44,14 @@ class ScheduleController(threading.Thread):
                 min_old = min_now
                 food_done = False
 
-            # print("Now: " + str(week_day_now) + " " + str(hour_now) + " " + str(minutes_now))
             schedules = self.get_local_schedules()
             for schedule in schedules:
+                # If the schedule was deleted, it has to be ignored
+                if schedule.deleted is True:
+                    continue
                 schedule_week_day = int(schedule.get_week_day())
                 schedule_hour = int(schedule.get_hour() / 100)
                 schedule_min = int(schedule.get_hour() % 100)
-
-                # print("Schedule: " + str(schedule_week_day) + " " + str(schedule_hour) + " " + str(schedule_minutes))
 
                 if (schedule_week_day == week_day_now and schedule_hour == hour_now
                         and schedule_min == min_now and not food_done):

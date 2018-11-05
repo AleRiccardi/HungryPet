@@ -73,6 +73,7 @@ class FoodLevel:
     def get_date_update(self):
         return self.date_update
 
+
 class InstantFood:
     id = ""
     mac = ""

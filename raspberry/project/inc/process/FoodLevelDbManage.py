@@ -16,8 +16,8 @@ class FoodLevelDbManage(threading.Thread):
     REQUEST_URL = 'http://hungrypet.altervista.org/request_data.php?table=food_level&mac='
     TIME = 1  # seconds
     # Json action
-    A_CONTAINER_LEVEL = "container_level"
-    A_BOWL_LEVEL = "bowl_level"
+    A_CONTAINER_LEVEL = "cnl"
+    A_BOWL_LEVEL = "bwl"
     # Type
     CONTAINER = "container"
     BOWL = "bowl"
@@ -64,21 +64,22 @@ class FoodLevelDbManage(threading.Thread):
     def check_message_from_serial(self):
         """
         Listen for message that comes from the serial.
+        TODO when arrive two messages from serial, only one is read from this class.
         """
         data = self.msg_exc.pop_from_serial(self.TAG)
         if data:
             data = json.loads(str(data))
             # selection of action
             try:
-                if data['action'] == self.A_CONTAINER_LEVEL:
+                if data['ac'] == self.A_CONTAINER_LEVEL:
                     """ Request of wifi """
-                    content = data['content']
+                    content = data['cn']
                     level = int(content)
                     self.update_local(self.CONTAINER, level)
 
-                elif data['action'] == self.A_BOWL_LEVEL:
+                elif data['ac'] == self.A_BOWL_LEVEL:
                     """ Set wifi """
-                    content = data['content']
+                    content = data['cn']
                     level = content
                     self.update_local(self.BOWL, level)
 
@@ -116,6 +117,8 @@ class FoodLevelDbManage(threading.Thread):
             for remote in foods_remote:
                 if remote not in foods_local:
                     to_local += remote
+
+            # Log.w(self.TAG, "local: " + str(to_local))
 
             if len(to_local) > 0:
                 Log.i(self.TAG, "Upload " + str(len(to_local)) + " food level to local")
@@ -164,22 +167,21 @@ class FoodLevelDbManage(threading.Thread):
         date_now = datetime.today().strftime('%Y-%m-%d %H:%M:%S')
 
         try:
-            for food_level in food_levels:
-                if food_level.get_mac() == mac and food_level.get_type() == type_container and \
-                        food_level.get_level() == int(level):
-                    # UPDATE
-                    sql = ("UPDATE food_level SET level=" + str(level) + ", date_update='" + date_now +
-                           "' WHERE mac='" + mac + "'and type='" + type_container + "'")
-                    print(sql)
-                    self.cursor.execute(sql)
+            if not food_levels:
+                # INSERT
+                sql = ("INSERT INTO food_level(mac, type, level, date_create, date_update) VALUES ('" + mac + "', '" +
+                       type_container + "', " + str(level) + ", '" + date_now + "', '" + date_now + "')")
+                self.cursor.execute(sql)
+            else:
+                for food_level in food_levels:
+                    if food_level.get_mac() == mac and food_level.get_type() == type_container and \
+                            food_level.get_level() != int(level):
+                        # UPDATE
+                        sql = ("UPDATE food_level SET level=" + str(level) + ", date_update='" + date_now +
+                               "' WHERE mac='" + mac + "'and type='" + type_container + "'")
+                        self.cursor.execute(sql)
 
-                    return True
-
-            # INSERT
-            sql = ("INSERT INTO food_level(mac, type, level, date_create, date_update) VALUES ('" + mac + "', '" +
-                   type_container + "', " + str(level) + ", '" + date_now + "', '" + date_now + "')")
-            print(sql)
-            self.cursor.execute(sql)
+                        return True
 
         except Exception as err:
             Log.e(self.TAG, "Update local: " + str(err))
@@ -193,17 +195,24 @@ class FoodLevelDbManage(threading.Thread):
         :return: a list of food level.
         """
         food_levels = []
-
-        self.cursor.execute("SELECT * FROM food_level WHERE mac='" + self.wifi_conn.get_mac() + "'")
-        for db_schedule in self.cursor.fetchall():
-            food_level = FoodLevel(
-                db_schedule[0],
-                db_schedule[1],
-                db_schedule[2],
-                db_schedule[3],
-                db_schedule[4],
-            )
-            food_levels += [food_level]
+        exit_loop = False
+        while not exit_loop:
+            try:
+                self.cursor.execute("SELECT * FROM food_level WHERE mac='" + self.wifi_conn.get_mac() + "'")
+                for db_schedule in self.cursor.fetchall():
+                    food_level = FoodLevel(
+                        db_schedule[0],
+                        db_schedule[1],
+                        db_schedule[2],
+                        db_schedule[3],
+                        db_schedule[4],
+                    )
+                    food_levels += [food_level]
+                    exit_loop = True
+            except Warning as warn:
+                Log.e(self.TAG, str(warn))
+                self.cursor.execute("REPAIR TABLE food_level")
+                exit_loop = False
 
         return food_levels
 

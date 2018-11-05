@@ -1,5 +1,5 @@
 class JsonVar:
-    ENTITY_BLUETOOTH = 'bluetooth'
-    ENTITY_ENGINE = 'engine'
+    ENTITY_BLUETOOTH = 'bt'
+    ENTITY_ENGINE = 'eng'
 
     ACTION_ENGINE_START = 'engine_start'

@@ -25,15 +25,15 @@ class WifiConn(threading.Thread):
     # ___STATUS___
     A_WIFI_ON = "conn-on"
     A_WIFI_OFF = "conn-off"
-    A_WIFI_GET = "wifi-get"
-    A_WIFI_SET = "wifi-set"
+    A_WIFI_GET = "wg" # wifi-get
+    A_WIFI_SET = "ws" # wifi-set
     A_BT_DISCONNECT = "bt-quit"
 
     # ____JSON____
-    JS_CONN_ON = "{'entity':'" + JsonVar.ENTITY_BLUETOOTH + "','action':'" + A_WIFI_ON + "'}"
-    JS_CONN_OFF = "{'entity':'" + JsonVar.ENTITY_BLUETOOTH + "','action':'" + A_WIFI_OFF + "'}"
-    JS_WIFI_CONNECTED = "{'entity':'" + JsonVar.ENTITY_BLUETOOTH + "','action':'" + A_WIFI_SET + "', 'content': 'success'}"
-    JS_NO_WIFI_CONNECTED = "{'entity':'" + JsonVar.ENTITY_BLUETOOTH + "','action':'" + A_WIFI_SET + "', 'content': 'fail'}"
+    JS_CONN_ON = "{'en':'" + JsonVar.ENTITY_BLUETOOTH + "','ac':'" + A_WIFI_ON + "'}"
+    JS_CONN_OFF = "{'en':'" + JsonVar.ENTITY_BLUETOOTH + "','ac':'" + A_WIFI_OFF + "'}"
+    JS_WIFI_CONNECTED = "{'en':'" + JsonVar.ENTITY_BLUETOOTH + "','ac':'" + A_WIFI_SET + "', 'cn': 'success'}"
+    JS_NO_WIFI_CONNECTED = "{'en':'" + JsonVar.ENTITY_BLUETOOTH + "','ac':'" + A_WIFI_SET + "', 'cn': 'fail'}"
 
     # ___VARIABLES___
     # Boolean
@@ -71,21 +71,21 @@ class WifiConn(threading.Thread):
                 data = json.loads(str(data))
                 # selection of action
                 try:
-                    if data["action"] == self.A_WIFI_GET:
+                    if data["ac"] == self.A_WIFI_GET:
                         """ Request of wifi """
                         self.send_wifi_to_bt()
 
-                    elif data["action"] == self.A_WIFI_SET:
+                    elif data["ac"] == self.A_WIFI_SET:
                         """ Set wifi """
-                        ssid = data["content"]["ssid"]
-                        pswd = data["content"]["pswd"]
+                        ssid = data["cn"]["ssid"]
+                        pswd = data["cn"]["pswd"]
                         Log.i(self.TAG, "Request to set wifi: " + ssid)
                         ip_address = self.connect_to_wifi(ssid, pswd)  # Connection
 
                         if ip_address == self.NOT_SET:
                             Log.i(self.TAG, "Couldn\"t connect to wifi: " + ssid)
-                            data["action"] = self.A_WIFI_SET
-                            data["content"] = {"status": 'fail'}
+                            data["ac"] = self.A_WIFI_SET
+                            data["cn"] = {"status": 'fail'}
                             json_data = json.dumps(data)
                             self.msg_exc.put_to_serial(json_data)
 
@@ -94,7 +94,7 @@ class WifiConn(threading.Thread):
                             Log.i(self.TAG, "Connected to wifi: " + ssid)
                             self.send_device_info_to_bt(ip_address)
 
-                    elif data["action"] == self.A_BT_DISCONNECT:
+                    elif data["ac"] == self.A_BT_DISCONNECT:
                         """ Closing connection """
                         Log.i(self.TAG, 'End of comunication')
 
@@ -108,16 +108,22 @@ class WifiConn(threading.Thread):
         self.is_running = False
 
     def send_wifi_to_bt(self):
+        limit = 3
+        count_limit = 0
+        char_limit = 16
         all_wifi = []
         wifi_sc = WifiScan()
         connect = wifi_sc.scan()
         result = wifi_sc.parse(connect)
-        js_response = "{'entity':'" + JsonVar.ENTITY_BLUETOOTH + "','action':'" + self.A_WIFI_GET + "','content':["
-        for wifi in result:
-            if wifi["essid"] != '':
+        wifi_sorted = sorted(result, key=lambda k: k['signal_quality'], reverse=True)
+        js_response = "{'en':'" + JsonVar.ENTITY_BLUETOOTH + "','ac':'" + self.A_WIFI_GET + "','cn':["
+        for wifi in wifi_sorted:
+            if wifi["essid"] != '' and count_limit < limit and len(wifi["essid"]) < char_limit:
                 all_wifi += [wifi["essid"]]
-                js_wifi = "{'ssid':'" + wifi["essid"] + "','encryption':'" + wifi["encryption"] + "'}"
+                js_wifi = "{'ssid':'" + wifi["essid"] + "'}"
+                # js_wifi = "{'ssid':'" + wifi["essid"] + "'}"
                 js_response += "" + js_wifi + ","
+                count_limit += 1
 
         js_response = js_response[:-1]
         js_response += "]}"
@@ -138,9 +144,9 @@ class WifiConn(threading.Thread):
                 mac_address = l.strip().split(b"ether ")[1].split(b" ")[0]
 
         if mac_address != self.NOT_SET and ip_address != self.NOT_SET:
-            data = {"entity": JsonVar.ENTITY_BLUETOOTH,
-                    "action": self.A_WIFI_SET,
-                    "content": {"status": 'success',
+            data = {"en": JsonVar.ENTITY_BLUETOOTH,
+                    "ac": self.A_WIFI_SET,
+                    "cn": {"status": 'success',
                                 "mac": mac_address.decode(),
                                 "ip": ip_address.decode()}}
             json_data = json.dumps(data)
@@ -163,8 +169,8 @@ class WifiConn(threading.Thread):
         f.write("country=US\n")
         f.write("\n")
         f.write("network={\n")
-        f.write("    ssid='" + ssid + "'\n")
-        f.write("    psk='" + psk + "'\n")
+        f.write("    ssid=\"" + ssid + "\"\n")
+        f.write("    psk=\"" + psk + "\"\n")
         f.write("    key_mgmt=WPA-PSK\n")
         f.write("}\n")
         f.close()
@@ -267,9 +273,11 @@ class WifiScan:
             if cellNumber is not None:
                 cells.append(cellNumber.groupdict())
                 continue
+
             wpa = self.wpaRe.search(line)
             if wpa is not None:
                 cells[-1].update({"encryption": "wpa"})
+
             wpa2 = self.wpa2Re.search(line)
             if wpa2 is not None:
                 cells[-1].update({"encryption": "wpa2"})

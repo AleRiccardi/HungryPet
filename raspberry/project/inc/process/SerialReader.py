@@ -54,10 +54,11 @@ class SerialReader(threading.Thread):
 
     def serial_send(self, msg):
         """ Send messages to serial """
-        msg += chr(13)
-        msg = msg.replace(" ", "")
-        Log.g(self.TAG, msg)
-        self.serial_conn.write(msg.encode())
+        if msg:
+            msg += chr(13)
+            msg = msg.replace(" ", "")
+            Log.g(self.TAG, msg)
+            self.serial_conn.write(msg.encode())
 
     def serial_read(self):
         """ Read messages from serial (secondary thread) """
