@@ -1,3 +1,4 @@
+from .process.ProcessView import ProcessView
 from .process.ScheduleController import ScheduleController
 from .process.SerialReader import SerialReader
 from .process.WifiConn import WifiConn
@@ -7,7 +8,7 @@ from .process.InstantFoodDbManage import InstantFoodDbManage
 from .util.log import Log
 
 import time
-import signal
+import os
 import sys
 
 
@@ -19,9 +20,11 @@ class Core:
     # Processes
     loop = True
     closing = False
+    reboot = False
+    process_view = 0
     serial_reader = 0
     wifi_conn = 0
-    db_manage = 0
+    schedule_db = 0
     schedule_cont = 0
     food_level = 0
     instant_food = 0
@@ -33,14 +36,26 @@ class Core:
         print("\n**************************************************** \n")
 
     def run(self):
+        self.process_view = ProcessView()
         self.serial_reader = SerialReader()
         self.wifi_conn = WifiConn()
-        self.db_manage = ScheduleDbManage(self.wifi_conn)
+        self.schedule_db = ScheduleDbManage(self.wifi_conn)
         self.schedule_cont = ScheduleController()
         self.food_level = FoodLevelDbManage(self.wifi_conn)
         self.instant_food = InstantFoodDbManage(self.wifi_conn)
 
         while self.loop:
+
+            # ProcessView
+            if not self.process_view.isAlive() and not self.closing:
+                self.process_view = ProcessView()
+                self.process_view.start()
+            elif self.closing is True:
+                self.process_view.close()
+
+            if self.process_view.shall_reboot():
+                self.closing = True
+                self.reboot = True
 
             # SerialReader
             if not self.serial_reader.isAlive() and not self.closing:
@@ -57,11 +72,11 @@ class Core:
                 self.wifi_conn.close()
 
             # DbManage
-            if not self.db_manage.isAlive() and not self.closing:
-                self.db_manage = ScheduleDbManage(self.wifi_conn)
-                self.db_manage.start()
+            if not self.schedule_db.isAlive() and not self.closing:
+                self.schedule_db = ScheduleDbManage(self.wifi_conn)
+                self.schedule_db.start()
             elif self.closing is True:
-                self.db_manage.close()
+                self.schedule_db.close()
 
             # ScheduleController
             if not self.schedule_cont.isAlive() and not self.closing:
@@ -88,7 +103,7 @@ class Core:
                 # Waiting that all the thread close
                 while self.serial_reader.is_running or \
                         self.wifi_conn.is_running or \
-                        self.db_manage.is_running or \
+                        self.schedule_db.is_running or \
                         self.schedule_cont.is_running or \
                         self.food_level.is_running or \
                         self.instant_food.is_running:
@@ -99,8 +114,12 @@ class Core:
                 # Sleeping time
                 time.sleep(self.TIME)
 
-        Log.g(self.TAG, 'System exit')
-        sys.exit(0)
+        if self.reboot:
+            Log.g(self.TAG, 'System reboot')
+            os.system('sudo shutdown -r now')
+        else:
+            Log.g(self.TAG, 'System exit')
+            sys.exit()
 
     def print_msg(self, msg):
         """Print class msg."""
