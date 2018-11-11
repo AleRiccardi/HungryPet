@@ -21,7 +21,8 @@ class ScheduleController(threading.Thread):
 
     def __init__(self):
         threading.Thread.__init__(self)
-        db = MySQLdb.connect(host="localhost", user="root", passwd="", db="my_hungrypet")
+        db = MySQLdb.connect(host="127.0.0.1", user="crontab", passwd="crontab", unix_socket="/var/run/mysqld/mysqld.sock",
+                             port=3306, db="my_hungrypet")
         self.cursor = db.cursor()
 
     def close(self):
@@ -47,8 +48,9 @@ class ScheduleController(threading.Thread):
             schedules = self.get_local_schedules()
             for schedule in schedules:
                 # If the schedule was deleted, it has to be ignored
-                if schedule.deleted is True:
+                if schedule.deleted == 1:
                     continue
+
                 schedule_week_day = int(schedule.get_week_day())
                 schedule_hour = int(schedule.get_hour() / 100)
                 schedule_min = int(schedule.get_hour() % 100)

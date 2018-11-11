@@ -96,7 +96,7 @@ class WifiConn(threading.Thread):
 
                     elif data["ac"] == self.A_BT_DISCONNECT:
                         """ Closing connection """
-                        Log.i(self.TAG, 'End of comunication')
+                        Log.i(self.TAG, 'End of communication')
 
                 except KeyError as err:
                     Log.e(self.TAG, "Wrong json access: " + str(err))

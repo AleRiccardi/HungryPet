@@ -37,7 +37,8 @@ class FoodLevelDbManage(threading.Thread):
         :param wifi_conn: WifiConn class.
         """
         threading.Thread.__init__(self)
-        db = MySQLdb.connect(host="localhost", user="root", passwd="", db="my_hungrypet")
+        db = MySQLdb.connect(host="127.0.0.1", user="crontab", passwd="crontab", unix_socket="/var/run/mysqld/mysqld.sock",
+                             port=3306, db="my_hungrypet")
         self.cursor = db.cursor()
         self.msg_exc = MsgExchange.get_instance()
         self.wifi_conn = wifi_conn
@@ -53,7 +54,7 @@ class FoodLevelDbManage(threading.Thread):
 
         while self.loop:
             self.check_message_from_serial()
-            self.sync_remote_to_local()
+            self.sync_local_to_remote()
 
             # Sleeping time
             time.sleep(self.TIME)
@@ -64,7 +65,7 @@ class FoodLevelDbManage(threading.Thread):
     def check_message_from_serial(self):
         """
         Listen for message that comes from the serial.
-        TODO when arrive two messages from serial, only one is read from this class.
+        TODO fix when arrive two messages from serial in the same moment, only one is read from this class.
         """
         data = self.msg_exc.pop_from_serial(self.TAG)
         if data:
@@ -72,13 +73,13 @@ class FoodLevelDbManage(threading.Thread):
             # selection of action
             try:
                 if data['ac'] == self.A_CONTAINER_LEVEL:
-                    """ Request of wifi """
+                    """ Container Level """
                     content = data['cn']
                     level = int(content)
                     self.update_local(self.CONTAINER, level)
 
                 elif data['ac'] == self.A_BOWL_LEVEL:
-                    """ Set wifi """
+                    """ Bowl Level """
                     content = data['cn']
                     level = content
                     self.update_local(self.BOWL, level)
@@ -86,7 +87,7 @@ class FoodLevelDbManage(threading.Thread):
             except KeyError as err:
                 Log.e(self.TAG, 'Wrong json access: ' + str(err))
 
-    def sync_remote_to_local(self):
+    def sync_local_to_remote(self):
         """
         Sync remote information with local.
         """

@@ -32,7 +32,8 @@ class InstantFoodDbManage(threading.Thread):
 
     def __init__(self, wifi_conn):
         threading.Thread.__init__(self)
-        db = MySQLdb.connect(host="localhost", user="root", passwd="", db="my_hungrypet")
+        db = MySQLdb.connect(host="127.0.0.1", user="crontab", passwd="crontab", unix_socket="/var/run/mysqld/mysqld.sock",
+                             port=3306, db="my_hungrypet")
         self.cursor = db.cursor()
         self.msg_exc = MsgExchange.get_instance()
         self.wifi_conn = wifi_conn
@@ -68,6 +69,12 @@ class InstantFoodDbManage(threading.Thread):
             self.update_remote(instant)
 
     def update_remote(self, instant_food):
+        """
+        Update the remote instant food with the current date in a way to
+        set it as done.
+        :param instant_food:
+        :return: true or false
+        """
         if self.wifi_conn.is_connected():
             date_now = datetime.today().strftime('%Y-%m-%d %H:%M:%S')
 
@@ -89,6 +96,11 @@ class InstantFoodDbManage(threading.Thread):
         return False
 
     def get_remote(self):
+        """
+        Request to the remote if there is a request to give an instant
+        food (managed from the server).
+        :return a list of instant request.
+        """
         instant_foods = []
         if self.wifi_conn.is_connected():
             url = self.REQUEST_URL + self.wifi_conn.get_mac()

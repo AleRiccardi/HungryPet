@@ -6,6 +6,7 @@ from .process.ScheduleDbManage import ScheduleDbManage
 from .process.FoodLevelDbManage import FoodLevelDbManage
 from .process.InstantFoodDbManage import InstantFoodDbManage
 from .util.log import Log
+from subprocess import call
 
 import time
 import os
@@ -34,6 +35,7 @@ class Core:
         print("Welcome to the HungryPet raspberry system,")
         print("here you can see all the status of the process.")
         print("\n**************************************************** \n")
+        call(['sudo', 'service', 'mysql', 'start'])
 
     def run(self):
         self.process_view = ProcessView()
@@ -46,16 +48,16 @@ class Core:
 
         while self.loop:
 
+            if self.process_view.isAlive() and self.process_view.shall_reboot():
+                self.closing = True
+                self.reboot = True
+
             # ProcessView
             if not self.process_view.isAlive() and not self.closing:
                 self.process_view = ProcessView()
                 self.process_view.start()
             elif self.closing is True:
                 self.process_view.close()
-
-            if self.process_view.shall_reboot():
-                self.closing = True
-                self.reboot = True
 
             # SerialReader
             if not self.serial_reader.isAlive() and not self.closing:

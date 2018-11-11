@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from inc.core import Core
 import signal
 

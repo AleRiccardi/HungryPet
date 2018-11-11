@@ -31,10 +31,18 @@ class ProcessView(threading.Thread):
         GPIO.cleanup()
 
     def run(self):
+        Log.i(self.TAG, "Thread started")
         while self.loop:
             # set an interrupt on a falling edge and wait for it to happen
             GPIO.wait_for_edge(self.BUTTON, GPIO.FALLING)
-            self.reboot = True
+            time.sleep(0.005)  # debounce for 5mSec
+            # only show valid edges
+            if GPIO.input(self.BUTTON) == 0:
+                Log.i(self.TAG, 'Button pressed')
+                self.reboot = True
+
+        Log.i(self.TAG, 'Thread closed')
+        self.is_running = False
 
     def shall_reboot(self):
         return self.reboot

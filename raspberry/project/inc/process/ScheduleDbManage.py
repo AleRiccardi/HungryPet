@@ -24,7 +24,8 @@ class ScheduleDbManage(threading.Thread):
     def __init__(self, wifi_conn):
         threading.Thread.__init__(self)
         self.wifi_conn = wifi_conn
-        db = MySQLdb.connect(host="localhost", user="root", passwd="", db="my_hungrypet")
+        db = MySQLdb.connect(host="127.0.0.1", user="crontab", passwd="crontab", unix_socket="/var/run/mysqld/mysqld.sock",
+                             port=3306, db="my_hungrypet")
         self.cursor = db.cursor()
 
     def close(self):
