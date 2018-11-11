@@ -6,7 +6,7 @@
 #define PIN_TRIG 10
 #define PIN_ECHO 11
 #define MAX_DIST 1.0
-#define MAX_DIST_CONT 0.3
+#define MAX_DIST_CONT 0.17
 #define MIN_DIST_CONT 0.0
 
 void ConatinerLevelService::init(int period) {
@@ -122,4 +122,3 @@ bool ConatinerLevelService::timeStabilizer() {
     return false;
   }
 }
-

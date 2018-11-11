@@ -3,8 +3,8 @@
 //////////////////////////
 #include "BluetoothService.h"
 
-#define PIN_TX A0
-#define PIN_RX A1
+#define PIN_RX A0
+#define PIN_TX A1
 
 SoftwareSerial blueSerial(PIN_TX, PIN_RX);
 
@@ -66,4 +66,3 @@ void BluetoothService::sendMsg(const String & msg) {
   msg += (char)4;
   blueSerial.print(msg);
 }
-
