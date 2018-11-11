@@ -208,7 +208,7 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:text="Last feed time"
+                android:text="Next feed time"
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/text_medium"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -216,7 +216,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/txv_last_feed_time"
+                android:id="@+id/txv_next_feed_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"

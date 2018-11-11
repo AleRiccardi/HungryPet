@@ -32,17 +32,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="5dp"
             android:padding="2dp"
             android:text="Medium Text"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@android:color/black" />
+            android:textColor="@android:color/black"
+            android:layout_marginStart="10dp" />
 
-        <TextView
-            android:id="@+id/txv_encryption"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:text="TextView" />
     </LinearLayout>
 </LinearLayout>

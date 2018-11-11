@@ -124,7 +124,7 @@ public class WifiPresenter implements WifiContract.Presenter {
                         try {
                             JSONObject json = new JSONObject(messageReed);
 
-                            String action = (String) json.get("action");
+                            String action = (String) json.get("ac");
 
                             // Possible actions from the HungryPet device
                             if (action.equals(CommDirectory.A_WIFI_GET)) {
@@ -168,7 +168,7 @@ public class WifiPresenter implements WifiContract.Presenter {
         boolean success = false;
         try {
             String jsScanMsg = new JSONObject()
-                    .put("action", CommDirectory.A_WIFI_GET).toString();
+                    .put("ac", CommDirectory.A_WIFI_GET).toString();
             success = mComm.sendMessage(jsScanMsg);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -178,15 +178,13 @@ public class WifiPresenter implements WifiContract.Presenter {
     }
 
     private void sendWifiToView(JSONObject jsWifiNetworks) {
-        JSONArray arWifiNet = jsWifiNetworks.optJSONArray("content");
+        JSONArray arWifiNet = jsWifiNetworks.optJSONArray("cn");
         List<WifiCell> listWifiNet = new ArrayList<>();
         try {
             for (int i = 0; i < arWifiNet.length(); i++) {
                 JSONObject jsWifi = arWifiNet.getJSONObject(i);
                 String ssid = jsWifi.get("ssid").toString();
-                String encryption = jsWifi.get("encryption").toString();
-
-                WifiCell wifi = new WifiCell(ssid, encryption);
+                WifiCell wifi = new WifiCell(ssid);
                 listWifiNet.add(wifi);
             }
             mView.populateLsvWifi(listWifiNet);

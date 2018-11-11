@@ -84,9 +84,9 @@ public class ScheduleDayFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 final Schedule scheduleSelected = (Schedule) ltvShedule.getItemAtPosition(position);
-                Calendar mcurrentTime = Calendar.getInstance();
-                int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
-                int minute = mcurrentTime.get(Calendar.MINUTE);
+                Calendar currentTime = Calendar.getInstance();
+                int hour = currentTime.get(Calendar.HOUR_OF_DAY);
+                int minute = currentTime.get(Calendar.MINUTE);
                 TimePickerDialog mTimePicker;
                 mTimePicker = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
                     @Override

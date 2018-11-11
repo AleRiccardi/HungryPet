@@ -34,10 +34,8 @@ public class WifiAdapter extends ArrayAdapter<WifiCell> {
         }
         // Lookup view for data population
         TextView txvSsid = (TextView) convertView.findViewById(R.id.txv_ssid);
-        TextView txvEncryption = (TextView) convertView.findViewById(R.id.txv_encryption);
         // Populate the data into the template view using the data object
         txvSsid.setText(wifi.getSsid());
-        txvEncryption.setText("Encryption: " + wifi.getEncryption());
         // Return the completed view to render on screen
         return convertView;
     }

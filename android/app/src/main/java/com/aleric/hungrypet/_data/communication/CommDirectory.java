@@ -8,8 +8,8 @@ import org.json.JSONObject;
 
 public class CommDirectory {
 
-    public static final String A_WIFI_GET = "wifi-get";
-    public static final String A_WIFI_SET = "wifi-set";
+    public static final String A_WIFI_GET = "wg";
+    public static final String A_WIFI_SET = "ws";
     public static final String A_BT_DISCONNECT = "bt-quit";
 
     public static final int E_NONE = 0;
@@ -84,8 +84,8 @@ public class CommDirectory {
     public void closeComm(){
         try {
             String jsCloseMsg = new JSONObject()
-                    .put("action", CommDirectory.A_BT_DISCONNECT)
-                    .put("content", "none")
+                    .put("ac", CommDirectory.A_BT_DISCONNECT)
+                    .put("cn", "none")
                     .toString();
             sendMessage(jsCloseMsg);
         } catch (JSONException e) {

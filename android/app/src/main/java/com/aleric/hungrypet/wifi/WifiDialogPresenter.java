@@ -88,12 +88,12 @@ public class WifiDialogPresenter implements WifiContract.PresenterDialog {
                         Log.i(TAG, messageReed);
                         try {
                             JSONObject jsAction = new JSONObject(messageReed);
-                            String action = (String) jsAction.get("action");
+                            String action = (String) jsAction.get("ac");
 
                             // Possible actions from the HungryPet station
                             if (action.equals(CommDirectory.A_WIFI_SET)) {
                                 JSONObject jsContent = new JSONObject(messageReed);
-                                jsContent = jsContent.getJSONObject("content");
+                                jsContent = jsContent.getJSONObject("cn");
                                 String status = (String) jsContent.get("status");
 
                                 if (status.equals("success")) {
@@ -144,8 +144,8 @@ public class WifiDialogPresenter implements WifiContract.PresenterDialog {
         boolean success = false;
         try {
             mJsScanMsg = new JSONObject()
-                    .put("action", CommDirectory.A_WIFI_SET)
-                    .put("content", new JSONObject()
+                    .put("ac", CommDirectory.A_WIFI_SET)
+                    .put("cn", new JSONObject()
                             .put("ssid", mWifi.getSsid())
                             .put("pswd", mWifi.getPswd()))
                     .toString();

@@ -21,11 +21,16 @@ import android.widget.TextView;
 import com.aleric.hungrypet.R;
 import com.aleric.hungrypet._data.SynchronizeProgressBar;
 import com.aleric.hungrypet._data.UploadInstantFood;
+import com.aleric.hungrypet._data.database.DbScheduleManager;
+import com.aleric.hungrypet._data.shedule.Schedule;
 import com.aleric.hungrypet._data.station.Station;
 import com.aleric.hungrypet._data.station.StationDirectory;
 import com.aleric.hungrypet.schedule.ScheduleActivity;
 import com.aleric.hungrypet.settings.SettingsActivity;
 import com.aleric.hungrypet.station.StationActivity;
+
+import java.util.Calendar;
+import java.util.List;
 
 public class OverviewActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -143,7 +148,7 @@ public class OverviewActivity extends AppCompatActivity implements NavigationVie
     private void initComponents() {
         final Activity activity = this;
         mTxvStationName = findViewById(R.id.txv_station_name);
-        mTxvLastFeedTime = findViewById(R.id.txv_last_feed_time);
+        mTxvLastFeedTime = findViewById(R.id.txv_next_feed_time);
         mPgbLevelContainer = findViewById(R.id.pgb_level_container);
         mPgbLevelBowl = findViewById(R.id.pgb_level_bowl);
         mBtnFeedNow = findViewById(R.id.btn_feed_now);
@@ -151,7 +156,7 @@ public class OverviewActivity extends AppCompatActivity implements NavigationVie
         mStation = StationDirectory.getInstance().getStation();
         if (mStation != null) {
             mTxvStationName.setText(mStation.getName());
-            mTxvLastFeedTime.setText("To set");
+            mTxvLastFeedTime.setText(this.getLastFeedTime());
             // BUTTON FEED NOW
             mBtnFeedNow.setEnabled(true);
             mBtnFeedNow.setClickable(true);
@@ -168,6 +173,47 @@ public class OverviewActivity extends AppCompatActivity implements NavigationVie
         } else {
             mBtnFeedNow.setEnabled(false);
             mBtnFeedNow.setClickable(false);
+        }
+    }
+
+
+    private String getLastFeedTime(){
+        DbScheduleManager mDbScheduleManager = new DbScheduleManager(this);
+        List<Schedule> schedules = mDbScheduleManager.getSchedules(mStation.getMac());
+        Calendar currentTime = Calendar.getInstance();
+        Schedule nextSchedule = null;
+        int day = currentTime.get(Calendar.DAY_OF_WEEK);
+        int hourNow = currentTime.get(Calendar.HOUR_OF_DAY);
+        int minuteNow = currentTime.get(Calendar.MINUTE);
+
+        day -= 2;
+        if(day == -1){
+            day = 6;
+        }
+
+        for (Schedule schedule : schedules) {
+            if (schedule.isAvailable() && schedule.getWeekDay() == day) {
+                int hourAndMinutes = schedule.getHour();
+                int hourS = hourAndMinutes / 100;
+                int minuteS = hourAndMinutes % 100;
+
+                if (hourNow == hourS){
+                    if(minuteNow <g minuteS){
+                        if(nextSchedule == null){
+                            nextSchedule = schedule;
+                        }
+                    }
+                } else if (hourNow < hourS) {
+                    if(nextSchedule == null){
+                        nextSchedule = schedule;
+                    }
+                }
+            }
+        }
+        if(nextSchedule != null) {
+            return Schedule.createStringHour(nextSchedule.getHour());
+        } else {
+            return "No schedule";
         }
     }
 
