@@ -27,3 +27,8 @@ android/.idea
 #.idea/workspace.xml - remove # and delete .idea if it better suit your needs.
 android/.gradle
 android/app/build/
+.idea
+.idea/*
+android/
+arduino/
+raspberry/.DS_Store
