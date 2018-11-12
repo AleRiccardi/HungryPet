@@ -1,0 +1,63 @@
+<resources>
+
+    <!-- ## GENERAL ## -->
+    <string name="app_name">HungryPet</string>
+    <string name="cancel">Cancel</string>
+    <string name="state_on">On</string>
+    <string name="state_off">Off</string>
+    <string name="SSID">SSID</string>
+    <string name="password">Password</string>
+    <string name="none">none</string>
+
+
+    <!-- ## Activity Welcome ## -->
+    <string name="main_title_welcome">Welcome to HungryPet</string>
+    <string name="main_text_welcome">Looks like you haven\'t configurated your HungryPet station, so make
+        sure that you established a connection with its and then press configure to connect the station
+        to Internet.</string>
+
+    <!-- ## Activity Wifi ## -->
+    <string name="wifi_bar_title">Wifi connection</string>
+    <string name="text_no_wifi">No wifi detected</string>
+
+    <!-- Connection -->
+    <string name="not_connected">You are not connected to a station</string>
+
+    <!-- Button -->
+    <string name="btn_mange">Continue and do not configure</string>
+    <string name="btn_config">Configure</string>
+    <string name="btn_select">Select</string>
+    <string name="btn_scan">Scan</string>
+
+    <!-- Dialog -->
+    <string name="config_configuring">Start configuring …</string>
+    <string name="config_fail">Fail to configure Wifi! Please check SSID and/or password and try again.</string>
+    <string name="sing_in">Sing in</string>
+
+    <!-- ## InitDevice ## -->
+    <string name="initialize">Initialize</string>
+    <string name="name">Name</string>
+
+    <!-- ## Core ## -->
+    <string name="nav_overview_title">Overview</string>
+    <string name="nav_overview_desc">Overview header</string>
+    <string name="nav_overview_subtitle">Select a section</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="schedule">My Schedule</string>
+    <string name="station">My Station</string>
+    <string name="settings">Settings</string>
+
+    <string name="scheduleDay">Day</string>
+
+    <!-- ~ Dashboard ~ -->
+
+
+
+    <!-- ~ Schedule ~ -->
+    <string name="label_download">Download</string>
+
+
+
+</resources>

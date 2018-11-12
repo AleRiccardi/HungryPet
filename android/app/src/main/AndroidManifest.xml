@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.aleric.hungrypet">
+
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+
+        <activity
+            android:name=".main.MainActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".wifi.WifiActivity"
+            android:configChanges="keyboardHidden|orientation" />
+
+        <activity
+            android:name=".init.InitActivity"
+            android:label="@string/initialize" />
+
+        <activity
+            android:name=".overview.OverviewActivity"
+            android:label="@string/nav_overview_title"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".schedule.ScheduleActivity"
+            android:label="@string/schedule"
+            android:parentActivityName=".overview.OverviewActivity"
+            tools:targetApi="jelly_bean">
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".overview.OverviewActivity" />
+        </activity>
+
+        <activity
+            android:name=".schedule.ScheduleDayActivity"
+            android:label="@string/scheduleDay"
+            android:parentActivityName=".schedule.ScheduleActivity"
+            tools:targetApi="jelly_bean">
+            <!-- The meta-data element is needed for versions lower than 4.1 -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".schedule.ScheduleActivity" />
+        </activity>
+
+        <activity
+            android:name=".station.StationActivity"
+            android:label="@string/station"
+            android:parentActivityName=".overview.OverviewActivity"
+            tools:targetApi="jelly_bean">
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".overview.OverviewActivity" />
+        </activity>
+
+        <activity
+            android:name=".settings.SettingsActivity"
+            android:label="@string/settings"
+            android:parentActivityName=".overview.OverviewActivity"
+            tools:targetApi="jelly_bean">
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".overview.OverviewActivity" />
+        </activity>
+    </application>
+</manifest>

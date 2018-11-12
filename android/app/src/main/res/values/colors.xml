@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- # Primary # -->
+    <color name="colorPrimary">#2E7D32</color>
+    <color name="colorPrimaryDark">#1b5e20</color>
+    <color name="colorPrimaryLight">#60ad5e</color>
+    <color name="colorAccent">#005906</color>
+    <color name="colorBar">#fcfcfc</color>
+
+    <color name="wifiActive">#e7e7e7</color>
+    <color name="inactiveGray">#d6d6d6</color>
+    <color name="bootstrapGray">#e9ecef</color>
+
+    <color name="badgeText">#303131</color>
+
+
+    <color name="colorRed">#dc3545</color>
+    <color name="colorYellow">#ffc107</color>
+    <color name="colorGreen">#28a745</color>
+    <color name="colorBlue">#007bff</color>
+</resources>
