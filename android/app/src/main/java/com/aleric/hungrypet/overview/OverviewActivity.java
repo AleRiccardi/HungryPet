@@ -198,7 +198,7 @@ public class OverviewActivity extends AppCompatActivity implements NavigationVie
                 int minuteS = hourAndMinutes % 100;
 
                 if (hourNow == hourS){
-                    if(minuteNow <g minuteS){
+                    if(minuteNow < minuteS){
                         if(nextSchedule == null){
                             nextSchedule = schedule;
                         }
