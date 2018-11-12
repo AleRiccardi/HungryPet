@@ -85,6 +85,7 @@ class WifiConn(threading.Thread):
                         if ip_address == self.NOT_SET:
                             Log.i(self.TAG, "Couldn\"t connect to wifi: " + ssid)
                             data["ac"] = self.A_WIFI_SET
+                            data["en"] = JsonVar.ENTITY_BLUETOOTH
                             data["cn"] = {"status": 'fail'}
                             json_data = json.dumps(data)
                             self.msg_exc.put_to_serial(json_data)
