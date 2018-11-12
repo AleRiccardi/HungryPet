@@ -9,12 +9,16 @@ void EngineService::init(int period) {
   Task::init(period);
   this->exchange = ExchangeInfo::getInstance();
   this->active = false;
+  this->engineOn = false;
+  this->engineRunning = false;
+  this->engineOff = false;
   pinMode(PIN_ENGINE, OUTPUT);
 }
 
 void EngineService::tick() {
   // Listen data from Serial (Raspberry)
   this->listenFromSerialMsg();
+  this->checkEngine();
 }
 
 void EngineService::listenFromSerialMsg() {
@@ -29,15 +33,35 @@ void EngineService::listenFromSerialMsg() {
     int offset = existAction + 11;
 
     if (existAction != -1 && existEngineStart != -1) {
-      this->startEngine(message);
+      engineOn = true;
     }
     delete msg;
   }
 }
 
-void EngineService::startEngine(String msg) {
-  analogWrite(PIN_ENGINE, 255);
-  delay(5000);
-  analogWrite(PIN_ENGINE, 0);
-}
+void EngineService::checkEngine() {
+  if (this->engineOn) {
+    analogWrite(PIN_ENGINE, 255);
+    previousMillis = millis();
 
+    this->engineRunning = true; // it has to run
+    this->engineOn = false;
+    this->engineOff = false;
+  }
+
+  if (this->engineRunning) {
+    unsigned long currentMillis = millis();
+    if (currentMillis - previousMillis >= interval) {
+      this->engineRunning = false;
+      this->engineOn = false;
+      this->engineOff = true; // it has to stop
+    }
+  }
+
+  if (this->engineOff) {
+    analogWrite(PIN_ENGINE, 0); // it stopped
+    this->engineRunning = false;
+    this->engineOn = false;
+    this->engineOff = false;
+  }
+}

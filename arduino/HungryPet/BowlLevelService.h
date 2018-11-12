@@ -4,7 +4,6 @@
 #include "ExchangeInfo.h"
 #include "MsgService.h"
 #include "Task.h"
-#include <AFMotor.h>
 
 #define ARRAY_SIZE 10
 

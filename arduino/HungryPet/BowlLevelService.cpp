@@ -99,8 +99,9 @@ void BowlLevelService::sendInfoToSerial(int value) {
 
 bool BowlLevelService::timeStabilizer() {
   this->timeElapsed ++;
-  // 10 times more faster than the container level,
-  // in this way, it can stop the engine for the food.
+  // More faster than the container level, that permit to
+  // retrive the weight of the food in the bowl and allow in 
+  // the feature verison, to stops the engine for the food.
   if (this->timeElapsed >= 5) {
     this->timeElapsed = 0;
     return true;
@@ -108,4 +109,3 @@ bool BowlLevelService::timeStabilizer() {
     return false;
   }
 }
-
