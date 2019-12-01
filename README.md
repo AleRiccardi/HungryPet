@@ -10,14 +10,11 @@ The second is used from your Raspberry-pi device developed in Python which is th
 The third is used from your Arduino that is connected with the Raspberry-pi and permits to manage the phisic control.
 
 ### Pet-feeder station  
-</br>
-<p align="center">
-<img src="./media/structure.jpeg" width="500">
-</p>
 
-<p align="center">
-<img src="./media/structure-final.jpeg" width="700">
-</p>
+Working on             |   Completed
+:-------------------------:|:-------------------------:
+<img src="./media/structure.jpeg">   |  <img src="./media/structure-final.jpeg">  
+
 
 ### Video  
 [![Preview pet-feeder](.media/prw-in-action.png)](https://photos.google.com/share/AF1QipPlpBHl9jkvHRqFEGFoO9xck5l0jhM2sURE0ccdQ3BN5OQIQSRqMLIvjoyWSoRZtA/photo/AF1QipP_I0YCFWh2Vcik5bPO0V3__duLRFceeswmvify?key=QXpsRzZmX2RROS1Db1RQUFlJRDNFSmU4RHNvZ2xn)
