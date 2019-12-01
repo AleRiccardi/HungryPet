@@ -1,8 +1,6 @@
 # HungryPet
 
-Code platform used to automate a pet feeder.
-
-Contributors: @AleRiccardi
+Pet feeder station created with Arduino and Raspberry PI. With the Android application it is possible to program schedules and control the level of food.
 
 ## Description
  
